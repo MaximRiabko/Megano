@@ -6,28 +6,6 @@ function getCSRFToken() {
     return cookieValue;
 }
 
-// async function login() {
-//     const username = document.getElementById("name").value;
-//     const password = document.getElementById("pass").value;
-//
-//     const response = await fetch('/auth/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': getCSRFToken()
-//         },
-//         body: JSON.stringify({username: username, password: password })
-//     });
-//
-//     const data = await response.json();
-//     console.log(data);
-//
-//     if (response.ok) {
-//         window.location.href = '/index.html';
-//     } else {
-//         console.log(data);
-//     }
-// }
 
 async function login() {
     const username = document.getElementById("name").value;
