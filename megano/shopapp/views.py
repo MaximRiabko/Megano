@@ -18,8 +18,6 @@ class SellerDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         seller = self.get_object()
         top_products = get_top_products(seller)
-        cache.set(f"top_products_{seller.id}", top_products, 60 * 60)
-
         context['top_products'] = top_products
         return context
 

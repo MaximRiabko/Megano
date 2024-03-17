@@ -1,9 +1,7 @@
 {% extends 'shopapp/base_main.html' %}
-{% block head %}
-   Seller details
-{% endblock %}
+{% load static %}
 
-{% block body %}
+{% block middle %}
     <h1>{{ seller.name }}</h1>
     <p>{{ seller.description }}</p>
     <img src="{{ seller.image.url }}" alt="Seller Image">
