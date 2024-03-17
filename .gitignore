@@ -259,6 +259,10 @@ poetry.toml
 
 # ruff
 .ruff_cache/
+.idea
+.DS_Store
+.AppleDouble
+.LSOverride
 
 # LSP config files
 pyrightconfig.json
