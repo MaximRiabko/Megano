@@ -3,4 +3,4 @@ from .models import SiteSettings
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'value', 'is_boolean']
+    list_display = ['name', 'cache_time',]

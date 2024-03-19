@@ -20,8 +20,7 @@ class SingletonModel(models.Model):
 
 class SiteSettings(SingletonModel):
     name = models.CharField(max_length=100, unique=True)
-    value = models.TextField()
-    is_boolean = models.BooleanField(default=False)
+    cache_time = models.IntegerField(default=5)
 
     def __str__(self):
         return self.name
