@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shopapp', '0002_alter_seller_address'),
+        ("shopapp", "0002_alter_seller_address"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='seller',
-            name='image',
-            field=models.ImageField(blank=True, null=True, upload_to='seller_image_directory_path'),
+            model_name="seller",
+            name="image",
+            field=models.ImageField(
+                blank=True, null=True, upload_to="seller_image_directory_path"
+            ),
         ),
     ]

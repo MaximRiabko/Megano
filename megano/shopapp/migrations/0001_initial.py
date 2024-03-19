@@ -4,23 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Seller',
+            name="Seller",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.CharField(max_length=255)),
-                ('image', models.ImageField(blank=True, null=True, upload_to='seller_images/')),
-                ('phone', models.IntegerField()),
-                ('address', models.IntegerField()),
-                ('email', models.EmailField(max_length=254)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.CharField(max_length=255)),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="seller_images/"
+                    ),
+                ),
+                ("phone", models.IntegerField()),
+                ("address", models.IntegerField()),
+                ("email", models.EmailField(max_length=254)),
             ],
         ),
     ]

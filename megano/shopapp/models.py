@@ -4,7 +4,9 @@ from django.db import models
 class Seller(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='seller_image_directory_path', blank=True, null=True)
+    image = models.ImageField(
+        upload_to="seller_image_directory_path", blank=True, null=True
+    )
     phone = models.IntegerField()
     address = models.CharField(max_length=255)
     email = models.EmailField()
@@ -32,6 +34,7 @@ class ProductImage(models.Model):
     """
     Модель ProductImage представляет изображение продукта.
     """
+
     image = models.ImageField(upload_to=product_images_directory_path)
     is_preview = models.BooleanField(default=False)
 
@@ -46,7 +49,7 @@ class Product(models.Model):
     description = models.TextField(null=False, blank=True)
     archived = models.BooleanField(default=False)
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
-    images = models.ManyToManyField(ProductImage, blank=True, related_name='products')
+    images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
     category = models.ForeignKey(Categories, on_delete=models.PROTECT)
 
 
@@ -54,6 +57,7 @@ class ProductSeller(models.Model):
     """
     Модель ProductSeller представляет продукт с его ценой от продавца
     """
+
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
