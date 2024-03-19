@@ -260,6 +260,7 @@ poetry.toml
 # ruff
 .ruff_cache/
 .idea
+.idea/
 .DS_Store
 .AppleDouble
 .LSOverride
