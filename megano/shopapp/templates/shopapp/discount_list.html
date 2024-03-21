@@ -1,0 +1,24 @@
+{% extends 'shopapp/base_main.html' %}
+{% load static %}
+
+{% block middle %}
+    <h1>Скидки:</h1>
+    {% if object_list %}
+    <div>
+        {% for discount in object_list %}
+        <h2>{{ discount.name }}</h2>
+        <p>{{ discount.description }}</p>
+
+        {% if discount.date_start %}
+        <p>Начало акции: <b>{{ discount.date_start|date:"d.m.Y" }}</b></p>
+        {% endif %}
+
+        {% if discount.date_end %}
+        <p>Конец акции: <b>{{ discount.date_end|date:"d.m.Y" }}</b></p>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <h2>Пока скидок нет</h2>
+    {% endif %}
+{% endblock %}

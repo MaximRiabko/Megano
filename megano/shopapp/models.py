@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Seller(models.Model):
@@ -62,3 +63,27 @@ class ProductSeller(models.Model):
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     quantity = models.SmallIntegerField(default=0)
+
+
+class ViewHistory(models.Model):
+    """
+    Модель ViewHistory представляет историю просмотренных продуктов
+    """
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    viewed_products = models.ManyToManyField(Product)
+
+
+class Discount(models.Model):
+    """
+    Модель ViewHistory представляет скидку на продукт
+    """
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=False, blank=True)
+    products = models.ManyToManyField(Product)
+    date_start = models.DateTimeField(auto_now_add=True)
+    date_end = models.DateTimeField()
+    promocode = models.CharField(max_length=255)
+    is_group = models.BooleanField(default=False)
+    value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+    type = models.CharField(max_length=255)
