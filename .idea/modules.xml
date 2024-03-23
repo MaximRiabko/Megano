@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Django_Megano.iml" filepath="$PROJECT_DIR$/.idea/Django_Megano.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/megano.iml" filepath="$PROJECT_DIR$/.idea/megano.iml" />
     </modules>
   </component>
 </project>
