@@ -27,7 +27,7 @@ def adding_review(request: HttpRequest):
 def delete_review(request: HttpRequest):
     """Функция для удаления отзывов"""
     if request.user.is_authenticated:
-        del_review = Review.objects.get()
+        del_review = Review.objects.filter()
         del_review.delete()
         return redirect('catalog:product_review')
 
