@@ -304,7 +304,11 @@
                                             <div class="Comment-content">{{ review.description }}
                                             </div>
                                         </div>
-
+                                        <div class="ProductCard-cartElement" style="margin-top: 25px; margin-left: 250px;">
+                                            <a class="btn btn_primary" href="{% url 'catalog:review_delete' %}">
+                                                <span class="btn-content">Удалить</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 {% endfor %}
