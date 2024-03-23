@@ -18,6 +18,7 @@ def adding_review(request: HttpRequest):
     form = ReviewForm
     context = {
         "reviews": Review.objects.all(),
+        "count_rev": Review.objects.all().count(),
         "form": form,
         "error": error
     }

@@ -100,7 +100,7 @@
                                 <span>Характеристика</span>
                             </a>
                             <a class="Tabs-link" href="#reviews">
-                                <span>Отзывы (1)</span>
+                                <span>Отзывы {{ count_rev }}</span>
                             </a>
                         </div>
                         <div class="Tabs-wrap">
@@ -283,7 +283,7 @@
                             </div>
                             <div class="Tabs-block" id="reviews">
                                 <header class="Section-header">
-                                    <h3 class="Section-title">1 отзыв
+                                    <h3 class="Section-title">{{ count_rev }} отзыв(ов)
                                     </h3>
                                 </header>
                                 {% if reviews %}
