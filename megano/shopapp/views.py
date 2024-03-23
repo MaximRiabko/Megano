@@ -29,7 +29,4 @@ def get_top_products(seller):
 class DiscountListView(ListView):
     model = Discount
     template_name = "shopapp/discount_list.html"
-    context_object_name = "discounts"
-    queryset = (
-        Discount.objects.order_by("-date_start").all()
-    )
+
