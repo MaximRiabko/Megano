@@ -69,6 +69,7 @@ class ViewHistory(models.Model):
     """
     Модель ViewHistory представляет историю просмотренных продуктов
     """
+
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     creation_date = models.DateTimeField(auto_now_add=True)
     viewed_products = models.ManyToManyField(Product)
@@ -78,6 +79,7 @@ class Discount(models.Model):
     """
     Модель ViewHistory представляет скидку на продукт
     """
+
     name = models.CharField(max_length=255)
     description = models.TextField(null=False, blank=True)
     products = models.ManyToManyField(Product)

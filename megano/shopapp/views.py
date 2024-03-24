@@ -29,4 +29,3 @@ def get_top_products(seller):
 class DiscountListView(ListView):
     model = Discount
     template_name = "shopapp/discount_list.html"
-
