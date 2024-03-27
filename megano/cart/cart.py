@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
-from shopapp.models import Product, ProductSeller, Seller
+from shopapp.models import ProductSeller
 
 
 class Cart(object):
@@ -16,22 +16,20 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product_seller, product, quantity=1, update_quantity=False):
+    def add(self, product_seller, quantity=1, update_quantity=False):
         """
         Добавить продукт в корзину или обновить его количество.
         """
-        product_id = str(product.id)
         product_seller_id = str(product_seller.id)
-        if product_id not in self.cart:
-            self.cart[product_id] = {
+        if product_seller_id not in self.cart:
+            self.cart[product_seller_id] = {
                 "quantity": 0,
-                "product_seller_id": product_seller_id,
-                "price": str(ProductSeller.objects.get(product=product, seller=product_seller).price)
+                "price": str(product_seller.price)
             }
         if update_quantity:
-            self.cart[product_id]["quantity"] = quantity
+            self.cart[product_seller]["quantity"] = quantity
         else:
-            self.cart[product_id]["quantity"] += quantity
+            self.cart[product_seller]["quantity"] += quantity
         self.save()
 
     def save(self):
@@ -40,27 +38,26 @@ class Cart(object):
         # Отметить сеанс как "измененный", чтобы убедиться, что он сохранен
         self.session.modified = True
 
-    def remove(self, product):
+    def remove(self, product_seller):
         """
         Удаление товара из корзины.
         """
-        product_id = str(product.id)
-        if product_id in self.cart:
-            del self.cart[product_id]
+        product_seller = str(product_seller.id)
+        if product_seller in self.cart:
+            del self.cart[product_seller]
             self.save()
 
     def __iter__(self):
         """
         Перебор элементов в корзине и получение продуктов из базы данных.
         """
-        product_ids = self.cart.keys()
+        product_seller_ids  = self.cart.keys()
         # получение объектов product и добавление их в корзину
-        products = Product.objects.filter(id__in=product_ids)
-        for product in products:
-            self.cart[str(product.id)]["product"] = product
+        product_sellers = ProductSeller.objects.filter(id__in=product_seller_ids )
+        for product_seller in product_sellers:
+            self.cart[str(product_seller.id)]["product_seller"] = product_seller
 
         for item in self.cart.values():
-            item['product_seller_id'] = ProductSeller.objects.get(pk=item['product_seller_id'])
             item["price"] = Decimal(item["price"])
             item["total_price"] = item["price"] * item["quantity"]
             yield item
