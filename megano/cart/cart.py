@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
-from shop.models import Product
+from shopapp.models import Product, ProductSeller, Seller
 
 
 class Cart(object):
@@ -16,13 +16,18 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, update_quantity=False):
+    def add(self, product_seller, product, quantity=1, update_quantity=False):
         """
         Добавить продукт в корзину или обновить его количество.
         """
         product_id = str(product.id)
+        product_seller_id = str(product_seller.id)
         if product_id not in self.cart:
-            self.cart[product_id] = {"quantity": 0, "price": str(product.price)}
+            self.cart[product_id] = {
+                "quantity": 0,
+                "product_seller_id": product_seller_id,
+                "price": str(ProductSeller.objects.get(product=product, seller=product_seller).price)
+            }
         if update_quantity:
             self.cart[product_id]["quantity"] = quantity
         else:
@@ -55,6 +60,7 @@ class Cart(object):
             self.cart[str(product.id)]["product"] = product
 
         for item in self.cart.values():
+            item['product_seller_id'] = ProductSeller.objects.get(pk=item['product_seller_id'])
             item["price"] = Decimal(item["price"])
             item["total_price"] = item["price"] * item["quantity"]
             yield item
