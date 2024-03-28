@@ -118,3 +118,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STATIC_URL = "/static/"
 STATIC_ROOT = "staticfiles"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+# ключ для хранения корзины в сессии пользователя
+CART_SESSION_ID = 'cart'
