@@ -89,3 +89,8 @@ class Discount(models.Model):
     is_group = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     type = models.CharField(max_length=255)
+
+class Review(models.Model):
+    """Модель Review предоставляет отзывы на продукт"""
+    description = models.TextField(null=False, blank=True)
+    created_reviews = models.DateTimeField(auto_now_add=True)

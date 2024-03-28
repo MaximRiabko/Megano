@@ -1,12 +1,34 @@
 from django.conf import settings
 from django.core.cache import cache
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpRequest
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView
 
-from .models import Seller, Discount
+from .models import Seller, Discount, Review
+from .forms import ReviewForm
 
+
+def adding_review(request: HttpRequest):
+    """Функция для обработки формы товара
+    и отображения отзывов на странице"""
+    error = ""
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+        else:
+            error = "Неправильно составлен отзыв!"
+
+    form = ReviewForm
+    context = {
+        "reviews": Review.objects.all(),
+        "count_rev": Review.objects.all().count(),
+        "form": form,
+        "error": error
+    }
+    return render(request, "shopapp/product_reviews.html", context=context)
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
 class SellerDetailView(DetailView):
