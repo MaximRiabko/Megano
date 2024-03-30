@@ -102,9 +102,6 @@
                             <a class="Tabs-link" href="#reviews">
                                 <span>Отзывы {{ count_rev }}</span>
                             </a>
-                            <a class="Tabs-link" href="#discount">
-                                <span>Скидка</span>
-                            </a>
                         </div>
                         <div class="Tabs-wrap">
                             <div class="Tabs-block" id="description">
@@ -304,7 +301,7 @@
                                                     </strong><span class="Comment-date">{{ review.created_reviews}}</span>
                                                 </div>
                                             </header>
-                                            <div class="Comment-content">{{ review.description }}
+                                            <div class="Comment-content">{{ review.content }}
                                             </div>
                                         </div>
                                     </div>
@@ -321,30 +318,7 @@
                                     <form class="form" action="#" method="post">
                                         {% csrf_token %}
                                         <div class="form-group">
-                                            {{ form.user }}
-                                            {{ form.description }}
-                                            <span>{{ error }}</span>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <button class="btn btn_muted" type="submit">Отправить отзыв
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="Tabs-block" id="discount">
-                                <header class="Section-header Section-header_product">
-                                    <h3 class="Section-title">Введите промокод для скидки на корзину:
-                                    </h3>
-                                </header>
-                                <div class="Tabs-addComment">
-                                    <form class="form" action="#" method="post">
-                                        {% csrf_token %}
-                                        <div class="form-group">
-                                            {{ form.user }}
-                                            {{ form.description }}
+                                            {{ form.content }}
                                             <span>{{ error }}</span>
                                         </div>
 

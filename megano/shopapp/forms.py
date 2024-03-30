@@ -8,11 +8,11 @@ class ReviewForm(ModelForm):
     class Meta:
         model = Review
         fields = [
-            'description',
+            'content',
         ]
 
         widgets = {
-            'description': Textarea(attrs={
+            'content': Textarea(attrs={
                 'class': 'form-textarea',
                 'id': 'reviwed',
                 'name': 'reviwed',
