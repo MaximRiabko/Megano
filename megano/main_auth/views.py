@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.auth import logout
 
 class Login(LoginView):
@@ -51,3 +51,6 @@ class Reset_Password_Done(PasswordResetDoneView):
 
 class Reset_Password_Confirm(PasswordResetConfirmView):
     template_name = 'e-mail-confirm.html'
+
+class Reset_Password_Complete(PasswordResetCompleteView):
+    template_name = 'e-mail-complete.html'
