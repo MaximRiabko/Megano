@@ -63,6 +63,12 @@ class ProductSeller(models.Model):
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     quantity = models.SmallIntegerField(default=0)
+    sale = models.IntegerField(blank=True, default=0)
+
+    def get_sale(self):
+        """Функция рассчитывает стоимость со скидкой"""
+        price = int(self.price * (100 - self.sale) / 100)
+        return price
 
 
 class ViewHistory(models.Model):
@@ -89,6 +95,14 @@ class Discount(models.Model):
     is_group = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     type = models.CharField(max_length=255)
+
+
+class Review(models.Model):
+    """Модель Review представляет отзывы на продукт"""
+    author = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT)
+    content = models.TextField(null=False, blank=True)
+    created_reviews = models.DateTimeField(auto_now_add=True)
 
 
 def avatar_directory_path(instance: "Profile", filename: str) -> str:

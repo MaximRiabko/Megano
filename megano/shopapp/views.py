@@ -9,7 +9,7 @@ from django.views.decorators.cache import cache_page
 from django.contrib.auth.models import User
 from django.views.generic import DetailView, ListView, UpdateView, TemplateView
 
-from .models import Seller, Discount, ViewHistory, Profile
+from .models import Seller, Discount, ViewHistory, Profile, Review
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")

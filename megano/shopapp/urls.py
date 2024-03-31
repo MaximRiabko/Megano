@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 
-from .views import SellerDetailView, DiscountListView, AccountDetailView
+from .views import (
+    SellerDetailView,
+    DiscountListView,
+    AccountDetailView,
+)
 from django.conf import settings
 
 appname = "shopapp"
