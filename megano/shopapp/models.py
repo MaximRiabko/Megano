@@ -89,3 +89,21 @@ class Discount(models.Model):
     is_group = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     type = models.CharField(max_length=255)
+
+
+def avatar_directory_path(instance: "Profile", filename: str) -> str:
+    return "users/user_{pk}/avatar/{filename}".format(
+        pk=instance.pk,
+        filename=filename
+    )
+
+
+class Profile(models.Model):
+    """
+    Модель Profile представляет профиль пользователя
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(null=True, blank=True, upload_to=avatar_directory_path)
+    phone = models.IntegerField()
+    middle_name = models.CharField(max_length=255)
+    seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
