@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Seller(models.Model):
@@ -99,6 +99,7 @@ class Discount(models.Model):
 
 class Review(models.Model):
     """Модель Review представляет отзывы на продукт"""
+
     author = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT)
     content = models.TextField(null=False, blank=True)
@@ -106,16 +107,14 @@ class Review(models.Model):
 
 
 def avatar_directory_path(instance: "Profile", filename: str) -> str:
-    return "users/user_{pk}/avatar/{filename}".format(
-        pk=instance.pk,
-        filename=filename
-    )
+    return "users/user_{pk}/avatar/{filename}".format(pk=instance.pk, filename=filename)
 
 
 class Profile(models.Model):
     """
     Модель Profile представляет профиль пользователя
     """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True, upload_to=avatar_directory_path)
     phone = models.IntegerField()

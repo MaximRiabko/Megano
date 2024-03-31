@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
+
 from shopapp.models import ProductSeller
 
 
@@ -24,7 +25,7 @@ class Cart(object):
         if product_seller_id not in self.cart:
             self.cart[product_seller_id] = {
                 "quantity": 0,
-                "price": str(product_seller.price)
+                "price": str(product_seller.price),
             }
         if update_quantity:
             self.cart[product_seller]["quantity"] = quantity
@@ -51,9 +52,9 @@ class Cart(object):
         """
         Перебор элементов в корзине и получение продуктов из базы данных.
         """
-        product_seller_ids  = self.cart.keys()
+        product_seller_ids = self.cart.keys()
         # получение объектов product и добавление их в корзину
-        product_sellers = ProductSeller.objects.filter(id__in=product_seller_ids )
+        product_sellers = ProductSeller.objects.filter(id__in=product_seller_ids)
         for product_seller in product_sellers:
             self.cart[str(product_seller.id)]["product_seller"] = product_seller
 

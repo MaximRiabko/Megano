@@ -112,7 +112,6 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-
 ]
 
 # Default primary key field type
@@ -127,4 +126,4 @@ STATIC_ROOT = "staticfiles"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 # ключ для хранения корзины в сессии пользователя
-CART_SESSION_ID = 'cart'
+CART_SESSION_ID = "cart"
