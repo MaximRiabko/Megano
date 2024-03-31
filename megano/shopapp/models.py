@@ -103,7 +103,7 @@ class Review(models.Model):
     product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT)
     content = models.TextField(null=False, blank=True)
     created_reviews = models.DateTimeField(auto_now_add=True)
-=======
+
 
 def avatar_directory_path(instance: "Profile", filename: str) -> str:
     return "users/user_{pk}/avatar/{filename}".format(
