@@ -1,3 +1,10 @@
 from django.db import models
 
-# Create your models here.
+from shopapp.models import ProductSeller
+
+class Order(models.Model):
+    price = models.FloatField()
+    old_price = models.FloatField()
+    count = models.IntegerField()
+    product = models.ForeignKey(ProductSeller)
+
