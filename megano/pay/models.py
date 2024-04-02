@@ -16,9 +16,9 @@ class Order(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, related_name='users')
     city = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-    payment = models.CharField(choices=PaymentChoices.choices, default=PaymentChoices.CASH, max_length=2)
+    payment = models.CharField(choices=PaymentChoices.choices, default=PaymentChoices.CASH, max_length=100)
     payment_status = models.CharField(max_length=100)
-    delivery = models.CharField(choices=DeliveryChoices.choices, default=DeliveryChoices.PICKUP, max_length=2)
+    delivery = models.CharField(choices=DeliveryChoices.choices, default=DeliveryChoices.PICKUP, max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=200)
 
