@@ -48,7 +48,7 @@ ROOT_URLCONF = "megano.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["base_templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -105,6 +105,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -127,3 +128,5 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 # ключ для хранения корзины в сессии пользователя
 CART_SESSION_ID = "cart"
+
+LOGIN_REDIRECT_URL = "/index.html"
