@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.db.models import Count
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
@@ -10,6 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 
 from .models import Discount, Profile, Review, Seller, ViewHistory
+from pay.models import OrderItem
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -52,4 +54,14 @@ class AccountDetailView(DetailView):
                 three_viewed.append(product)
 
         context["three_viewed"] = three_viewed
+        return context
+
+
+class MainPageView(TemplateView):
+    template_name = "shopapp/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = OrderItem.objects.only("product").annotate(cnt=Count('product')).order_by("-cnt")[:8]
+        context['products'] = products
         return context
