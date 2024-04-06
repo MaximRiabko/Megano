@@ -9,7 +9,17 @@ from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 
-from .models import Discount, Profile, Review, Seller, ViewHistory
+from .models import Discount, Profile, Review, Seller, ViewHistory, Product
+from .forms import ReviewForm
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "shopapp/product_detail.html"
+    context_object_name = "product"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(*kwargs)
+
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
