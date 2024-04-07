@@ -45,7 +45,7 @@ class DiscountListView(ListView):
     template_name = "shopapp/discount_list.html"
 
 
-class AccountDetailView(DetailView):
+class AccountDetailView(UserPassesTestMixin, DetailView):
     def test_func(self):
         return self.request.user.is_authenticated
 
@@ -68,7 +68,7 @@ class AccountDetailView(DetailView):
         return context
 
 
-class ProfileUpdateView(TemplateView):
+class ProfileUpdateView(UserPassesTestMixin, TemplateView):
     def test_func(self):
         return self.request.user.is_authenticated
     template_name = 'shopapp/profile.html'
@@ -77,15 +77,14 @@ class ProfileUpdateView(TemplateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         context['user'] = user
-        print(user)
         return context
 
-    def post(self, request: HttpRequest, pk) -> HttpResponse:
+    def post(self, request: HttpRequest) -> HttpResponse:
         user = self.request.user
         if request.method == "POST":
             if request.FILES:
                 image = request.FILES['avatar']
-                fs = FileSystemStorage()
+                fs = FileSystemStorage(location=f"/uploads/users/user_{self.request.user.pk}/avatar/{image.name}")
                 img_name = fs.save(image.name, image)
                 img_url = fs.url(img_name)
                 user.profile.avatar = img_url
