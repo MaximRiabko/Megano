@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from .views import AccountDetailView, DiscountListView, SellerDetailView, MainPageView
+from .views import AccountDetailView, DiscountListView, SellerDetailView, MainPageView, ProfileUpdateView
 
 appname = "shopapp"
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path("about/<int:pk>/", SellerDetailView.as_view(), name="seller_detail"),
     path("discounts/", DiscountListView.as_view(), name="discounts"),
     path("profile/<int:pk>/details/", AccountDetailView.as_view(), name="profile"),
+    path("profile/<int:pk>/details/profile.html/", ProfileUpdateView.as_view(), name="profile_update"),
 ]
 
 if settings.DEBUG:
