@@ -43,5 +43,5 @@ class OrderItem(models.Model):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        related_name="products",
+        related_name="order_items",
     )
