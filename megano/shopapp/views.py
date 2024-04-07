@@ -16,8 +16,9 @@ from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 
-from .models import Discount, Profile, Review, Seller, ViewHistory, ProductSeller
 from pay.models import OrderItem
+
+from .models import Discount, ProductSeller, Profile, Review, Seller, ViewHistory
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -99,6 +100,8 @@ class MainPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        top_order_products = ProductSeller.objects.annotate(cnt=Count('order_items')).order_by("-cnt")[:8]
-        context['top_order_products'] = top_order_products
+        top_order_products = ProductSeller.objects.annotate(
+            cnt=Count("order_items")
+        ).order_by("-cnt")[:8]
+        context["top_order_products"] = top_order_products
         return context
