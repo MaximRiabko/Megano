@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from .views import AccountDetailView, DiscountListView, SellerDetailView, MainPageView
+from .views import AccountDetailView, DiscountListView, MainPageView, SellerDetailView
 
 appname = "shopapp"
 
