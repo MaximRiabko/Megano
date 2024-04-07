@@ -11,6 +11,7 @@ from django.db.models import Count
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaulttags import url
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import cache_page
@@ -45,9 +46,12 @@ class DiscountListView(ListView):
 
 
 class AccountDetailView(DetailView):
-    model = Profile
+    def test_func(self):
+        return self.request.user.is_authenticated
+
     template_name = "shopapp/account.html"
     context_object_name = "profile"
+    model = Profile
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,19 +69,21 @@ class AccountDetailView(DetailView):
 
 
 class ProfileUpdateView(TemplateView):
+    def test_func(self):
+        return self.request.user.is_authenticated
     template_name = 'shopapp/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = User.objects.get(pk=kwargs['pk'])
+        user = self.request.user
         context['user'] = user
+        print(user)
         return context
 
     def post(self, request: HttpRequest, pk) -> HttpResponse:
-        user = User.objects.get(pk=pk)
-
+        user = self.request.user
         if request.method == "POST":
-            if request.FILES['avatar']:
+            if request.FILES:
                 image = request.FILES['avatar']
                 fs = FileSystemStorage()
                 img_name = fs.save(image.name, image)
