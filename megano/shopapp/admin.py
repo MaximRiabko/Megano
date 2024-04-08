@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Review, Seller, Profile
+from .models import Profile, Review, Seller
 
 admin.site.register(Seller)
 admin.site.register(Review)

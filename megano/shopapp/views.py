@@ -46,15 +46,14 @@ class DiscountListView(ListView):
 
 
 class AccountDetailView(UserPassesTestMixin, DetailView):
+    template_name = "shopapp/account.html"
+
     def test_func(self):
         return self.request.user.is_authenticated
 
-    template_name = "shopapp/account.html"
-    context_object_name = "profile"
-    model = Profile
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["profile"] = self.request.user.profile
         view_history = None
         view_history = ViewHistory.objects.prefetch_related("viewed_products").order_by(
             "-creation_date"
@@ -69,22 +68,25 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
 
 
 class ProfileUpdateView(UserPassesTestMixin, TemplateView):
+    template_name = "shopapp/profile.html"
+
     def test_func(self):
         return self.request.user.is_authenticated
-    template_name = 'shopapp/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        context['user'] = user
+        context["user"] = user
         return context
 
     def post(self, request: HttpRequest) -> HttpResponse:
         user = self.request.user
         if request.method == "POST":
             if request.FILES:
-                image = request.FILES['avatar']
-                fs = FileSystemStorage(location=f"/uploads/users/user_{self.request.user.pk}/avatar/{image.name}")
+                image = request.FILES["avatar"]
+                fs = FileSystemStorage(
+                    location=f"/uploads/users/user_{self.request.user.pk}/avatar/{image.name}"
+                )
                 img_name = fs.save(image.name, image)
                 img_url = fs.url(img_name)
                 user.profile.avatar = img_url
