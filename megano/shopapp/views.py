@@ -40,9 +40,21 @@ def get_top_products(seller):
     pass
 
 
+def get_discounted_product():
+    pass
+
+
 class DiscountListView(ListView):
     model = Discount
     template_name = "shopapp/discount_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        discounts = Discount.objects\
+            .only('name', 'description', 'date_start', 'date_end')\
+            .prefetch_related('products')
+        context["discounts"] = discounts
+        return context
 
 
 class AccountDetailView(UserPassesTestMixin, DetailView):
