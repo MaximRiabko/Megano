@@ -1,25 +1,14 @@
-from io import BytesIO
-
-from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.models import User
-from django.contrib.sites import requests
-from django.core.cache import cache
-from django.core.files import File
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.template.defaulttags import url
-from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.cache import cache_page
-from django.views.generic import DetailView, ListView, TemplateView, UpdateView
+from django.views.generic import DetailView, ListView, TemplateView
 
-from pay.models import OrderItem
-
-from .models import Discount, ProductSeller, Profile, Review, Seller, ViewHistory
+from .models import Discount, ProductSeller, Seller, ViewHistory
+from pay.models import Order, OrderItem
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -45,15 +34,24 @@ def get_discounted_product():
 
 
 class DiscountListView(ListView):
-    model = Discount
     template_name = "shopapp/discount_list.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self, **kwargs):
         discounts = Discount.objects\
             .only('name', 'description', 'date_start', 'date_end')\
             .prefetch_related('products')
-        context["discounts"] = discounts
+        return discounts
+
+
+class MainPageView(TemplateView):
+    template_name = "shopapp/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        top_order_products = ProductSeller.objects.annotate(
+            cnt=Count("order_items")
+        ).order_by("-cnt")[:8]
+        context["top_order_products"] = top_order_products
         return context
 
 
@@ -114,13 +112,17 @@ class ProfileUpdateView(UserPassesTestMixin, TemplateView):
         return redirect(request.path)
 
 
-class MainPageView(TemplateView):
-    template_name = "shopapp/index.html"
+class HistoryOrder(ListView):
+    """
+    This page displays all customer's orders
+    """
+    template_name = "shopapp/historyorder.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        top_order_products = ProductSeller.objects.annotate(
-            cnt=Count("order_items")
-        ).order_by("-cnt")[:8]
-        context["top_order_products"] = top_order_products
-        return context
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def get_queryset(self, **kwargs):
+        orders = Order.objects.filter(user__id__contains=self.request.user.pk)
+        print(orders)
+        return orders
+

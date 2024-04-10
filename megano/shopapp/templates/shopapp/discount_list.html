@@ -23,7 +23,7 @@
             <div class="Section">
                 <div class="wrap">
                     <div class="Cards Cards_blog">
-                        <div class="Card"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png" /></a>
+                        <div class="Card"><a class="Card-picture" href="#"><img src="{{ discount.image.url }}" alt="product.png" /></a>
                             <div class="Card-date">
                                 <strong class="Card-date-number">{{ discount.date_start.day }}
                                 </strong><span class="Card-date-month">{{ discount.date_start|date:"M" }}</span>
