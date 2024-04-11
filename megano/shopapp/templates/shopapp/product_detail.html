@@ -130,14 +130,16 @@
                                 </div>
                             </div>
                             <div class="Tabs-block" id="sellers">
+                                {% if product.product_seller.all %}
+                                {% for sellers in product.product_seller.all %}
                                 <div class="Section-content">
                                     <div class="Orders">
                                         <div class="Order Order_anons">
                                             <div class="Order-personal">
                                                 <div class="row">
                                                     <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
-                                                            Ситилинк
+                                                        <a class="Order-title" href="">
+                                                            {{ sellers.seller }}
                                                         </a>
                                                         <div class="ProductCard-cartElement" style="margin-top: 10px;">
                                                             <a class="btn btn_primary" href="#modal_open">
@@ -162,81 +164,7 @@
                                                         <div class="Order-info">
                                                             <div class="Order-infoType">Стоимость:
                                                             </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">200.99$</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="Order Order_anons">
-                                            <div class="Order-personal">
-                                                <div class="row">
-                                                    <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
-                                                            ДНС
-                                                        </a>
-                                                        <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                                                            <a class="btn btn_primary" href="#modal_open">
-                                                                <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
-                                                                <span class="btn-content">Купить</span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-block">
-                                                        <div class="Order-info Order-info_delivery">
-                                                            <div class="Order-infoType">Тип доставки:
-                                                            </div>
-                                                            <div class="Order-infoContent">Обычная доставка
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info Order-info_pay">
-                                                            <div class="Order-infoType">Оплата:
-                                                            </div>
-                                                            <div class="Order-infoContent">Онлайн картой
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info">
-                                                            <div class="Order-infoType">Стоимость:
-                                                            </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">100.99$</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="Order Order_anons">
-                                            <div class="Order-personal">
-                                                <div class="row">
-                                                    <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
-                                                            Эльдорадо
-                                                        </a>
-                                                        <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                                                            <a class="btn btn_primary" href="#modal_open">
-                                                                <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
-                                                                <span class="btn-content">Купить</span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-block">
-                                                        <div class="Order-info Order-info_delivery">
-                                                            <div class="Order-infoType">Тип доставки:
-                                                            </div>
-                                                            <div class="Order-infoContent">Обычная доставка
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info Order-info_pay">
-                                                            <div class="Order-infoType">Оплата:
-                                                            </div>
-                                                            <div class="Order-infoContent">Онлайн картой
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info">
-                                                            <div class="Order-infoType">Стоимость:
-                                                            </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">20.00$</span>
+                                                            <div class="Order-infoContent"><span class="Order-price">{{ sellers.price }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -245,6 +173,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endfor %}
+                                {% else %}
+                                    <h1>Этот товар пока никто не продаёт 😞</h1>
+                                {% endif %}
                             </div>
                             <div class="Tabs-block" id="addit">
                                 <div class="Product-props">
@@ -293,7 +225,7 @@
                                 </div>
                                 {% endfor %}
                                 {% else %}
-                                    <h1>Этот товар пока без отзывов!</h1>
+                                    <h1>Этот товар пока без отзывов! ☹️</h1>
                                 {% endif %}
                                 <header class="Section-header Section-header_product">
                                     <h3 class="Section-title">Добавить отзыв

@@ -12,6 +12,9 @@ class Seller(models.Model):
     address = models.CharField(max_length=255)
     email = models.EmailField()
 
+    def __str__(self):
+        return self.name
+
 
 def seller_image_directory_path(instance: "Seller", filename: str) -> str:
     return "sellers/seller_{pk}/image/{filename}".format(
@@ -59,11 +62,12 @@ class ProductSeller(models.Model):
     Модель ProductSeller представляет продукт с его ценой от продавца
     """
 
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="product_seller")
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     quantity = models.SmallIntegerField(default=0)
     sale = models.IntegerField(blank=True, default=0)
+
 
     def get_sale(self):
         """Функция рассчитывает стоимость со скидкой"""
