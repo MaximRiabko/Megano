@@ -101,7 +101,7 @@ class Review(models.Model):
     """Модель Review представляет отзывы на продукт"""
 
     author = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, related_name="reviews_product")
     content = models.TextField(null=False, blank=True)
     created_reviews = models.DateTimeField(auto_now_add=True)
 

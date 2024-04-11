@@ -26,12 +26,7 @@
                             </div>
                             <div class="ProductCard-text">
                                 <ul>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, eiusmod
-                                    </li>
-                                    <li>tempor incididunt ut labore et dolore magna aliqua. Lorem
-                                    </li>
-                                    <li>ipsum dolor sit ameabore et dolore magna aliqua. Lorem ipsum
-                                    </li>
+                                    <li>{{ product.description}}</li>
                                 </ul>
                             </div>
                             <div class="ProductCard-cart">
@@ -100,7 +95,7 @@
                                 <span>Характеристика</span>
                             </a>
                             <a class="Tabs-link" href="#reviews">
-                                <span>Отзывы {{ count_rev }}</span>
+                                <span>Отзывы {{product.reviews_product.all.count}}</span>
                             </a>
                         </div>
                         <div class="Tabs-wrap">
@@ -112,17 +107,7 @@
                                     </strong>&#32;elit doli. Aenean commodo ligula eget dolor. Aenean massa.&#32;<a href="#">Cumtipsu</a>&#32;sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
                                 </p><img class="pict pict_right" src="{% static "assets/img/content/home/bigGoods.png" %}" alt="bigGoods.png" />
                                 <ul>
-                                    <li>Lorem ipsum dolor sit amet, consectetuer
-                                    </li>
-                                    <li>adipiscing elit doli.&#32;<em>Aenean</em>&#32;commodo ligula
-                                    </li>
-                                    <li>eget dolor. Aenean massa. Cumtipsu sociis
-                                    </li>
-                                    <li>natoque penatibus et magnis dis parturient
-                                    </li>
-                                    <li>montesti, nascetur ridiculus mus. Donec
-                                    </li>
-                                    <li>quam felis, ultricies nec, pellentesque eutu
+                                    <li>{{ product.description }}
                                     </li>
                                 </ul>
                                 <div class="clearfix">
@@ -283,11 +268,11 @@
                             </div>
                             <div class="Tabs-block" id="reviews">
                                 <header class="Section-header">
-                                    <h3 class="Section-title">{{ count_rev }} отзыв(ов)
+                                    <h3 class="Section-title">{{product.reviews_product.all.count}} отзыв(ов)
                                     </h3>
                                 </header>
-                                {% if reviews %}
-                                {% for review in reviews %}
+                                {% if product.reviews_product.all %}
+                                {% for item in product.reviews_product.all %}
                                 <div class="Comments">
                                     <div class="Comment">
                                         <div class="Comment-column Comment-column_pict">
@@ -297,11 +282,11 @@
                                         <div class="Comment-column">
                                             <header class="Comment-header">
                                                 <div>
-                                                    <strong class="Comment-title">{{ user.username }}
-                                                    </strong><span class="Comment-date">{{ review.created_reviews}}</span>
+                                                    <strong class="Comment-title">{{ item.author }}
+                                                    </strong><span class="Comment-date">{{ item.created_reviews }}</span>
                                                 </div>
                                             </header>
-                                            <div class="Comment-content">{{ review.content }}
+                                            <div class="Comment-content">{{ item.content }}
                                             </div>
                                         </div>
                                     </div>
@@ -315,11 +300,10 @@
                                     </h3>
                                 </header>
                                 <div class="Tabs-addComment">
-                                    <form class="form" action="#" method="post">
+                                    <form class="form" action="" method="post">
                                         {% csrf_token %}
                                         <div class="form-group">
-                                            {{ form.content }}
-                                            <span>{{ error }}</span>
+                                            {{ form.as_p }}
                                         </div>
 
                                         <div class="form-group">

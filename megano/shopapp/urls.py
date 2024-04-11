@@ -10,7 +10,7 @@ from .views import (
     ProductDetailView,
 )
 
-appname = "shopapp"
+app_name = "shopapp"
 
 urlpatterns = [
     path("about/<int:pk>/", SellerDetailView.as_view(), name="seller_detail"),
