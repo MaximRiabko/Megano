@@ -34,7 +34,11 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
-        Order, null=True, blank=True, on_delete=models.CASCADE, related_name="order_items"
+        Order,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="order_items",
     )
     price = models.FloatField()
     old_price = models.FloatField()

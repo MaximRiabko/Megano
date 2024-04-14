@@ -5,9 +5,11 @@ from django.urls import path
 from .views import (
     AccountDetailView,
     DiscountListView,
+    HistoryOrder,
     MainPageView,
+    OrderDetailView,
     ProfileUpdateView,
-    SellerDetailView, HistoryOrder, OrderDetailView,
+    SellerDetailView,
 )
 
 app_name = "shopapp"
@@ -19,7 +21,11 @@ urlpatterns = [
     path("profile/details/", AccountDetailView.as_view(), name="profile"),
     path("profile/details/update/", ProfileUpdateView.as_view(), name="profile_update"),
     path("profile/order/history/", HistoryOrder.as_view(), name="history_order"),
-    path("profile/order/history/<int:pk>", OrderDetailView.as_view(), name="order_details"),
+    path(
+        "profile/order/history/<int:pk>",
+        OrderDetailView.as_view(),
+        name="order_details",
+    ),
 ]
 
 if settings.DEBUG:
