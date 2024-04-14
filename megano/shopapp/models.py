@@ -76,9 +76,17 @@ class ViewHistory(models.Model):
     Модель ViewHistory представляет историю просмотренных продуктов
     """
 
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="view_history"
+    )
     creation_date = models.DateTimeField(auto_now_add=True)
-    viewed_products = models.ManyToManyField(Product)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="view_historys",
+    )
 
 
 def discount_img_directory_path(instance: "Discount", filename: str) -> str:
