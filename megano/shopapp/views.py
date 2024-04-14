@@ -1,25 +1,15 @@
-from io import BytesIO
-
-from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.models import User
-from django.contrib.sites import requests
-from django.core.cache import cache
-from django.core.files import File
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.template.defaulttags import url
-from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.cache import cache_page
-from django.views.generic import DetailView, ListView, TemplateView, UpdateView
+from django.views.generic import DetailView, ListView, TemplateView
+from django.contrib.auth.models import User
 
-from pay.models import OrderItem
-
-from .models import Discount, ProductSeller, Profile, Review, Seller, ViewHistory
+from .models import Discount, ProductSeller, Seller, ViewHistory
+from pay.models import Order, OrderItem
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -40,9 +30,30 @@ def get_top_products(seller):
     pass
 
 
+def get_discounted_product():
+    pass
+
+
 class DiscountListView(ListView):
-    model = Discount
     template_name = "shopapp/discount_list.html"
+
+    def get_queryset(self, **kwargs):
+        discounts = Discount.objects\
+            .only('name', 'description', 'date_start', 'date_end')\
+            .prefetch_related('products')
+        return discounts
+
+
+class MainPageView(TemplateView):
+    template_name = "shopapp/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        top_order_products = ProductSeller.objects.annotate(
+            cnt=Count("order_items")
+        ).order_by("-cnt")[:8]
+        context["top_order_products"] = top_order_products
+        return context
 
 
 class AccountDetailView(UserPassesTestMixin, DetailView):
@@ -102,13 +113,36 @@ class ProfileUpdateView(UserPassesTestMixin, TemplateView):
         return redirect(request.path)
 
 
-class MainPageView(TemplateView):
-    template_name = "shopapp/index.html"
+class HistoryOrder(ListView):
+    """
+    This page displays all customer's orders
+    """
+    model = Order
+    template_name = "shopapp/historyorder.html"
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        history_orders = self.request.user.orders.order_by('-created_at')
+        for order in history_orders:
+            context[order] = order.order_items.only('price').aggregate(Sum('price'))
+            context[order] = context[order]['price__sum']
+        return {'history_orders': context}
+
+
+class OrderDetailView(DetailView):
+    """
+    This page displays the details of the chosen order
+    """
+    model = Order
+    template_name = "shopapp/oneorder.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        top_order_products = ProductSeller.objects.annotate(
-            cnt=Count("order_items")
-        ).order_by("-cnt")[:8]
-        context["top_order_products"] = top_order_products
+        user = self.request.user
+        context["user"] = user
+        context["items"] = self.object.order_items.prefetch_related("product").all()
+        context.update(self.object.order_items.only('price').aggregate(Sum('price')))
         return context
