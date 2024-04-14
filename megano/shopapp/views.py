@@ -1,11 +1,12 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView, TemplateView
+from django.contrib.auth.models import User
 
 from .models import Discount, ProductSeller, Seller, ViewHistory
 from pay.models import Order, OrderItem
@@ -116,13 +117,32 @@ class HistoryOrder(ListView):
     """
     This page displays all customer's orders
     """
+    model = Order
     template_name = "shopapp/historyorder.html"
 
     def test_func(self):
         return self.request.user.is_authenticated
 
-    def get_queryset(self, **kwargs):
-        orders = Order.objects.filter(user__id__contains=self.request.user.pk)
-        print(orders)
-        return orders
+    def get_context_data(self, **kwargs):
+        context = {}
+        history_orders = self.request.user.orders.order_by('-created_at')
+        for order in history_orders:
+            context[order] = order.order_items.only('price').aggregate(Sum('price'))
+            context[order] = context[order]['price__sum']
+        return {'history_orders': context}
 
+
+class OrderDetailView(DetailView):
+    """
+    This page displays the details of the chosen order
+    """
+    model = Order
+    template_name = "shopapp/oneorder.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["user"] = user
+        context["items"] = self.object.order_items.prefetch_related("product").all()
+        context.update(self.object.order_items.only('price').aggregate(Sum('price')))
+        return context
