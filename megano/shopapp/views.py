@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse
@@ -6,10 +7,10 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView, TemplateView
-from django.contrib.auth.models import User
+
+from pay.models import Order, OrderItem
 
 from .models import Discount, ProductSeller, Seller, ViewHistory
-from pay.models import Order, OrderItem
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -38,9 +39,9 @@ class DiscountListView(ListView):
     template_name = "shopapp/discount_list.html"
 
     def get_queryset(self, **kwargs):
-        discounts = Discount.objects\
-            .only('name', 'description', 'date_start', 'date_end')\
-            .prefetch_related('products')
+        discounts = Discount.objects.only(
+            "name", "description", "date_start", "date_end"
+        ).prefetch_related("products")
         return discounts
 
 
@@ -117,6 +118,7 @@ class HistoryOrder(ListView):
     """
     This page displays all customer's orders
     """
+
     model = Order
     template_name = "shopapp/historyorder.html"
 
@@ -125,17 +127,18 @@ class HistoryOrder(ListView):
 
     def get_context_data(self, **kwargs):
         context = {}
-        history_orders = self.request.user.orders.order_by('-created_at')
+        history_orders = self.request.user.orders.order_by("-created_at")
         for order in history_orders:
-            context[order] = order.order_items.only('price').aggregate(Sum('price'))
-            context[order] = context[order]['price__sum']
-        return {'history_orders': context}
+            context[order] = order.order_items.only("price").aggregate(Sum("price"))
+            context[order] = context[order]["price__sum"]
+        return {"history_orders": context}
 
 
 class OrderDetailView(DetailView):
     """
     This page displays the details of the chosen order
     """
+
     model = Order
     template_name = "shopapp/oneorder.html"
 
@@ -144,5 +147,5 @@ class OrderDetailView(DetailView):
         user = self.request.user
         context["user"] = user
         context["items"] = self.object.order_items.prefetch_related("product").all()
-        context.update(self.object.order_items.only('price').aggregate(Sum('price')))
+        context.update(self.object.order_items.only("price").aggregate(Sum("price")))
         return context
