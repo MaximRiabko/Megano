@@ -1,15 +1,15 @@
-from django.conf import settings
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.models import User
-from django.core.cache import cache
-from django.http import HttpRequest
-from django.shortcuts import get_object_or_404, redirect, render
+import json
+
+from django.http import HttpResponse, JsonResponse
+
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 
-from .models import Discount, Profile, Review, Seller, ViewHistory
+
+from .comparison import Comparison
+from .models import Discount, Profile, Seller, ViewHistory, Product, ProductSeller
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -53,3 +53,32 @@ class AccountDetailView(DetailView):
 
         context["three_viewed"] = three_viewed
         return context
+
+#
+# def compare_view(request):
+#     products = Comparison(request)  # Получаем товары для сравнения из сессии
+#     return render(request, 'shopapp/comparison.html', {'products': products})
+#
+
+
+class CompareView(TemplateView):
+    template_name = 'shopapp/comparison.html'
+    def get_context_data(self, **kwargs):
+        context = super(CompareView, self).get_context_data(**kwargs)
+        context['products'] = Comparison(self.request)
+        return context
+
+@csrf_exempt
+def compare_manager(request):
+    body_data = json.loads(request.body)
+    pk = body_data['product_pk']
+
+    if request.method == 'POST':
+        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
+        Comparison(request).add(product)
+        return JsonResponse({'status': 'ok'})
+
+    if request.method == "DELETE":
+        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
+        Comparison(request).remove(product)
+        return JsonResponse({'status': 'ok'})
