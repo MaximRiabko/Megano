@@ -16,7 +16,7 @@ class DeliveryChoices(models.TextChoices):
 
 class Order(models.Model):
     user = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.PROTECT, related_name="users"
+        User, null=True, blank=True, on_delete=models.PROTECT, related_name="orders"
     )
     city = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
@@ -29,11 +29,16 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=200)
+    reference_num = models.CharField(max_length=100)
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
-        Order, null=True, blank=True, on_delete=models.CASCADE, related_name="orders"
+        Order,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="order_items",
     )
     price = models.FloatField()
     old_price = models.FloatField()

@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.views.generic import View
 
 
 def payment_card(request):
