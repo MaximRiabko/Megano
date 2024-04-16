@@ -26,9 +26,9 @@ def remove_cart(request, product_seller_id):
     cart.remove(product_seller=product_seller)
     return redirect('cart:cart_detail')
 
-def cart_detail(request, product_seller_id):
+def cart_detail(request):
     cart = Cart(request)
     context = {
         "cart": cart,
     }
-    return render(request, 'cart/detail.html',context=context)
+    return render(request, 'cart/cart_detail.html', context=context)
