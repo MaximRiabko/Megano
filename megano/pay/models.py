@@ -14,6 +14,11 @@ class DeliveryChoices(models.TextChoices):
     COURIER = ("courier", "Courier")
 
 
+class PaymentStatus(models.TextChoices):
+    PAID = ("paid", "Paid")
+    CANCELLED = ("cancelled", "Cancelled")
+
+
 class Order(models.Model):
     user = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.PROTECT, related_name="orders"
@@ -23,7 +28,8 @@ class Order(models.Model):
     payment = models.CharField(
         choices=PaymentChoices.choices, default=PaymentChoices.CASH, max_length=100
     )
-    payment_status = models.CharField(max_length=100)
+    payment_status = models.CharField(
+        choices=PaymentStatus.choices, default=PaymentStatus.CANCELLED, max_length=100)
     delivery = models.CharField(
         choices=DeliveryChoices.choices, default=DeliveryChoices.PICKUP, max_length=100
     )
