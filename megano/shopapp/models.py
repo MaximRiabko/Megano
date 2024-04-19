@@ -90,9 +90,12 @@ class ViewHistory(models.Model):
 
 
 def discount_img_directory_path(instance: "Discount", filename: str) -> str:
-    return "discounts/discount_{pk}/image/{filename}".format(
-        pk=instance.pk, filename=filename
-    )
+    return "discounts/discount_{pk}/image/{filename}".format(pk=instance.pk, filename=filename)
+
+
+class DiscountTypeChoices(models.TextChoices):
+    PERCENT = ("%", "%")
+    RUBLES = ("RUB", "RUB")
 
 
 class Discount(models.Model):
@@ -108,10 +111,10 @@ class Discount(models.Model):
     promocode = models.CharField(max_length=255)
     is_group = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
-    type = models.CharField(max_length=255)
-    image = models.ImageField(
-        null=True, blank=True, upload_to=discount_img_directory_path
+    type = models.CharField(
+        choices=DiscountTypeChoices.choices, default=DiscountTypeChoices.PERCENT, max_length=100
     )
+    image = models.ImageField(null=True, blank=True, upload_to=discount_img_directory_path)
 
 
 class Review(models.Model):
