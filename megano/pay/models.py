@@ -29,7 +29,8 @@ class Order(models.Model):
         choices=PaymentChoices.choices, default=PaymentChoices.CASH, max_length=100
     )
     payment_status = models.CharField(
-        choices=PaymentStatus.choices, default=PaymentStatus.CANCELLED, max_length=100)
+        choices=PaymentStatus.choices, default=PaymentStatus.CANCELLED, max_length=100
+    )
     delivery = models.CharField(
         choices=DeliveryChoices.choices, default=DeliveryChoices.PICKUP, max_length=100
     )
