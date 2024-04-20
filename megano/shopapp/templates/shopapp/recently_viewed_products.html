@@ -1,0 +1,7 @@
+{% extends 'shopapp/base_main.html' %}
+{% load static %}
+{% block middle %}
+    {% for recent_products in recently_viewed_products %}
+        {{ product.name }}
+    {% endfor %}
+{% endblock %}

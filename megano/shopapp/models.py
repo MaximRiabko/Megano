@@ -6,7 +6,7 @@ class Seller(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     image = models.ImageField(
-        upload_to="seller_image_directory_path", blank=True, null=True
+        upload_to="seller_свimage_directory_path", blank=True, null=True
     )
     phone = models.IntegerField()
     address = models.CharField(max_length=255)

@@ -26,7 +26,7 @@
                             </div>
                             <div class="ProductCard-text">
                                 <ul>
-                                    <li>{{ product.description}}</li>
+                                    <li>{{ product.description|truncatewords:45}}</li>
                                 </ul>
                             </div>
                             <div class="ProductCard-cart">
@@ -138,7 +138,7 @@
                                             <div class="Order-personal">
                                                 <div class="row">
                                                     <div class="row-block">
-                                                        <a class="Order-title" href="">
+                                                        <a class="Order-title" href="{% url 'shopapp:seller_detail' pk=sellers.pk %}">
                                                             {{ sellers.seller }}
                                                         </a>
                                                         <div class="ProductCard-cartElement" style="margin-top: 10px;">
@@ -218,8 +218,7 @@
                                                     </strong><span class="Comment-date">{{ item.created_reviews }}</span>
                                                 </div>
                                             </header>
-                                            <div class="Comment-content">{{ item.content }}
-                                            </div>
+                                            <div class="Comment-content">{{ item.content }}</div>
                                         </div>
                                     </div>
                                 </div>

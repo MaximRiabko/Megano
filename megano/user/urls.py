@@ -18,6 +18,8 @@ from .views import (
     register,
 )
 
+app_name = "auth"
+
 urlpatterns = [
     path("", Login.as_view(), name="login"),
     path("logout/", logout_view, name="logout"),

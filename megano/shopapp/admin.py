@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Review, Seller, Product, ProductSeller
+from .models import Review, Seller, Product, ProductSeller, ProductImage
 
 class SellerAdmin(admin.ModelAdmin):
     list_display = "pk", "name", "description", "image", "phone", "address", "email"
@@ -14,3 +14,4 @@ admin.site.register(Seller, SellerAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Product)
 admin.site.register(ProductSeller)
+admin.site.register(ProductImage)

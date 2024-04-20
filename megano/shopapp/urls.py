@@ -8,6 +8,7 @@ from .views import (
     DiscountListView,
     SellerDetailView,
     ProductDetailView,
+    viewed_products_recently,
 )
 
 app_name = "shopapp"
@@ -16,6 +17,7 @@ urlpatterns = [
     path("about/<int:pk>/", SellerDetailView.as_view(), name="seller_detail"),
     path("discounts/", DiscountListView.as_view(), name="discounts"),
     path("products/<int:pk>", ProductDetailView.as_view(), name="product"),
+    path("recently_products/", viewed_products_recently, name="recently_products"),
     path("profile/<int:pk>/details/", AccountDetailView.as_view(), name="profile"),
 ]
 
