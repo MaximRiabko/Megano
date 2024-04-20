@@ -54,6 +54,28 @@ class DiscountListView(ListView):
         return discounts
 
 
+class DiscountDetailView(DetailView):
+    model = Discount
+    template_name = "shopapp/discountdetails.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = []
+        for product in context['discount'].products.all():
+            price = ProductSeller.objects.only("price").get(product=product)
+            price = getattr(price, "price")
+            discounted_price = price
+            discount = context["discount"]
+            if discount.type == "%":
+                discounted_price = price - (price * discount.value / 100)
+            elif discount.type == "RUB":
+                discounted_price = price - discount.value
+            product.price = discounted_price
+            products.append(product)
+        context["products"] = products
+        return context
+
+
 class MainPageView(TemplateView):
     template_name = "shopapp/index.html"
 
@@ -67,7 +89,7 @@ class MainPageView(TemplateView):
 
 
 class AccountDetailView(UserPassesTestMixin, DetailView):
-    template_name = "shopapp/account.html"
+    template_name = "shopapp/discountdetails.html"
 
     def test_func(self):
         return self.request.user.is_authenticated
