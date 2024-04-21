@@ -35,7 +35,6 @@ class ProductImage(models.Model):
     """
     Модель ProductImage представляет изображение продукта.
     """
-
     image = models.ImageField(upload_to=product_images_directory_path)
     is_preview = models.BooleanField(default=False)
 
@@ -52,6 +51,9 @@ class Product(models.Model):
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
     category = models.ForeignKey(Categories, on_delete=models.PROTECT)
+
+    def __str__(self) -> str:
+        return f"Product(pk={self.pk}, name={self.name!r})"
 
 
 class ProductSeller(models.Model):
@@ -122,6 +124,9 @@ class Discount(models.Model):
     image = models.ImageField(
         null=True, blank=True, upload_to=discount_img_directory_path
     )
+
+    def __str__(self) -> str:
+        return f"Discount(pk={self.pk}, name={self.name!r})"
 
 
 class Review(models.Model):
