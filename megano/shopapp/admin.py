@@ -9,7 +9,7 @@ from .models import (
     Profile,
     Review,
     Seller,
-    ViewHistory
+    ViewHistory,
 )
 
 
@@ -22,14 +22,16 @@ class DiscountAdmin(admin.ModelAdmin):
     inlines = [
         DiscountInline,
     ]
-    list_display = "pk", \
-                   "name", \
-                   "description_short", \
-                   "date_start", \
-                   "date_end", \
-                   "promocode", \
-                   "value", \
-                   "type"
+    list_display = (
+        "pk",
+        "name",
+        "description_short",
+        "date_start",
+        "date_end",
+        "promocode",
+        "value",
+        "type",
+    )
     list_display_links = "pk", "name"
     ordering = ["pk"]
     search_fields = "name", "description"

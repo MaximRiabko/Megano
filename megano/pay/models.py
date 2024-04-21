@@ -22,6 +22,7 @@ class PaymentStatus(models.TextChoices):
 class Order(models.Model):
     class Meta:
         get_latest_by = "created_at"
+
     user = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.PROTECT, related_name="orders"
     )

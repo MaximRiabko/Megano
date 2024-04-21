@@ -1,9 +1,8 @@
-from django.utils import timezone
-
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from shopapp.models import ProductSeller, Discount
+from shopapp.models import Discount, ProductSeller
 
 from .cart import Cart
 from .forms import CartAddProductForm, PromocodeApplyForm
@@ -37,4 +36,3 @@ def cart_detail(request):
         "cart": cart,
     }
     return render(request, "cart/cart_detail.html", context=context)
-

@@ -63,7 +63,7 @@ class DiscountDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         products = []
-        for product in context['discount'].products.all():
+        for product in context["discount"].products.all():
             price = ProductSeller.objects.only("price").get(product=product)
             price = getattr(price, "price")
             discounted_price = price
@@ -101,10 +101,14 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
         view_history = None
-        view_history = self.request.user.view_history.prefetch_related("product").order_by("-creation_date")[:3]
+        view_history = self.request.user.view_history.prefetch_related(
+            "product"
+        ).order_by("-creation_date")[:3]
         three_viewed = []
         for history in view_history:
-            history.product.price = ProductSeller.objects.only("price").get(product=history.product)
+            history.product.price = ProductSeller.objects.only("price").get(
+                product=history.product
+            )
             history.product.price = history.product.price.price
             three_viewed.append(history.product)
         context["three_viewed"] = three_viewed

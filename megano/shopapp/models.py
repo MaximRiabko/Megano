@@ -35,6 +35,7 @@ class ProductImage(models.Model):
     """
     Модель ProductImage представляет изображение продукта.
     """
+
     image = models.ImageField(upload_to=product_images_directory_path)
     is_preview = models.BooleanField(default=False)
 
