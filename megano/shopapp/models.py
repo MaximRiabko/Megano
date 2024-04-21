@@ -35,7 +35,6 @@ class ProductImage(models.Model):
     """
     Модель ProductImage представляет изображение продукта.
     """
-
     image = models.ImageField(upload_to=product_images_directory_path)
     is_preview = models.BooleanField(default=False)
 
@@ -52,6 +51,9 @@ class Product(models.Model):
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
     category = models.ForeignKey(Categories, on_delete=models.PROTECT)
+
+    def __str__(self) -> str:
+        return f"Product(pk={self.pk}, name={self.name!r})"
 
 
 class ProductSeller(models.Model):
@@ -76,7 +78,7 @@ class ViewHistory(models.Model):
     Модель ViewHistory представляет историю просмотренных продуктов
     """
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="view_history"
     )
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -112,6 +114,7 @@ class Discount(models.Model):
     date_end = models.DateTimeField()
     promocode = models.CharField(max_length=255)
     is_group = models.BooleanField(default=False)
+    is_displayed = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     type = models.CharField(
         choices=DiscountTypeChoices.choices,
@@ -121,6 +124,9 @@ class Discount(models.Model):
     image = models.ImageField(
         null=True, blank=True, upload_to=discount_img_directory_path
     )
+
+    def __str__(self) -> str:
+        return f"Discount(pk={self.pk}, name={self.name!r})"
 
 
 class Review(models.Model):
