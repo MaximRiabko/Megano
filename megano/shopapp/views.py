@@ -91,7 +91,8 @@ class MainPageView(TemplateView):
 
 
 class AccountDetailView(UserPassesTestMixin, DetailView):
-    template_name = "shopapp/discountdetails.html"
+    model = User
+    template_name = "shopapp/account.html"
 
     def test_func(self):
         return self.request.user.is_authenticated
@@ -100,14 +101,12 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
         view_history = None
-        view_history = ViewHistory.objects.prefetch_related("viewed_products").order_by(
-            "-creation_date"
-        )[:3]
+        view_history = self.request.user.view_history.prefetch_related("product").order_by("-creation_date")[:3]
         three_viewed = []
         for history in view_history:
-            for product in history.viewed_products.all():
-                three_viewed.append(product)
-
+            history.product.price = ProductSeller.objects.only("price").get(product=history.product)
+            history.product.price = history.product.price.price
+            three_viewed.append(history.product)
         context["three_viewed"] = three_viewed
         return context
 
@@ -180,5 +179,23 @@ class OrderDetailView(DetailView):
         user = self.request.user
         context["user"] = user
         context["items"] = self.object.order_items.prefetch_related("product").all()
+        context.update(self.object.order_items.only("price").aggregate(Sum("price")))
+        return context
+
+
+class LastOrderDetailView(DetailView):
+    """
+    This page displays the details of the last user's order
+    """
+
+    model = Order
+    template_name = "shopapp/oneorder.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["user"] = user
+        order = Order.objects.latest()
+        context["items"] = order.order_items.prefetch_related("product")
         context.update(self.object.order_items.only("price").aggregate(Sum("price")))
         return context

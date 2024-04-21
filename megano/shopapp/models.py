@@ -78,7 +78,7 @@ class ViewHistory(models.Model):
     Модель ViewHistory представляет историю просмотренных продуктов
     """
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="view_history"
     )
     creation_date = models.DateTimeField(auto_now_add=True)

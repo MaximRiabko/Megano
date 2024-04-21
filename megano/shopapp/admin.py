@@ -9,6 +9,7 @@ from .models import (
     Profile,
     Review,
     Seller,
+    ViewHistory
 )
 
 
@@ -49,3 +50,4 @@ admin.site.register(Product)
 admin.site.register(ProductSeller)
 admin.site.register(ProductImage)
 admin.site.register(Categories)
+admin.site.register(ViewHistory)
