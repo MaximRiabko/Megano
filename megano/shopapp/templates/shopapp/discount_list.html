@@ -23,7 +23,9 @@
             <div class="Section">
                 <div class="wrap">
                     <div class="Cards Cards_blog">
+                        {% if discount.image.url %}
                         <div class="Card"><a class="Card-picture" href="#"><img src="{{ discount.image.url }}" alt="product.png" /></a>
+                            {% endif %}
                             <div class="Card-date">
                                 <strong class="Card-date-number">{{ discount.date_start.day }}
                                 </strong><span class="Card-date-month">{{ discount.date_start|date:"M" }}</span>
@@ -37,7 +39,7 @@
                             <div class="Card-pin">
                             </div>
                             <div class="Card-content">
-                                <strong class="Card-title"><a href="#">{{ discount.name }}</a>
+                                <strong class="Card-title"><a href="{% url 'shopapp:discount_details' pk=discount.pk%}">{{ discount.name }}</a>
                                 </strong>
                                 <div class="Card-description">{{ discount.description }}
                                 </div>

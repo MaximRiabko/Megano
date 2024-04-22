@@ -34,8 +34,19 @@ def get_top_products(seller):
     pass
 
 
-def get_discounted_product():
-    pass
+def get_discounted_product(product):
+    discount_product = Discount.objects.get(products=product)
+    if discount_product:
+        product_price = ProductSeller.objects.only("price").get(product=product)
+        product_price = getattr(product_price, "price")
+        discounted_price = product_price
+        if discount_product.type == "%":
+            discounted_price = product_price - (
+                product_price * discount_product.value / 100
+            )
+        elif discount_product.type == "RUB":
+            discounted_price = product_price - discount_product.value
+        return discounted_price
 
 
 class DiscountListView(ListView):
@@ -46,6 +57,28 @@ class DiscountListView(ListView):
             "name", "description", "date_start", "date_end"
         ).prefetch_related("products")
         return discounts
+
+
+class DiscountDetailView(DetailView):
+    model = Discount
+    template_name = "shopapp/discountdetails.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = []
+        for product in context["discount"].products.all():
+            price = ProductSeller.objects.only("price").get(product=product)
+            price = getattr(price, "price")
+            discounted_price = price
+            discount = context["discount"]
+            if discount.type == "%":
+                discounted_price = price - (price * discount.value / 100)
+            elif discount.type == "RUB":
+                discounted_price = price - discount.value
+            product.price = discounted_price
+            products.append(product)
+        context["products"] = products
+        return context
 
 
 class MainPageView(TemplateView):
@@ -61,6 +94,7 @@ class MainPageView(TemplateView):
 
 
 class AccountDetailView(UserPassesTestMixin, DetailView):
+    model = User
     template_name = "shopapp/account.html"
 
     def test_func(self):
@@ -70,14 +104,16 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
         view_history = None
-        view_history = ViewHistory.objects.prefetch_related("viewed_products").order_by(
-            "-creation_date"
-        )[:3]
+        view_history = self.request.user.view_history.prefetch_related(
+            "product"
+        ).order_by("-creation_date")[:3]
         three_viewed = []
         for history in view_history:
-            for product in history.viewed_products.all():
-                three_viewed.append(product)
-
+            history.product.price = ProductSeller.objects.only("price").get(
+                product=history.product
+            )
+            history.product.price = history.product.price.price
+            three_viewed.append(history.product)
         context["three_viewed"] = three_viewed
         return context
 
@@ -182,3 +218,21 @@ def catalog(request, pk):
     }
     return render(request, 'shopapp/catalog.html', context)
 
+
+
+class LastOrderDetailView(DetailView):
+    """
+    This page displays the details of the last user's order
+    """
+
+    model = Order
+    template_name = "shopapp/oneorder.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["user"] = user
+        order = Order.objects.latest()
+        context["items"] = order.order_items.prefetch_related("product")
+        context.update(self.object.order_items.only("price").aggregate(Sum("price")))
+        return context
