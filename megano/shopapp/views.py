@@ -1,16 +1,19 @@
+from datetime import timedelta
+
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView, TemplateView
 
 from pay.models import Order, OrderItem
 
-from .models import Discount, ProductSeller, Seller, ViewHistory
+from .models import Discount, ProductSeller, Seller, ViewHistory, Categories, Product
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -149,3 +152,33 @@ class OrderDetailView(DetailView):
         context["items"] = self.object.order_items.prefetch_related("product").all()
         context.update(self.object.order_items.only("price").aggregate(Sum("price")))
         return context
+
+
+class CategoriesView(ListView):
+    model = Categories
+    template_name = "shopapp/categories_list.html"
+    context_object_name = 'categories'
+
+
+def catalog(request, pk):
+    categories = Categories.objects.all()
+
+    if pk:
+        cache_key = f'catalog_{pk}'
+        products = cache.get(cache_key)
+        if not products:
+            products = Product.objects.filter(id=pk, archived=False)
+            cache.set(cache_key, products, timeout=86400)
+    else:
+        cache_key = 'catalog_all'
+        products = cache.get(cache_key)
+        if not products:
+            products = Product.objects.filter(archived=False)
+            cache.set(cache_key, products, timeout=86400)
+
+    context = {
+        'categories': categories,
+        'products': products,
+    }
+    return render(request, 'shopapp/catalog.html', context)
+

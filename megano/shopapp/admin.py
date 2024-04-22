@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.cache import cache
 
 from .models import (
     Categories,
@@ -19,3 +20,6 @@ admin.site.register(ProductSeller)
 admin.site.register(Discount)
 admin.site.register(ProductImage)
 admin.site.register(Categories)
+
+
+

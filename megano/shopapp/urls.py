@@ -10,6 +10,8 @@ from .views import (
     OrderDetailView,
     ProfileUpdateView,
     SellerDetailView,
+    CategoriesView,
+    catalog,
 )
 
 app_name = "shopapp"
@@ -26,6 +28,9 @@ urlpatterns = [
         OrderDetailView.as_view(),
         name="order_details",
     ),
+    path("categories/", CategoriesView.as_view(), name="categories_list"),
+    path("categories/products/<int:pk>", catalog, name="catalog"),
+
 ]
 
 if settings.DEBUG:
