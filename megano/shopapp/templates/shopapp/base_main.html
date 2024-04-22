@@ -147,20 +147,20 @@
                                         </div>
                                         <span class="CategoriesButton-text">{{ category.name }}</span>
                                     </a>
-                                </div>
                                 {% if category.subcategories.exists %}
                                 <a class="CategoriesButton-arrow" href="#"></a>
-                                <div class="CategoriesButton-submenu"><a class="CategoriesButton-link" href="#">
+                                <div class="CategoriesButton-submenu">
                                     {% for subcat in category.subcategories.all %}
-                                            <a class="CategoriesButton-link" href="{% url 'shopapp:catalog' pk=subcat.pk %}">
-                                                <div class="CategoriesButton-icon">
-                                                    <img src="{% static 'assets/img/icons/departments/1.svg' %}" alt="1.svg" />
-                                                </div>
-                                                <span class="CategoriesButton-text">{{ subcat.name }}</span>
-                                            </a>
+                                    <a class="CategoriesButton-link" href="{% url 'shopapp:catalog' pk=subcat.pk %}">
+                                        <div class="CategoriesButton-icon">
+                                            <img src="{% static 'assets/img/icons/departments/1.svg' %}" alt="1.svg" />
+                                        </div>
+                                        <span class="CategoriesButton-text">{{ subcat.name }}</span>
+                                    </a>
                                     {% endfor %}
                                 </div>
                                 {% endif %}
+                                </div>
                             {% endfor %}
                         </div>
 
