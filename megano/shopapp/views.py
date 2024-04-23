@@ -1,6 +1,8 @@
 import json
 
+from aiohttp.web_urldispatcher import View
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -68,17 +70,41 @@ class CompareView(TemplateView):
         context['products'] = Comparison(self.request)
         return context
 
-@csrf_exempt
-def compare_manager(request):
-    body_data = json.loads(request.body)
-    pk = body_data['product_pk']
 
-    if request.method == 'POST':
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CompareManager(TemplateView):
+    template_name = 'shopapp/comparison.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CompareManager, self).get_context_data(**kwargs)
+        products = tuple(product for product in Comparison(self.request))
+        similar = Comparison.get_similar(products)
+        for product in products:
+            product_id = product.get('id')
+            sim = similar.get(str(product_id))
+            product['similar'] = sim
+        context['products'] = products
+        return context
+
+    def post(self, request, *args, **kwargs):
+        body_data = json.loads(request.body)
+        pk = body_data['product_pk']
         product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
         Comparison(request).add(product)
         return JsonResponse({'status': 'ok'})
+        # return render(request, self.request.META.get("HTTP_REFERER"))
 
-    if request.method == "DELETE":
+    def delete(self, request, *args, **kwargs):
+        body_data = json.loads(request.body)
+        pk = body_data['product_pk']
         product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
         Comparison(request).remove(product)
         return JsonResponse({'status': 'ok'})
+        # return render(request, self.request.META.get('HTTP_REFERER'))
+
+
+
+

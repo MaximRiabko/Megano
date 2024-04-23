@@ -41,7 +41,6 @@ class Comparison(object):
         self.save()
 
 
-
     def save(self):
         # Обновление сессии compare
         self.session[settings.COMPARISON_SESSION_ID] = self.compare
@@ -58,12 +57,27 @@ class Comparison(object):
             self.save()
 
 
+
     def get_more_about_product(self, product_id):
         """
         Получить путь к img и другую информацию о продукте
         """
         img = ProductImage.objects.filter(product_id=product_id).select_related('product_images')
-        return
+        return img
+
+    @staticmethod
+    def get_similar(products: tuple) -> dict:
+        similar = {str(product.get('id')): [] for product in products}
+        for index_check in range(len(products) - 1):
+            check_details = products[index_check].get('details')
+            for curr_i in range(index_check + 1, len(products)):
+                curr_details = products[curr_i].get('details')
+                for detail, value in curr_details.items():
+                    if detail in check_details.keys():
+                        if curr_details.get(detail) == check_details.get(detail):
+                            similar[str(products[index_check].get('id'))].append(detail)
+                            similar[str(products[curr_i].get('id'))].append(detail)
+        return similar
 
 
     def __iter__(self):
