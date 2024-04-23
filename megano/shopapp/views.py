@@ -1,19 +1,17 @@
 import json
-
-
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Sum
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 from .comparison import Comparison
 from pay.models import Order
-
-from .models import Discount, ProductSeller, Seller, ViewHistory, Profile
+from django.contrib.auth.models import User
+from .models import Discount, ProductSeller, Seller
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -245,16 +243,14 @@ class CompareManager(TemplateView):
         pk = body_data['product_pk']
         product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
         Comparison(request).add(product)
-        return JsonResponse({'status': 'ok'})
-        # return render(request, self.request.META.get("HTTP_REFERER"))
+        return render(request, self.request.META.get("HTTP_REFERER"))
 
     def delete(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
         pk = body_data['product_pk']
         product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
         Comparison(request).remove(product)
-        return JsonResponse({'status': 'ok'})
-        # return render(request, self.request.META.get('HTTP_REFERER'))
+        return render(request, self.request.META.get('HTTP_REFERER'))
 
 
 
