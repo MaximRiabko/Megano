@@ -52,6 +52,7 @@ class Product(models.Model):
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
     category = models.ForeignKey(Categories, on_delete=models.PROTECT)
+    details = models.JSONField()
 
     def __str__(self) -> str:
         return f"Product(pk={self.pk}, name={self.name!r})"
