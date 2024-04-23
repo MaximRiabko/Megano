@@ -4,6 +4,8 @@ from django.urls import path
 
 from .views import (
     AccountDetailView,
+    CompareManager,
+    CompareView,
     DiscountDetailView,
     DiscountListView,
     HistoryOrder,
@@ -13,7 +15,6 @@ from .views import (
     ProfileUpdateView,
     SellerDetailView,
 )
-from .views import AccountDetailView, DiscountListView, SellerDetailView, CompareView, CompareManager
 
 appname = "shopapp"
 
@@ -22,8 +23,10 @@ urlpatterns = [
     path("about/<int:pk>/", SellerDetailView.as_view(), name="seller_detail"),
     path("discounts/", DiscountListView.as_view(), name="discounts"),
     path("profile/<int:pk>/details/", AccountDetailView.as_view(), name="profile"),
-    path('comparison/', CompareView.as_view(), name='compare'),
-    path('comparison/compare_manager/', CompareManager.as_view(), name='compare_manager'),
+    path("comparison/", CompareView.as_view(), name="compare"),
+    path(
+        "comparison/compare_manager/", CompareManager.as_view(), name="compare_manager"
+    ),
     path(
         "discounts/<int:pk>",
         DiscountDetailView.as_view(),

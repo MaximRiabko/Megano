@@ -1,5 +1,7 @@
 import json
+
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Sum
 from django.http import HttpRequest, HttpResponse, JsonResponse
@@ -8,9 +10,10 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
-from .comparison import Comparison
+
 from pay.models import Order
-from django.contrib.auth.models import User
+
+from .comparison import Comparison
 from .models import Discount, ProductSeller, Seller
 
 
@@ -205,6 +208,7 @@ class LastOrderDetailView(DetailView):
         context.update(self.object.order_items.only("price").aggregate(Sum("price")))
         return context
 
+
 #
 # def compare_view(request):
 #     products = Comparison(request)  # Получаем товары для сравнения из сессии
@@ -213,45 +217,47 @@ class LastOrderDetailView(DetailView):
 
 
 class CompareView(TemplateView):
-    template_name = 'shopapp/comparison.html'
+    template_name = "shopapp/comparison.html"
+
     def get_context_data(self, **kwargs):
         context = super(CompareView, self).get_context_data(**kwargs)
-        context['products'] = Comparison(self.request)
+        context["products"] = Comparison(self.request)
         return context
 
 
-
-
-
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class CompareManager(TemplateView):
-    template_name = 'shopapp/comparison.html'
+    template_name = "shopapp/comparison.html"
 
     def get_context_data(self, **kwargs):
         context = super(CompareManager, self).get_context_data(**kwargs)
         products = tuple(product for product in Comparison(self.request))
         similar = Comparison.get_similar(products)
         for product in products:
-            product_id = product.get('id')
+            product_id = product.get("id")
             sim = similar.get(str(product_id))
-            product['similar'] = sim
-        context['products'] = products
+            product["similar"] = sim
+        context["products"] = products
         return context
 
     def post(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        pk = body_data['product_pk']
-        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
+        pk = body_data["product_pk"]
+        product = (
+            ProductSeller.objects.filter(product_id=pk)
+            .prefetch_related("product")
+            .first()
+        )
         Comparison(request).add(product)
         return render(request, self.request.META.get("HTTP_REFERER"))
 
     def delete(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        pk = body_data['product_pk']
-        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
+        pk = body_data["product_pk"]
+        product = (
+            ProductSeller.objects.filter(product_id=pk)
+            .prefetch_related("product")
+            .first()
+        )
         Comparison(request).remove(product)
-        return render(request, self.request.META.get('HTTP_REFERER'))
-
-
-
-
+        return render(request, self.request.META.get("HTTP_REFERER"))

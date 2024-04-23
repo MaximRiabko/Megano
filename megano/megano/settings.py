@@ -132,4 +132,3 @@ CART_SESSION_ID = "cart"
 LOGIN_REDIRECT_URL = "/index.html"
 
 COMPARISON_SESSION_ID = "comparison"
-
