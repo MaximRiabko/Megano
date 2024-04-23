@@ -32,7 +32,6 @@ class Cart(object):
             self.cart[product_seller_id]["quantity"] = quantity
         else:
             self.cart[product_seller_id]["quantity"] += quantity
-        print('cart.py', self.cart)
         self.save()
 
     def save(self):
