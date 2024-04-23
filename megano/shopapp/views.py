@@ -31,21 +31,6 @@ def get_top_products(seller):
     pass
 
 
-def get_discounted_product(product):
-    discount_product = Discount.objects.get(products=product)
-    if discount_product:
-        product_price = ProductSeller.objects.only("price").get(product=product)
-        product_price = getattr(product_price, "price")
-        discounted_price = product_price
-        if discount_product.type == "%":
-            discounted_price = product_price - (
-                product_price * discount_product.value / 100
-            )
-        elif discount_product.type == "RUB":
-            discounted_price = product_price - discount_product.value
-        return discounted_price
-
-
 class DiscountListView(ListView):
     template_name = "shopapp/discount_list.html"
 
