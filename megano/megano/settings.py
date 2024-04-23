@@ -43,6 +43,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
+
 ROOT_URLCONF = "megano.urls"
 
 TEMPLATES = [
@@ -105,7 +107,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -126,9 +127,13 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "staticfiles"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "uploads"
+
 # ключ для хранения корзины в сессии пользователя
 CART_SESSION_ID = "cart"
 
 LOGIN_REDIRECT_URL = "/index.html"
 
 COMPARISON_SESSION_ID = "comparison"
+

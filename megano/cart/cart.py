@@ -26,6 +26,7 @@ class Cart(object):
             self.cart[product_seller_id] = {
                 "quantity": 0,
                 "price": str(product_seller.price),
+                "old_price": str(product_seller.price),
             }
         if update_quantity:
             self.cart[product_seller]["quantity"] = quantity
@@ -60,6 +61,7 @@ class Cart(object):
 
         for item in self.cart.values():
             item["price"] = Decimal(item["price"])
+            item["old_price"] = Decimal(item["old_price"])
             item["total_price"] = item["price"] * item["quantity"]
             yield item
 
