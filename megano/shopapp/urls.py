@@ -16,7 +16,7 @@ from .views import (
     SellerDetailView,
 )
 
-appname = "shopapp"
+app_name = "shopapp"
 
 urlpatterns = [
     path("", MainPageView.as_view(), name="index"),

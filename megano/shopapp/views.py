@@ -167,6 +167,9 @@ class OrderDetailView(DetailView):
     model = Order
     template_name = "shopapp/oneorder.html"
 
+    def test_func(self):
+        return self.request.user.is_authenticated
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -181,16 +184,15 @@ class LastOrderDetailView(DetailView):
     This page displays the details of the last user's order
     """
 
-    model = Order
+    model = User
     template_name = "shopapp/oneorder.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
-        context["user"] = user
         order = Order.objects.latest()
+        context["order"] = order
         context["items"] = order.order_items.prefetch_related("product")
-        context.update(self.object.order_items.only("price").aggregate(Sum("price")))
+        context.update(order.order_items.only("price").aggregate(Sum("price")))
         return context
 
 
