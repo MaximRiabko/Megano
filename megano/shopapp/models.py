@@ -58,6 +58,10 @@ class Product(models.Model):
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
     category = models.ForeignKey(Categories, on_delete=models.PROTECT, related_name="product_category")
+    details = models.JSONField()
+
+    def __str__(self) -> str:
+        return f"Product(pk={self.pk}, name={self.name!r})"
 
 
 class ProductSeller(models.Model):
@@ -83,9 +87,28 @@ class ViewHistory(models.Model):
     Модель ViewHistory представляет историю просмотренных продуктов
     """
 
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="view_history"
+    )
     creation_date = models.DateTimeField(auto_now_add=True)
-    viewed_products = models.ManyToManyField(Product)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="view_historys",
+    )
+
+
+def discount_img_directory_path(instance: "Discount", filename: str) -> str:
+    return "discounts/discount_{pk}/image/{filename}".format(
+        pk=instance.pk, filename=filename
+    )
+
+
+class DiscountTypeChoices(models.TextChoices):
+    PERCENT = ("%", "%")
+    RUBLES = ("RUB", "RUB")
 
 
 class Discount(models.Model):
@@ -100,8 +123,19 @@ class Discount(models.Model):
     date_end = models.DateTimeField()
     promocode = models.CharField(max_length=255)
     is_group = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
-    type = models.CharField(max_length=255)
+    type = models.CharField(
+        choices=DiscountTypeChoices.choices,
+        default=DiscountTypeChoices.PERCENT,
+        max_length=100,
+    )
+    image = models.ImageField(
+        null=True, blank=True, upload_to=discount_img_directory_path
+    )
+
+    def __str__(self) -> str:
+        return f"Discount(pk={self.pk}, name={self.name!r})"
 
 
 class Review(models.Model):
