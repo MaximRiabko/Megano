@@ -42,6 +42,7 @@ class ProductImage(models.Model):
     """
     Модель ProductImage представляет изображение продукта.
     """
+
     image = models.ImageField(upload_to=product_images_directory_path)
     is_preview = models.BooleanField(default=False)
 
@@ -57,7 +58,9 @@ class Product(models.Model):
     archived = models.BooleanField(default=False)
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
-    category = models.ForeignKey(Categories, on_delete=models.PROTECT, related_name="product_category")
+    category = models.ForeignKey(
+        Categories, on_delete=models.PROTECT, related_name="product_category"
+    )
     details = models.JSONField()
 
     def __str__(self) -> str:
@@ -69,12 +72,13 @@ class ProductSeller(models.Model):
     Модель ProductSeller представляет продукт с его ценой от продавца
     """
 
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="product_seller")
+    product = models.ForeignKey(
+        Product, on_delete=models.PROTECT, related_name="product_seller"
+    )
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     quantity = models.SmallIntegerField(default=0)
     sale = models.IntegerField(blank=True, default=0)
-
 
     def get_sale(self):
         """Функция рассчитывает стоимость со скидкой"""
@@ -142,7 +146,9 @@ class Review(models.Model):
     """Модель Review представляет отзывы на продукт"""
 
     author = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, related_name="reviews_product")
+    product = models.ForeignKey(
+        Product, null=True, on_delete=models.PROTECT, related_name="reviews_product"
+    )
     content = models.TextField(null=False, blank=True)
     created_reviews = models.DateTimeField(auto_now_add=True)
 

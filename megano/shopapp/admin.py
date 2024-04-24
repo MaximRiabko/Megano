@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 from .models import (
     Categories,
     Discount,
@@ -49,11 +48,14 @@ class DiscountAdmin(admin.ModelAdmin):
 class SellerAdmin(admin.ModelAdmin):
     list_display = "pk", "name", "description", "image", "phone", "address", "email"
 
+
 class ReviewAdmin(admin.ModelAdmin):
     list_display = "pk", "author", "product", "content", "created_reviews"
 
+
 class ProductAdmin(admin.ModelAdmin):
     list_display = "pk", "category"
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = "pk", "name"

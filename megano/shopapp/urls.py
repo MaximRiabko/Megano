@@ -4,18 +4,18 @@ from django.urls import path
 
 from .views import (
     AccountDetailView,
-    DiscountListView,
-    SellerDetailView,
-    ProductDetailView,
-    viewed_products_recently,
     CompareManager,
     CompareView,
     DiscountDetailView,
+    DiscountListView,
     HistoryOrder,
     LastOrderDetailView,
     MainPageView,
     OrderDetailView,
+    ProductDetailView,
     ProfileUpdateView,
+    SellerDetailView,
+    viewed_products_recently,
 )
 
 app_name = "shopapp"
