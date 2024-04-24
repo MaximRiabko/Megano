@@ -60,31 +60,6 @@ class ProductDetailView(
         return super().form_valid(form)
 
 
-def viewed_products_recently(request: HttpRequest, product_id):
-    """Функция для вывода просмотренных товаров"""
-    product = Product.object.get(pk=product_id)
-    recently_viewed_products = None
-    if "recently_viewed" in request.session:
-        if product_id in request.session["recently_viewed"]:
-            request.session["recently_viewed"].remove(product_id)
-
-            recently_viewed_products = Product.objects.filter(
-                pk__in=request.session["recently_viewed"]
-            )
-            request.session["recently_viewed"].insert(0, product_id)
-            if len(request.session["recently_viewed"]) > 5:
-                request.session["recently_viewed"].pop()
-    else:
-        request.session["recently_viewed"] = [product]
-
-    request.session.modified = True
-    context = {
-        "product": product,
-        "recently_viewed_products": recently_viewed_products,
-    }
-    return render(request, "shopapp/recently_viewed_products.html", context=context)
-
-
 @method_decorator(cache_page(60 * 60), name="dispatch")
 class SellerDetailView(DetailView):
     model = Seller
