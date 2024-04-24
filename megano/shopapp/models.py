@@ -116,7 +116,7 @@ class Discount(models.Model):
     date_end = models.DateTimeField()
     promocode = models.CharField(max_length=255)
     is_group = models.BooleanField(default=False)
-    is_displayed = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     type = models.CharField(
         choices=DiscountTypeChoices.choices,
