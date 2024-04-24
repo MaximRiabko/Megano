@@ -26,8 +26,8 @@
                 <div>
                     <input onclick="login()" type="submit" value="Войти"/>
                 </div>
-                <a class="forgot-label" href={% url "recovery_password" %}>Забыли пароль?</a>
-                <a class="registr" href={% url 'register' %}>Регистрация</a>
+                <a class="forgot-label" href="{% url 'auth:recovery_password' %}">Забыли пароль?</a>
+                <a class="registr" href="{% url 'auth:register' %}">Регистрация</a>
             </form>
         </div>
 

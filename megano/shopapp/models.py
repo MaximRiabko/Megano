@@ -6,7 +6,7 @@ class Seller(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     image = models.ImageField(
-        upload_to="seller_свimage_directory_path", blank=True, null=True
+        upload_to="seller_image_directory_path", blank=True, null=True
     )
     phone = models.IntegerField()
     address = models.CharField(max_length=255)
@@ -24,7 +24,11 @@ def seller_image_directory_path(instance: "Seller", filename: str) -> str:
 
 
 class Categories(models.Model):
-    pass
+    name = models.CharField(max_length=50, null=True, blank=True)
+    archived = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
@@ -38,7 +42,6 @@ class ProductImage(models.Model):
     """
     Модель ProductImage представляет изображение продукта.
     """
-
     image = models.ImageField(upload_to=product_images_directory_path)
     is_preview = models.BooleanField(default=False)
 
@@ -54,7 +57,7 @@ class Product(models.Model):
     archived = models.BooleanField(default=False)
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
-    category = models.ForeignKey(Categories, on_delete=models.PROTECT)
+    category = models.ForeignKey(Categories, on_delete=models.PROTECT, related_name="product_category")
 
 
 class ProductSeller(models.Model):

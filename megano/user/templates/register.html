@@ -1,4 +1,3 @@
-
 {% extends 'base_auth.html' %}
 <!DOCTYPE html>
 <html>
@@ -16,7 +15,7 @@
                 </div>
                 <div class="clear"></div>
 
-                <form action="{% url 'register' %}" method="post">
+                <form action="{% url 'auth:register' %}" method="post">
                     {% csrf_token %}
                     <div>
                         <input class="user-input" type="text" name="name" id="name" placeholder="Имя" />
@@ -31,7 +30,7 @@
                     <input onclick="register()" type="submit" value="Зарегистрироваться" />
 
 
-                    <a class="registr" href={% url "login" %}>
+                    <a class="registr" href="{% url 'auth:login' %}">
                         Вход
                     </a>
                     <div class="clear"></div>
