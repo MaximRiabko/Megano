@@ -115,8 +115,10 @@
                                     <strong class="Cart-title">Итого:<span class="Cart-price">{{ price__sum }}$</span>
                                     </strong>
                                 </div>
+                                {% if order.payment_status == "cancelled" %}
                                 <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay:payment'%}">Оплатить</a>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

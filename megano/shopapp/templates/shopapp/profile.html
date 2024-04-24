@@ -21,6 +21,9 @@
                                     <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'shopapp:profile_update'%}">Профиль</a>
                                     </li>
                                     <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:history_order'%}">История заказов</a>
+                                    </li>
+                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:last_order_details' pk=user.pk%}">Последний заказ</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
