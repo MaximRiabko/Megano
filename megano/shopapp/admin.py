@@ -45,11 +45,27 @@ class DiscountAdmin(admin.ModelAdmin):
         return Discount.objects.prefetch_related("products")
 
 
-admin.site.register(Seller)
-admin.site.register(Review)
-admin.site.register(Profile)
+class SellerAdmin(admin.ModelAdmin):
+    list_display = "pk", "name", "description", "image", "phone", "address", "email"
+
+
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = "pk", "author", "product", "content", "created_reviews"
+
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = "pk", "category"
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = "pk", "name"
+
+
+admin.site.register(Seller, SellerAdmin)
+admin.site.register(Review, ReviewAdmin)
 admin.site.register(Product)
 admin.site.register(ProductSeller)
 admin.site.register(ProductImage)
-admin.site.register(Categories)
+admin.site.register(Categories, CategoryAdmin)
+admin.site.register(Profile)
 admin.site.register(ViewHistory)

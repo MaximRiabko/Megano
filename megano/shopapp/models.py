@@ -12,6 +12,9 @@ class Seller(models.Model):
     address = models.CharField(max_length=255)
     email = models.EmailField()
 
+    def __str__(self):
+        return self.name
+
 
 def seller_image_directory_path(instance: "Seller", filename: str) -> str:
     return "sellers/seller_{pk}/image/{filename}".format(
@@ -21,7 +24,11 @@ def seller_image_directory_path(instance: "Seller", filename: str) -> str:
 
 
 class Categories(models.Model):
-    pass
+    name = models.CharField(max_length=50, null=True, blank=True)
+    archived = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
@@ -51,7 +58,9 @@ class Product(models.Model):
     archived = models.BooleanField(default=False)
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
-    category = models.ForeignKey(Categories, on_delete=models.PROTECT)
+    category = models.ForeignKey(
+        Categories, on_delete=models.PROTECT, related_name="product_category"
+    )
     details = models.JSONField()
 
     def __str__(self) -> str:
@@ -63,7 +72,9 @@ class ProductSeller(models.Model):
     Модель ProductSeller представляет продукт с его ценой от продавца
     """
 
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product, on_delete=models.PROTECT, related_name="product_seller"
+    )
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     quantity = models.SmallIntegerField(default=0)
@@ -135,7 +146,9 @@ class Review(models.Model):
     """Модель Review представляет отзывы на продукт"""
 
     author = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product, null=True, on_delete=models.PROTECT, related_name="reviews_product"
+    )
     content = models.TextField(null=False, blank=True)
     created_reviews = models.DateTimeField(auto_now_add=True)
 
