@@ -1,5 +1,5 @@
 import json
-
+import requests
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -58,6 +58,14 @@ class ProductDetailView(
         self.object.product = self.get_object()
         self.object.save()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        with open('fixtures/characteristic.json') as f:
+            data = json.load(f)
+        context = {
+            'characteristics': data['categoryes']['characteristics'],
+        }
+        return context
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")

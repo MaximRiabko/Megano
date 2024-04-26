@@ -178,14 +178,20 @@
                                     <h1>Этот товар пока никто не продаёт 😞</h1>
                                 {% endif %}
                             </div>
-                            <div class="Tabs-block" id="addit">
-                                <div class="Product-props">
-                                    <div class="Product-prop">
-                                        <strong>Lorem
-                                        </strong><span>{{ product.details }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <table class="Tabs-block" id="addit">
+                                <tbody class="Product-props">
+                                    <tr>
+                                        <td class="Product-prop">Характеристика</td>
+                                        <td>Значение</td>
+                                    </tr>
+                                    {% for char, char_details in characteristics.items %}
+                                        <tr>
+                                            <td>{{ char }}:</td>
+                                            <td>{{ char_details }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                             <div class="Tabs-block" id="reviews">
                                 <header class="Section-header">
                                     <h3 class="Section-title">{{product.reviews_product.all.count}} отзыв(ов)
