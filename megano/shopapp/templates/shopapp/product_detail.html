@@ -188,19 +188,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-                            <table class="Tabs-block" id="addit">
-                                <tbody class="Product-props">
-                                    {% for char, char_details in product.details.items %}
-                                        <tr>
-                                            <td class="Product-prop"><strong>{{ char }}:</strong></td>
-                                            <td>{{ char_details }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
                             <div class="Tabs-block" id="reviews">
                                 <header class="Section-header">
                                     <h3 class="Section-title">{{product.reviews_product.all.count}} отзыв(ов)
