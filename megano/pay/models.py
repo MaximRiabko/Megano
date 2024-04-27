@@ -60,3 +60,10 @@ class OrderItem(models.Model):
         on_delete=models.PROTECT,
         related_name="order_items",
     )
+
+class Transaction(models.Model):
+    uuid = models.CharField(max_length=8)
+    order = models.ForeignKey(Order, null=False, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, null=False, on_delete=models.PROTECT)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    is_paid = models.BooleanField(default=False)
