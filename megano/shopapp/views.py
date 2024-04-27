@@ -1,5 +1,5 @@
 import json
-
+import requests
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -58,6 +58,7 @@ class ProductDetailView(
         self.object.product = self.get_object()
         self.object.save()
         return super().form_valid(form)
+
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
