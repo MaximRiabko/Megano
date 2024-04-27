@@ -178,6 +178,19 @@
                                     <h1>Этот товар пока никто не продаёт 😞</h1>
                                 {% endif %}
                             </div>
+                            <div class="Tabs-block" id="addit">
+                                <div class="Product-props">
+                                    <div class="Product-prop">
+                                        {% for char, char_details in product.details.items %}
+                                            <strong>{{ char }}:
+                                            </strong><span>{{ char_details }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                             <table class="Tabs-block" id="addit">
                                 <tbody class="Product-props">
                                     {% for char, char_details in product.details.items %}
