@@ -59,13 +59,6 @@ class ProductDetailView(
         self.object.save()
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        with open('fixtures/characteristic.json') as f:
-            data = json.load(f)
-        context = {
-            'characteristics': data['categoryes']['characteristics'],
-        }
-        return context
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")

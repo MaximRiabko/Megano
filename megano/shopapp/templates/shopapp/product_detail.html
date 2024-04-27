@@ -180,13 +180,9 @@
                             </div>
                             <table class="Tabs-block" id="addit">
                                 <tbody class="Product-props">
-                                    <tr>
-                                        <td class="Product-prop">Характеристика</td>
-                                        <td>Значение</td>
-                                    </tr>
-                                    {% for char, char_details in characteristics.items %}
+                                    {% for char, char_details in product.details.items %}
                                         <tr>
-                                            <td>{{ char }}:</td>
+                                            <td class="Product-prop"><strong>{{ char }}:</strong></td>
                                             <td>{{ char_details }}</td>
                                         </tr>
                                     {% endfor %}
