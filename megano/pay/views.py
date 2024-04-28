@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.views.generic import UpdateView, CreateView
 
@@ -5,23 +7,23 @@ from pay.models import Transaction
 from .tasks import process_payment
 
 def payment_card(request):
-    return render(request, "pay/payment_card.html")
+    if request.method == 'GET':
+        return render(request, "pay/payment_card.html")
+    elif request.method == 'POST':
+        body_data = json.loads(request.body)
+        transaction_id = body_data["transaction_id"]
+        process_payment.delay(transaction_id)
 
 
 def payment_invoice(request):
-    return render(request, "pay/payment_invoice.html")
+    if request.method == 'GET':
+        return render(request, "pay/payment_invoice.html")
+    elif request.method == 'POST':
+        body_data = json.loads(request.body)
+        transaction_id = body_data["transaction_id"]
+        process_payment.delay(transaction_id)
 
 
 def proof_payment(request):
-    print(request)
     return render(request, "pay/progress_payment.html")
 
-class PaymentCard(CreateView):
-    model = Transaction
-    success_url = ""
-    template_name = 'pay/payment_card.html'
-
-    def form_valid(self, form):
-        form.save()
-        process_payment.delay(form.instance)
-        return super().form_valid(form)

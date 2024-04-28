@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -76,6 +76,21 @@ class SellerDetailView(DetailView):
 
 def get_top_products(seller):
     pass
+
+
+def get_discounted_product(product):
+    discount_product = Discount.objects.get(products=product)
+    if discount_product:
+        product_price = ProductSeller.objects.only("price").get(product=product)
+        product_price = getattr(product_price, "price")
+        discounted_price = product_price
+        if discount_product.type == "%":
+            discounted_price = product_price - (
+                product_price * discount_product.value / 100
+            )
+        elif discount_product.type == "RUB":
+            discounted_price = product_price - discount_product.value
+        return discounted_price
 
 
 class DiscountListView(ListView):
@@ -232,18 +247,13 @@ class LastOrderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["user"] = user
         order = Order.objects.latest()
         context["order"] = order
         context["items"] = order.order_items.prefetch_related("product")
         context.update(order.order_items.only("price").aggregate(Sum("price")))
         return context
-
-
-#
-# def compare_view(request):
-#     products = Comparison(request)  # Получаем товары для сравнения из сессии
-#     return render(request, 'shopapp/comparison.html', {'products': products})
-#
 
 
 class CompareView(TemplateView):
@@ -291,3 +301,4 @@ class CompareManager(TemplateView):
         )
         Comparison(request).remove(product)
         return render(request, self.request.META.get("HTTP_REFERER"))
+
