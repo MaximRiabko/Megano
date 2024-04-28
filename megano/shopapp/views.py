@@ -1,6 +1,5 @@
 import json
 
-import requests
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
