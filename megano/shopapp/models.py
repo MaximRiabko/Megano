@@ -32,8 +32,7 @@ class Categories(models.Model):
 
 
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
-    return "products/product_{pk}/images/{filename}".format(
-        pk=instance.product.pk,
+    return "products/images/{filename}".format(
         filename=filename,
     )
 
@@ -61,7 +60,7 @@ class Product(models.Model):
     category = models.ForeignKey(
         Categories, on_delete=models.PROTECT, related_name="product_category"
     )
-    details = models.JSONField()
+    details = models.JSONField(blank=True, verbose_name="Характеристики", default=dict)
 
     def __str__(self) -> str:
         return f"Product(pk={self.pk}, name={self.name!r})"
