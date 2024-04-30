@@ -42,6 +42,16 @@ class ProductDetailView(
     form_class = ReviewForm
     success_msg = "Отзыв успешно создан"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        product_sellers = ProductSeller.objects.filter(product=product)
+        is_available = any(seller.quantity > 0 for seller in product_sellers)
+        context['is_available'] = is_available
+        min_price = min(seller.price for seller in product_sellers)
+        context['min_price'] = min_price
+        return context
+
     def get_success_url(self, **kwargs):
         return reverse_lazy("shopapp:product", kwargs={"pk": self.get_object().id})
 
