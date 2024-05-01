@@ -72,7 +72,7 @@ class ProductSeller(models.Model):
     """
 
     product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, related_name="product_seller"
+        Product, on_delete=models.PROTECT, related_name="product_sellers"
     )
     seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)

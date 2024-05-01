@@ -19,8 +19,10 @@
                                 </h2>
                                 <div class="ProductCard-info">
                                     <div class="ProductCard-cost">
-                                        <div class="ProductCard-price">{{ min_price }}$
-                                        </div>
+                                        {% if min_price_product_seller %}
+                                        	<div class="ProductCard-price">{{ min_price_product_seller.price }}$</div>
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -30,7 +32,7 @@
                                 </ul>
                             </div>
                             <div class="ProductCard-cart">
-                                {% if is_available %}
+                                {% if product_sellers %}
                                     <div class="ProductCard-cartElement ProductCard-cartElement_amount">
                                         <div class="Amount Amount_product">
                                             <button class="Amount-remove" type="button">
@@ -134,8 +136,8 @@
                                 </div>
                             </div>
                             <div class="Tabs-block" id="sellers">
-                                {% if product.product_seller.all %}
-                                {% for sellers in product.product_seller.all %}
+                                {% if product.product_sellers.all %}
+                                {% for sellers in product.product_sellers.all %}
                                     {% if sellers.quantity > 0 %}
                                         <div class="Section-content">
                                             <div class="Orders">
