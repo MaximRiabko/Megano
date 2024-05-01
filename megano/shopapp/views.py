@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -41,6 +41,18 @@ class ProductDetailView(
     context_object_name = "product"
     form_class = ReviewForm
     success_msg = "Отзыв успешно создан"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+
+        product_sellers = product.product_sellers.filter(quantity__gt=0).order_by('price')
+        context['product_sellers'] = product_sellers
+
+        if product_sellers:
+            min_price_product_seller = product_sellers.first()
+            context['min_price_product_seller'] = min_price_product_seller
+        return context
 
     def get_success_url(self, **kwargs):
         return reverse_lazy("shopapp:product", kwargs={"pk": self.get_object().id})

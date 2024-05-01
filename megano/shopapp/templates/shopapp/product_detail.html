@@ -19,8 +19,10 @@
                                 </h2>
                                 <div class="ProductCard-info">
                                     <div class="ProductCard-cost">
-                                        <div class="ProductCard-price">$55.00
-                                        </div>
+                                        {% if min_price_product_seller %}
+                                        	<div class="ProductCard-price">{{ min_price_product_seller.price }}$</div>
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -30,49 +32,53 @@
                                 </ul>
                             </div>
                             <div class="ProductCard-cart">
-                                <div class="ProductCard-cartElement ProductCard-cartElement_amount">
-                                    <div class="Amount Amount_product">
-                                        <button class="Amount-remove" type="button">
-                                        </button>
-                                        <input class="Amount-input form-input" name="amount" type="text" value="1" />
-                                        <button class="Amount-add" type="button">
-                                        </button>
+                                {% if product_sellers %}
+                                    <div class="ProductCard-cartElement ProductCard-cartElement_amount">
+                                        <div class="Amount Amount_product">
+                                            <button class="Amount-remove" type="button">
+                                            </button>
+                                            <input class="Amount-input form-input" name="amount" type="text" value="1" />
+                                            <button class="Amount-add" type="button">
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="ProductCard-cartElement">
-                                    <a class="btn btn_primary" href="#modal_open">
-                                        <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
-                                        <span class="btn-content">Купить</span>
-                                    </a>
-                                </div>
+                                    <div class="ProductCard-cartElement">
+                                        <a class="btn btn_primary" href="#modal_open">
+                                            <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
+                                            <span class="btn-content">Купить</span>
+                                        </a>
+                                    </div>
 
-                                <div id="modal_open" class="my_modal">
-                                    <div class="my_modal-dialog">
-                                        <div class="my_modal-content">
-                                            <div class="my_modal-header">
-                                                <p class="my_modal-title">Поздравляем!</p>
-                                                <a href="#" title="Закрыть модальное окно" class="close">×</a>
-                                            </div>
-                                            <div class="my_modal-body">
-                                                <p>Товар успешно добавлен в корзину!</p>
+                                    <div id="modal_open" class="my_modal">
+                                        <div class="my_modal-dialog">
+                                            <div class="my_modal-content">
+                                                <div class="my_modal-header">
+                                                    <p class="my_modal-title">Поздравляем!</p>
+                                                    <a href="#" title="Закрыть модальное окно" class="close">×</a>
+                                                </div>
+                                                <div class="my_modal-body">
+                                                    <p>Товар успешно добавлен в корзину!</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div id="modal_open_viewed" class="my_modal">
-                                    <div class="my_modal-dialog">
-                                        <div class="my_modal-content">
-                                            <div class="my_modal-header">
-                                                <p class="my_modal-title">Поздравляем!</p>
-                                                <a href="#" title="Закрыть модальное окно" class="close">×</a>
-                                            </div>
-                                            <div class="my_modal-body">
-                                                <p>Товар успешно добавлен в просмотренные!</p>
+                                    <div id="modal_open_viewed" class="my_modal">
+                                        <div class="my_modal-dialog">
+                                            <div class="my_modal-content">
+                                                <div class="my_modal-header">
+                                                    <p class="my_modal-title">Поздравляем!</p>
+                                                    <a href="#" title="Закрыть модальное окно" class="close">×</a>
+                                                </div>
+                                                <div class="my_modal-body">
+                                                    <p>Товар успешно добавлен в просмотренные!</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% else %}
+                                    <p>Этого товара в данный момент нет в наличии.</p>
+                                {% endif %}
 
                             </div>
                             <div class="ProductCard-footer">
@@ -130,49 +136,52 @@
                                 </div>
                             </div>
                             <div class="Tabs-block" id="sellers">
-                                {% if product.product_seller.all %}
-                                {% for sellers in product.product_seller.all %}
-                                <div class="Section-content">
-                                    <div class="Orders">
-                                        <div class="Order Order_anons">
-                                            <div class="Order-personal">
-                                                <div class="row">
-                                                    <div class="row-block">
-                                                        <a class="Order-title" href="{% url 'shopapp:seller_detail' pk=sellers.pk %}">
-                                                            {{ sellers.seller }}
-                                                        </a>
-                                                        <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                                                            <a class="btn btn_primary" href="#modal_open">
-                                                                <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
-                                                                <span class="btn-content">Купить</span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-block">
-                                                        <div class="Order-info Order-info_delivery">
-                                                            <div class="Order-infoType">Тип доставки:
+                                {% if product.product_sellers.all %}
+                                {% for sellers in product.product_sellers.all %}
+                                    {% if sellers.quantity > 0 %}
+                                        <div class="Section-content">
+                                            <div class="Orders">
+                                                <div class="Order Order_anons">
+                                                    <div class="Order-personal">
+                                                        <div class="row">
+                                                            <div class="row-block">
+                                                                <a class="Order-title" href="{% url 'shopapp:seller_detail' pk=sellers.pk %}">
+                                                                    {{ sellers.seller }}
+                                                                </a>
+                                                                <div class="ProductCard-cartElement" style="margin-top: 10px;">
+                                                                    <a class="btn btn_primary" href="#modal_open">
+                                                                        <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
+                                                                        <span class="btn-content">Купить</span>
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                            <div class="Order-infoContent">Обычная доставка
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info Order-info_pay">
-                                                            <div class="Order-infoType">Оплата:
-                                                            </div>
-                                                            <div class="Order-infoContent">Онлайн картой
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info">
-                                                            <div class="Order-infoType">Стоимость:
-                                                            </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">{{ sellers.price }}</span>
+                                                            <div class="row-block">
+                                                                <div class="Order-info Order-info_delivery">
+                                                                    <div class="Order-infoType">Тип доставки:
+                                                                    </div>
+                                                                    <div class="Order-infoContent">Обычная доставка
+                                                                    </div>
+                                                                </div>
+                                                                <div class="Order-info Order-info_pay">
+                                                                    <div class="Order-infoType">Оплата:
+                                                                    </div>
+                                                                    <div class="Order-infoContent">Онлайн картой
+                                                                    </div>
+                                                                </div>
+                                                                <div class="Order-info">
+                                                                    <div class="Order-infoType">Стоимость:
+                                                                    </div>
+                                                                    <div class="Order-infoContent"><span class="Order-price">{{ sellers.price }}</span>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    {% endif %}
+
                                 {% endfor %}
                                 {% else %}
                                     <h1>Этот товар пока никто не продаёт 😞</h1>
