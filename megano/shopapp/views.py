@@ -4,9 +4,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Sum, Count
+from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -19,15 +19,7 @@ from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
-from .models import (
-    Discount,
-    Product,
-    ProductSeller,
-    Profile,
-    Review,
-    Seller,
-    ViewHistory,
-)
+from .models import Discount, Product, ProductSeller, Seller
 
 
 class ProductDetailView(
@@ -46,12 +38,14 @@ class ProductDetailView(
         context = super().get_context_data(**kwargs)
         product = self.get_object()
 
-        product_sellers = product.product_sellers.filter(quantity__gt=0).order_by('price')
-        context['product_sellers'] = product_sellers
+        product_sellers = product.product_sellers.filter(quantity__gt=0).order_by(
+            "price"
+        )
+        context["product_sellers"] = product_sellers
 
         if product_sellers:
             min_price_product_seller = product_sellers.first()
-            context['min_price_product_seller'] = min_price_product_seller
+            context["min_price_product_seller"] = min_price_product_seller
         return context
 
     def get_success_url(self, **kwargs):
