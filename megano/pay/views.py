@@ -1,27 +1,35 @@
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import UpdateView, CreateView
 
 from pay.models import Transaction
+from .forms import PaymentForm
 from .tasks import process_payment
 
 def payment_card(request):
     if request.method == 'GET':
-        return render(request, "pay/payment_card.html")
+        form = PaymentForm()
+        return render(request, "pay/payment_card.html", {"form": form})
     elif request.method == 'POST':
-        body_data = json.loads(request.body)
-        transaction_id = body_data["transaction_id"]
-        process_payment.delay(transaction_id)
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            uuid = form.data['card_number']
+            process_payment.delay(uuid)
+            return redirect("pay:progressPayment")
+
 
 
 def payment_invoice(request):
     if request.method == 'GET':
-        return render(request, "pay/payment_invoice.html")
+        form = PaymentForm()
+        return render(request, "pay/payment_invoice.html", {"form": form})
     elif request.method == 'POST':
-        body_data = json.loads(request.body)
-        transaction_id = body_data["transaction_id"]
-        process_payment.delay(transaction_id)
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            uuid = form.data['card_number']
+            process_payment.delay(uuid)
+            return redirect("pay:progressPayment")
 
 
 def proof_payment(request):
