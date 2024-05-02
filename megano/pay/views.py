@@ -1,11 +1,7 @@
-import json
-
 from django.shortcuts import render, redirect
-from django.views.generic import UpdateView, CreateView
-
-from pay.models import Transaction
 from .forms import PaymentForm
 from .tasks import process_payment
+from megano.megano.settings import ON_PAYMENT
 
 def payment_card(request):
     if request.method == 'GET':
@@ -14,8 +10,9 @@ def payment_card(request):
     elif request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
-            uuid = form.data['card_number']
-            process_payment.delay(uuid)
+            if ON_PAYMENT:
+                uuid = form.data['card_number']
+                process_payment.delay(uuid)
             return redirect("pay:progressPayment")
 
 
@@ -27,8 +24,9 @@ def payment_invoice(request):
     elif request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
-            uuid = form.data['card_number']
-            process_payment.delay(uuid)
+            if ON_PAYMENT:
+                uuid = form.data['card_number']
+                process_payment.delay(uuid)
             return redirect("pay:progressPayment")
 
 

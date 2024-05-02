@@ -134,6 +134,7 @@ LOGIN_REDIRECT_URL = "/index.html"
 COMPARISON_SESSION_ID = "comparison"
 
 #Redis settings
+ON_PAYMENT = False
 REDIS_HOST = '0.0.0.0'
 REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
