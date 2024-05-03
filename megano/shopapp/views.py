@@ -21,6 +21,8 @@ from .comparison import Comparison
 from .forms import ReviewForm
 from .models import Discount, Product, ProductSeller, Seller
 
+from cart.forms import CartAddProductForm
+
 
 class ProductDetailView(
     FormMixin,
@@ -46,6 +48,9 @@ class ProductDetailView(
         if product_sellers:
             min_price_product_seller = product_sellers.first()
             context["min_price_product_seller"] = min_price_product_seller
+
+        cart_product_form = CartAddProductForm()
+        context['cart_product_form'] = cart_product_form
         return context
 
     def get_success_url(self, **kwargs):
