@@ -58,7 +58,7 @@ class Product(models.Model):
     preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
     images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
     category = models.ForeignKey(
-        Categories, on_delete=models.PROTECT, related_name="product_category"
+        Categories, on_delete=models.PROTECT, related_name="products"
     )
     details = models.JSONField(blank=True, verbose_name="Характеристики", default=dict)
 
@@ -91,7 +91,7 @@ class ViewHistory(models.Model):
     """
 
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="view_history"
+        User, on_delete=models.CASCADE, related_name="view_historys"
     )
     creation_date = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(

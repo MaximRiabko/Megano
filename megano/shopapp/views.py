@@ -138,8 +138,7 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        view_history = None
-        view_history = self.request.user.view_history.prefetch_related(
+        view_historys = self.request.user.view_historys.prefetch_related(
             "product"
         ).order_by("-creation_date")[:3]
         three_viewed = []
