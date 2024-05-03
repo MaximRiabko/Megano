@@ -1,9 +1,10 @@
 import os
-from celery import Celery
-from megano.megano.settings import ON_PAYMENT
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'megano.settings')
+
+from megano.settings import ON_PAYMENT
 
 if ON_PAYMENT:
-    app = Celery('payment')
-    app.config_from_object('django.conf.settings', namespace='CELERY')
+    from celery import Celery
+
+    app = Celery("payment")
+    app.config_from_object("django.conf.settings", namespace="CELERY")
     app.autodiscover_tasks()

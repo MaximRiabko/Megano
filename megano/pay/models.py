@@ -76,8 +76,5 @@ class Transaction(models.Model):
         related_name="transaction",
     )
     user = models.ForeignKey(
-        User,
-        null=False,
-        on_delete=models.PROTECT,
-        related_name='transaction'
+        User, null=False, on_delete=models.PROTECT, related_name="transaction"
     )
