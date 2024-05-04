@@ -15,13 +15,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import FormMixin
 
+from cart.forms import CartAddProductForm
 from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
 from .models import Discount, Product, ProductSeller, Seller
-
-from cart.forms import CartAddProductForm
 
 
 class ProductDetailView(
@@ -50,7 +49,7 @@ class ProductDetailView(
             context["min_price_product_seller"] = min_price_product_seller
 
         cart_product_form = CartAddProductForm()
-        context['cart_product_form'] = cart_product_form
+        context["cart_product_form"] = cart_product_form
         return context
 
     def get_success_url(self, **kwargs):
