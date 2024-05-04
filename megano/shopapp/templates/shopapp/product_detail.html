@@ -35,22 +35,21 @@
                                 {% if product_sellers %}
                                     <form method="post" action="{% url 'cart:cart_add' min_price_product_seller.id %}">
                                         {% csrf_token %}
-                                        <div class="ProductCard-cartElementContainer">
-                                            <div class="ProductCard-cartElementAmount">
-                                                <div class="Amount Amount_product">
-                                                    <button class="Amount-remove" type="button" name="quantity" value="{{ cart_product_form.quantity.value|add:'-1' }}" ></button>
-                                                    <input type="number" name="quantity" value="{{ cart_product_form.quantity.value }}" min="1" max="20">
-                                                    <button class="Amount-add" type="button" name="quantity" value="{{ cart_product_form.quantity.value|add:'1' }}"></button>
-                                                </div>
-                                            </div>
-                                            <div class="ProductCard-cartElementBuy">
-                                                <input type="hidden" name="update" value="{{ update }}">
-                                                <button type="submit" class="btn btn_primary">
-                                                    <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
-                                                    <span class="btn-content">Купить</span>
-                                                </button>
+                                        <div style="display: flex;">
+                                        <div class="ProductCard-cartElement">
+                                            <div class="Amount Amount_product">
+                                                {{ cart_product_form }}
                                             </div>
                                         </div>
+
+                                        <div class="ProductCard-cartElement">
+                                            <button type="submit" class="btn btn_primary">
+                                                <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
+                                                <span class="btn-content">Купить</span>
+                                            </button>
+                                        </div>
+                                        </div>
+
                                     </form>
 
 
