@@ -113,6 +113,8 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        {% else %}
+                            <div class="Card">Вы не просмотрели не один товар</div>
                {% endif %}
            {% endblock %}
     <script src="{% static 'assets/plg/jQuery/jquery-3.5.0.slim.min.js' %}"></script>

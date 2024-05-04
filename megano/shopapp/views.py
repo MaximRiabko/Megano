@@ -20,7 +20,7 @@ from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
-from .models import Discount, Product, ProductSeller, Seller
+from .models import Discount, Product, ProductSeller, Seller, ViewHistory
 
 
 class ProductDetailView(
@@ -38,7 +38,7 @@ class ProductDetailView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-
+        ViewHistory.objects.create(user=self.request.user, product=product)
         product_sellers = product.product_sellers.filter(quantity__gt=0).order_by(
             "price"
         )
@@ -142,7 +142,7 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        view_historys = self.request.user.view_historys.prefetch_related(
+        view_history = self.request.user.view_historys.prefetch_related(
             "product"
         ).order_by("-creation_date")[:3]
         three_viewed = []
