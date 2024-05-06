@@ -1,12 +1,38 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+
+from megano.settings import ON_PAYMENT
+
+from .forms import PaymentForm
 
 
 def payment_card(request):
-    return render(request, "pay/payment_card.html")
+    if request.method == "GET":
+        form = PaymentForm()
+        return render(request, "pay/payment_card.html", {"form": form})
+    elif request.method == "POST":
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            if ON_PAYMENT:
+                from .tasks import process_payment
+
+                uuid = form.data["card_number"]
+                process_payment.delay(uuid)
+            return redirect("pay:progressPayment")
 
 
 def payment_invoice(request):
-    return render(request, "pay/payment_invoice.html")
+    if request.method == "GET":
+        form = PaymentForm()
+        return render(request, "pay/payment_invoice.html", {"form": form})
+    elif request.method == "POST":
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            if ON_PAYMENT:
+                from .tasks import process_payment
+
+                uuid = form.data["card_number"]
+                process_payment.delay(uuid)
+            return redirect("pay:progressPayment")
 
 
 def proof_payment(request):

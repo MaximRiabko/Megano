@@ -12,7 +12,6 @@ class ReviewForm(ModelForm):
         fields = [
             "content",
         ]
-
         widgets = {
             "content": Textarea(
                 attrs={

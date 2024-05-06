@@ -1,11 +1,3 @@
-from django.contrib import admin
-from django.contrib.auth.views import (
-    LoginView,
-    PasswordResetCompleteView,
-    PasswordResetConfirmView,
-    PasswordResetDoneView,
-    PasswordResetView,
-)
 from django.urls import path
 
 from .views import (
@@ -17,6 +9,8 @@ from .views import (
     logout_view,
     register,
 )
+
+app_name = "auth"
 
 urlpatterns = [
     path("", Login.as_view(), name="login"),

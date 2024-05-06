@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import json
+
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -7,12 +9,69 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.cache import cache_page
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import DetailView, ListView, TemplateView, UpdateView
+from django.views.generic.edit import FormMixin
 
-from pay.models import Order, OrderItem
+from cart.forms import CartAddProductForm
+from pay.models import Order
 
+from .comparison import Comparison
+from .forms import ReviewForm
+from .models import Discount, Product, ProductSeller, Seller, ViewHistory, Categories
+
+
+class ProductDetailView(
+    FormMixin,
+    DetailView,
+):
+    """Класс детальной страницы товаров"""
+
+    model = Product
+    template_name = "shopapp/product_detail.html"
+    context_object_name = "product"
+    form_class = ReviewForm
+    success_msg = "Отзыв успешно создан"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        ViewHistory.objects.create(user=self.request.user, product=product)
+        product_sellers = product.product_sellers.filter(quantity__gt=0).order_by(
+            "price"
+        )
+        context["product_sellers"] = product_sellers
+
+        if product_sellers:
+            min_price_product_seller = product_sellers.first()
+            context["min_price_product_seller"] = min_price_product_seller
+
+        cart_product_form = CartAddProductForm()
+        context["cart_product_form"] = cart_product_form
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("shopapp:product", kwargs={"pk": self.get_object().id})
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.product = self.get_object()
+        self.object.save()
+        return super().form_valid(form)
 from .models import Discount, ProductSeller, Seller, ViewHistory, Categories, Product
 
 
@@ -32,21 +91,6 @@ class SellerDetailView(DetailView):
 
 def get_top_products(seller):
     pass
-
-
-def get_discounted_product(product):
-    discount_product = Discount.objects.get(products=product)
-    if discount_product:
-        product_price = ProductSeller.objects.only("price").get(product=product)
-        product_price = getattr(product_price, "price")
-        discounted_price = product_price
-        if discount_product.type == "%":
-            discounted_price = product_price - (
-                product_price * discount_product.value / 100
-            )
-        elif discount_product.type == "RUB":
-            discounted_price = product_price - discount_product.value
-        return discounted_price
 
 
 class DiscountListView(ListView):
@@ -103,8 +147,7 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        view_history = None
-        view_history = self.request.user.view_history.prefetch_related(
+        view_history = self.request.user.view_historys.prefetch_related(
             "product"
         ).order_by("-creation_date")[:3]
         three_viewed = []
@@ -181,6 +224,9 @@ class OrderDetailView(DetailView):
     model = Order
     template_name = "shopapp/oneorder.html"
 
+    def test_func(self):
+        return self.request.user.is_authenticated
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -219,17 +265,70 @@ class LastOrderDetailView(DetailView):
     This page displays the details of the last user's order
     """
 
-    model = Order
+    model = User
     template_name = "shopapp/oneorder.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
-        context["user"] = user
         order = Order.objects.latest()
+        context["order"] = order
         context["items"] = order.order_items.prefetch_related("product")
-        context.update(self.object.order_items.only("price").aggregate(Sum("price")))
+        context.update(order.order_items.only("price").aggregate(Sum("price")))
         return context
+
+
+#
+# def compare_view(request):
+#     products = Comparison(request)  # Получаем товары для сравнения из сессии
+#     return render(request, 'shopapp/comparison.html', {'products': products})
+#
+
+
+class CompareView(TemplateView):
+    template_name = "shopapp/comparison.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CompareView, self).get_context_data(**kwargs)
+        context["products"] = Comparison(self.request)
+        return context
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class CompareManager(TemplateView):
+    template_name = "shopapp/comparison.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CompareManager, self).get_context_data(**kwargs)
+        products = tuple(product for product in Comparison(self.request))
+        similar = Comparison.get_similar(products)
+        for product in products:
+            product_id = product.get("id")
+            sim = similar.get(str(product_id))
+            product["similar"] = sim
+        context["products"] = products
+        return context
+
+    def post(self, request, *args, **kwargs):
+        body_data = json.loads(request.body)
+        pk = body_data["product_pk"]
+        product = (
+            ProductSeller.objects.filter(product_id=pk)
+            .prefetch_related("product")
+            .first()
+        )
+        Comparison(request).add(product)
+        return render(request, self.request.META.get("HTTP_REFERER"))
+
+    def delete(self, request, *args, **kwargs):
+        body_data = json.loads(request.body)
+        pk = body_data["product_pk"]
+        product = (
+            ProductSeller.objects.filter(product_id=pk)
+            .prefetch_related("product")
+            .first()
+        )
+        Comparison(request).remove(product)
+        return render(request, self.request.META.get("HTTP_REFERER"))
 
 
 def filter_products(request):

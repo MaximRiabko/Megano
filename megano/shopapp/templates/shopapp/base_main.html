@@ -68,8 +68,8 @@
                         </div>
                         <nav class="row-block">
                             <div class="row ControlPanel-rowSplit">
-                                <div class="row-block"><a class="ControlPanel-title" href="login.html">Вход</a>
-                                    <a class="ControlPanel-title" href="registr.html">Регистрация</a>
+                                <div class="row-block"><a class="ControlPanel-title" href="{% url 'auth:login' %}">Вход</a>
+                                    <a class="ControlPanel-title" href="{% url 'auth:register' %}">Регистрация</a>
                                 </div>
                             </div>
                         </nav>
@@ -110,10 +110,11 @@
                                 <div class="dropdown-content">
                                     <a class="dropdown-content-a" href="account.html">Личный кабинет</a>
                                     <a class="dropdown-content-a" href="account.html">Административный раздел</a>
+                                    <a class="dropdown-content-a" href="account.html">Просмотренные товары</a>
                                     <a class="dropdown-content-a" href="account.html">Выход</a>
                                 </div>
                             </div>
-                            <a class="CartBlock-block" href="cart.html"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg" /><span class="CartBlock-amount">0</span></a>
+                            <a class="CartBlock-block" href="{% url 'cart:cart_detail' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg" /><span class="CartBlock-amount">0</span></a>
                             <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span>
 
 
