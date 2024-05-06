@@ -1,15 +1,12 @@
-from datetime import timedelta
-
 import json
+from datetime import timedelta
 
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
-from django.shortcuts import redirect, render
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -24,7 +21,7 @@ from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
-from .models import Discount, Product, ProductSeller, Seller, ViewHistory, Categories
+from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
 
 
 class ProductDetailView(
@@ -72,7 +69,9 @@ class ProductDetailView(
         self.object.product = self.get_object()
         self.object.save()
         return super().form_valid(form)
-from .models import Discount, ProductSeller, Seller, ViewHistory, Categories, Product
+
+
+from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -241,23 +240,23 @@ def catalog(request, pk):
     the_id = category.id
 
     if the_id:
-        cache_key = f'catalog_{pk}'
+        cache_key = f"catalog_{pk}"
         products = cache.get(cache_key)
         if not products:
             products = Product.objects.filter(category=the_id, archived=False)
             cache.set(cache_key, products, timeout=86400)
     else:
-        cache_key = 'catalog_all'
+        cache_key = "catalog_all"
         products = cache.get(cache_key)
         if not products:
             products = Product.objects.filter(archived=False)
             cache.set(cache_key, products, timeout=86400)
 
     context = {
-        'category': category,
-        'products': products,
+        "category": category,
+        "products": products,
     }
-    return render(request, 'shopapp/catalog.html', context)
+    return render(request, "shopapp/catalog.html", context)
 
 
 class LastOrderDetailView(DetailView):
@@ -332,14 +331,14 @@ class CompareManager(TemplateView):
 
 
 def filter_products(request):
-    if request.method == 'POST':
-        price_from = request.POST.get('priceFrom')
-        price_to = request.POST.get('priceTo')
-        name_filter = request.POST.get('nameFilter')
-        description_filter = request.POST.get('descriptionFilter')
-        selected_sellers = request.POST.getlist('selectedSellers')
-        boolean_filter = request.POST.get('booleanFilter')
-        selected_options = request.POST.getlist('selectedOptions')
+    if request.method == "POST":
+        price_from = request.POST.get("priceFrom")
+        price_to = request.POST.get("priceTo")
+        name_filter = request.POST.get("nameFilter")
+        description_filter = request.POST.get("descriptionFilter")
+        selected_sellers = request.POST.getlist("selectedSellers")
+        boolean_filter = request.POST.get("booleanFilter")
+        selected_options = request.POST.getlist("selectedOptions")
 
         products = Product.objects.all()
         if price_from and price_to:
@@ -350,16 +349,14 @@ def filter_products(request):
             products = products.filter(description__icontains=description_filter)
         if selected_sellers:
             products = products.filter(seller__in=selected_sellers)
-        if boolean_filter == 'yes':
+        if boolean_filter == "yes":
             products = products.filter(boolean_attr=True)
-        elif boolean_filter == 'no':
+        elif boolean_filter == "no":
             products = products.filter(boolean_attr=False)
         if selected_options:
             products = products.filter(list_attr__in=selected_options)
 
-        context = {
-            'products': products
-        }
-        return render(request, 'filtered_product_list.html', context)
+        context = {"products": products}
+        return render(request, "filtered_product_list.html", context)
 
     return HttpResponseBadRequest()
