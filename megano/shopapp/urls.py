@@ -15,6 +15,8 @@ from .views import (
     ProductDetailView,
     ProfileUpdateView,
     SellerDetailView,
+    catalog,
+    filter_products
 )
 
 app_name = "shopapp"
@@ -42,11 +44,13 @@ urlpatterns = [
         OrderDetailView.as_view(),
         name="order_details",
     ),
+    path("categories/products/<int:pk>", catalog, name="catalog"),
     path(
         "profile/<int:pk>/order/last/",
         LastOrderDetailView.as_view(),
         name="last_order_details",
     ),
+    path("categories/products/filtered-products/", filter_products, name="filter-products"),
 ]
 
 if settings.DEBUG:

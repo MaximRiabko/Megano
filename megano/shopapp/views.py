@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import json
 
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -5,6 +7,8 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -20,7 +24,7 @@ from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
-from .models import Discount, Product, ProductSeller, Seller, ViewHistory
+from .models import Discount, Product, ProductSeller, Seller, ViewHistory, Categories
 
 
 class ProductDetailView(
@@ -68,6 +72,7 @@ class ProductDetailView(
         self.object.product = self.get_object()
         self.object.save()
         return super().form_valid(form)
+from .models import Discount, ProductSeller, Seller, ViewHistory, Categories, Product
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -231,6 +236,30 @@ class OrderDetailView(DetailView):
         return context
 
 
+def catalog(request, pk):
+    category = Categories.objects.filter(id=pk).first()
+    the_id = category.id
+
+    if the_id:
+        cache_key = f'catalog_{pk}'
+        products = cache.get(cache_key)
+        if not products:
+            products = Product.objects.filter(category=the_id, archived=False)
+            cache.set(cache_key, products, timeout=86400)
+    else:
+        cache_key = 'catalog_all'
+        products = cache.get(cache_key)
+        if not products:
+            products = Product.objects.filter(archived=False)
+            cache.set(cache_key, products, timeout=86400)
+
+    context = {
+        'category': category,
+        'products': products,
+    }
+    return render(request, 'shopapp/catalog.html', context)
+
+
 class LastOrderDetailView(DetailView):
     """
     This page displays the details of the last user's order
@@ -300,3 +329,37 @@ class CompareManager(TemplateView):
         )
         Comparison(request).remove(product)
         return render(request, self.request.META.get("HTTP_REFERER"))
+
+
+def filter_products(request):
+    if request.method == 'POST':
+        price_from = request.POST.get('priceFrom')
+        price_to = request.POST.get('priceTo')
+        name_filter = request.POST.get('nameFilter')
+        description_filter = request.POST.get('descriptionFilter')
+        selected_sellers = request.POST.getlist('selectedSellers')
+        boolean_filter = request.POST.get('booleanFilter')
+        selected_options = request.POST.getlist('selectedOptions')
+
+        products = Product.objects.all()
+        if price_from and price_to:
+            products = products.filter(price__gte=price_from, price__lte=price_to)
+        if name_filter:
+            products = products.filter(name__icontains=name_filter)
+        if description_filter:
+            products = products.filter(description__icontains=description_filter)
+        if selected_sellers:
+            products = products.filter(seller__in=selected_sellers)
+        if boolean_filter == 'yes':
+            products = products.filter(boolean_attr=True)
+        elif boolean_filter == 'no':
+            products = products.filter(boolean_attr=False)
+        if selected_options:
+            products = products.filter(list_attr__in=selected_options)
+
+        context = {
+            'products': products
+        }
+        return render(request, 'filtered_product_list.html', context)
+
+    return HttpResponseBadRequest()
