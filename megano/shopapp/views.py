@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -190,20 +190,15 @@ class OrderDetailView(DetailView):
         return context
 
 
-class CategoriesView(ListView):
-    model = Categories
-    template_name = "shopapp/categories_list.html"
-    context_object_name = 'categories'
-
-
 def catalog(request, pk):
-    categories = Categories.objects.all()
+    category = Categories.objects.filter(id=pk).first()
+    the_id = category.id
 
-    if pk:
+    if the_id:
         cache_key = f'catalog_{pk}'
         products = cache.get(cache_key)
         if not products:
-            products = Product.objects.filter(id=pk, archived=False)
+            products = Product.objects.filter(category=the_id, archived=False)
             cache.set(cache_key, products, timeout=86400)
     else:
         cache_key = 'catalog_all'
@@ -213,11 +208,10 @@ def catalog(request, pk):
             cache.set(cache_key, products, timeout=86400)
 
     context = {
-        'categories': categories,
+        'category': category,
         'products': products,
     }
     return render(request, 'shopapp/catalog.html', context)
-
 
 
 class LastOrderDetailView(DetailView):
@@ -236,3 +230,37 @@ class LastOrderDetailView(DetailView):
         context["items"] = order.order_items.prefetch_related("product")
         context.update(self.object.order_items.only("price").aggregate(Sum("price")))
         return context
+
+
+def filter_products(request):
+    if request.method == 'POST':
+        price_from = request.POST.get('priceFrom')
+        price_to = request.POST.get('priceTo')
+        name_filter = request.POST.get('nameFilter')
+        description_filter = request.POST.get('descriptionFilter')
+        selected_sellers = request.POST.getlist('selectedSellers')
+        boolean_filter = request.POST.get('booleanFilter')
+        selected_options = request.POST.getlist('selectedOptions')
+
+        products = Product.objects.all()
+        if price_from and price_to:
+            products = products.filter(price__gte=price_from, price__lte=price_to)
+        if name_filter:
+            products = products.filter(name__icontains=name_filter)
+        if description_filter:
+            products = products.filter(description__icontains=description_filter)
+        if selected_sellers:
+            products = products.filter(seller__in=selected_sellers)
+        if boolean_filter == 'yes':
+            products = products.filter(boolean_attr=True)
+        elif boolean_filter == 'no':
+            products = products.filter(boolean_attr=False)
+        if selected_options:
+            products = products.filter(list_attr__in=selected_options)
+
+        context = {
+            'products': products
+        }
+        return render(request, 'filtered_product_list.html', context)
+
+    return HttpResponseBadRequest()

@@ -1,26 +1,108 @@
 {% extends "shopapp/base_main.html" %}
 {% load static %}
+
 {% block middle %}
     <div class="Middle Middle_top">
-    <div class="Middle-top">
-        <div class="wrap">
-            <div class="Middle-header">
-                <ul class="product-list">
-                    {% for product in products %}
-                        <li class="product-item">
-                            <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
-                            <div class="product-details">
-                                <h3 class="product-title">{{ product.name }}</h3>
-                                <p class="product-price">{{ product.price }}</p>
-                                <p class="product-description">{{ product.description }}</p>
-                            </div>
-                        </li>
-                    {% empty %}
-                        <li>Нет товаров</li>
-                    {% endfor %}
-                </ul>
+        <div class="Middle-top">
+            <div class="wrap">
+                <div class="Middle-header">
+                    <h1>{{ category }}</h1>
+                    <form id="filter-form">
+                        <div class="filter-group">
+                            <label for="price-from">Цена от:</label>
+                            <input type="number" id="price-from" name="price-from">
+                        </div>
+                        <div class="filter-group">
+                            <label for="price-to">Цена до:</label>
+                            <input type="number" id="price-to" name="price-to">
+                        </div>
+                        <div class="filter-group">
+                            <label for="name-filter">Поиск по названию:</label>
+                            <input type="text" id="name-filter" name="name-filter">
+                        </div>
+                        <div class="filter-group">
+                            <label for="description-filter">Поиск по описанию:</label>
+                            <input type="text" id="description-filter" name="description-filter">
+                        </div>
+                        <div class="filter-group">
+                            <label for="seller-filter">Фильтр по продавцу:</label>
+                            <select id="seller-filter" name="seller-filter" multiple>
+                                <option value="seller1">Продавец 1</option>
+                                <option value="seller2">Продавец 2</option>
+                                <option value="seller3">Продавец 3</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="boolean-filter">Фильтр по boolean характеристике:</label>
+                            <select id="boolean-filter" name="boolean-filter">
+                                <option value="yes">Да</option>
+                                <option value="no">Нет</option>
+                                <option value="">Не учитывать</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="list-filter">Фильтр по характеристике-списку:</label>
+                            <input type="checkbox" id="list-option1" name="list-filter" value="option1">
+                            <label for="list-option1">Опция 1</label>
+                            <input type="checkbox" id="list-option2" name="list-filter" value="option2">
+                            <label for="list-option2">Опция 2</label>
+                            <input type="checkbox" id="list-option3" name="list-filter" value="option3">
+                            <label for="list-option3">Опция 3</label>
+                        </div>
+                        <button type="submit">Применить фильтры</button>
+                    </form>
+
+                    <ul class="product-list">
+                        {% for product in products %}
+                            <li class="product-item">
+                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                                <div class="product-details">
+                                    <h3 class="product-title">{{ product.name }}</h3>
+                                    <p class="product-price">{{ product.price }}</p>
+                                    <p class="product-description">{{ product.description }}</p>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>Нет товаров</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-    </div>
 {% endblock %}
+<script>
+    $(document).ready(function() {
+    $('#filter-form').submit(function(event) {
+        event.preventDefault();
+
+        var priceFrom = $('#price-from').val();
+        var priceTo = $('#price-to').val();
+        var nameFilter = $('#name-filter').val();
+        var descriptionFilter = $('#description-filter').val();
+        var selectedSellers = $('#seller-filter').val();
+        var booleanFilter = $('#boolean-filter').val();
+        var selectedOptions = $('input[name="list-filter"]:checked').map(function() {
+            return this.value;
+        }).get();
+
+        $.ajax({
+            url: '/filter-products',
+            method: 'POST',
+            data: {
+                priceFrom: priceFrom,
+                priceTo: priceTo,
+                nameFilter: nameFilter,
+                descriptionFilter: descriptionFilter,
+                selectedSellers: selectedSellers,
+                selectedManufacturers: selectedManufacturers,
+                booleanFilter: booleanFilter,
+                selectedOptions: selectedOptions
+            },
+            success: function(response) {
+                $('.product-list').html(response);
+            }
+        });
+    });
+});
+</script>
