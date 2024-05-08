@@ -9,9 +9,9 @@
                     {% for item in cart %}
                     <div class="Cart-product">
                         <div class="Cart-block Cart-block_row">
-                            <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="{{ item.product_seller.product.preview.image.url }}" alt="{{ item.product_seller.product.name }}"></a>
+                            <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="{% url 'shopapp:product' item.product_seller.product.pk %}"><img class="Cart-img" src="{{ item.product_seller.product.preview.image.url }}" alt="{{ item.product_seller.product.name }}"></a>
                             </div>
-                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ item.product_seller.product.name }}</a>
+                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{% url 'shopapp:product' item.product_seller.product.pk %}">{{ item.product_seller.product.name }}</a>
                                 <div class="Cart-desc">{{ item.product_seller.product.description }}
                                 </div>
                             </div>
