@@ -22,6 +22,7 @@ def cart_add(request, product_seller_id):
         )
     return redirect("cart:cart_detail")
 
+
 def add_inside_cart(request, product_seller_id):
     cart = Cart(request)
     product_seller = get_object_or_404(ProductSeller, id=product_seller_id)
@@ -31,6 +32,7 @@ def add_inside_cart(request, product_seller_id):
         update_quantity=False,
     )
     return redirect("cart:cart_detail")
+
 
 def remove_inside_cart(request, product_seller_id):
     cart = Cart(request)
@@ -42,12 +44,12 @@ def remove_inside_cart(request, product_seller_id):
     )
     return redirect("cart:cart_detail")
 
+
 def remove_cart(request, product_seller_id):
     cart = Cart(request)
     product_seller = get_object_or_404(ProductSeller, id=product_seller_id)
     cart.remove(product_seller=product_seller)
     return redirect("cart:cart_detail")
-
 
 
 def set_discounted_product(discount: Discount, cart: Cart):
