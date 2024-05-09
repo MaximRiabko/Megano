@@ -108,10 +108,10 @@
                             <div class="dropdown">
                                 <button class="dropbtn"><img class="CartBlock-img" src="{% static 'assets/img/icons/loon-icon.svg' %}" alt="loon-icon.svg" /></button>
                                 <div class="dropdown-content">
-                                    <a class="dropdown-content-a" href="account.html">Личный кабинет</a>
+                                    <a class="dropdown-content-a" href="{% url 'shopapp:profile' pk=user.pk %}">Личный кабинет</a>
                                     <a class="dropdown-content-a" href="account.html">Административный раздел</a>
-                                    <a class="dropdown-content-a" href="account.html">Просмотренные товары</a>
-                                    <a class="dropdown-content-a" href="account.html">Выход</a>
+                                    <a class="dropdown-content-a" href="{% url 'shopapp:profile' pk=user.pk %}">Просмотренные товары</a>
+                                    <a class="dropdown-content-a" href="{% url 'auth:logout' %}">Выход</a>
                                 </div>
                             </div>
                             <a class="CartBlock-block" href="{% url 'cart:cart_detail' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg" /><span class="CartBlock-amount">{{ cart|length }}</span></a>
