@@ -12,7 +12,7 @@
                             </div>
                             <div class="ProductCard-picts">
                                 {% for i in product.images.all %}
-                                <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="assets/img/content/home/bigGoods.png">
+                                <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ i.image.url }}">
                                     <img src="{{ i.image.url }}" alt="bigGoods.png" />
                                 </a>
                                 {% endfor %}
@@ -136,7 +136,7 @@
                                 <p>Lorem ipsum dolor sit amet, consectetuer&#32;
                                     <strong>adipiscing
                                     </strong>&#32;elit doli. Aenean commodo ligula eget dolor. Aenean massa.&#32;<a href="#">Cumtipsu</a>&#32;sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
-                                </p><img class="pict pict_right" src="{% static "assets/img/content/home/bigGoods.png" %}" alt="bigGoods.png" />
+                                </p><img class="pict pict_right" src="{{ product.preview.image.url }}" alt="bigGoods.png" />
                                 <ul>
                                     <li>{{ product.description }}
                                     </li>
