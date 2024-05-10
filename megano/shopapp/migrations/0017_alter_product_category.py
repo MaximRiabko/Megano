@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("shopapp", "0016_categories_archived_categories_name_and_more"),
+        ("shopapp", "0016_alter_viewhistory_user"),
     ]
 
     operations = [

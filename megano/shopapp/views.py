@@ -331,15 +331,15 @@ class CompareManager(TemplateView):
         return render(request, self.request.META.get("HTTP_REFERER"))
 
 
-def filter_products(request):
-    if request.method == 'POST':
-        price_from = request.POST.get('priceFrom')
-        price_to = request.POST.get('priceTo')
-        name_filter = request.POST.get('nameFilter')
-        description_filter = request.POST.get('descriptionFilter')
-        selected_sellers = request.POST.getlist('selectedSellers')
-        boolean_filter = request.POST.get('booleanFilter')
-        selected_options = request.POST.getlist('selectedOptions')
+class FilterProducts(ListView):
+    def get(self, request):
+        price_from = request.GET.get('priceFrom')
+        price_to = request.GET.get('priceTo')
+        name_filter = request.GET.get('nameFilter')
+        description_filter = request.GET.get('descriptionFilter')
+        selected_sellers = request.GET.getlist('selectedSellers')
+        boolean_filter = request.GET.get('booleanFilter')
+        selected_options = request.GET.getlist('selectedOptions')
 
         products = Product.objects.all()
         if price_from and price_to:
@@ -360,6 +360,5 @@ def filter_products(request):
         context = {
             'products': products
         }
-        return render(request, 'filtered_product_list.html', context)
+        return render(request, 'catalog.html', context)
 
-    return HttpResponseBadRequest()
