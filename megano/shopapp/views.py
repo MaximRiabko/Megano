@@ -1,15 +1,14 @@
 from datetime import timedelta
 
 import json
+from datetime import timedelta
 
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Sum
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
-from django.shortcuts import redirect, render
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -24,7 +23,7 @@ from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
-from .models import Discount, Product, ProductSeller, Seller, ViewHistory, Categories
+from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
 
 
 class ProductDetailView(
@@ -72,7 +71,9 @@ class ProductDetailView(
         self.object.product = self.get_object()
         self.object.save()
         return super().form_valid(form)
-from .models import Discount, ProductSeller, Seller, ViewHistory, Categories, Product
+
+
+from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -360,5 +361,4 @@ class FilterProducts(ListView):
         context = {
             'products': products
         }
-        return render(request, 'catalog.html', context)
-
+        return render(request, 'filtered_product_list.html', context)

@@ -24,11 +24,16 @@ def seller_image_directory_path(instance: "Seller", filename: str) -> str:
 
 
 class Categories(models.Model):
-    name = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=255, default="")
     archived = models.BooleanField(default=False)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='subcategories',
-                               on_delete=models.PROTECT)
-    
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        related_name="subcategories",
+        on_delete=models.PROTECT,
+    )
+
     def __str__(self):
         return self.name
 
