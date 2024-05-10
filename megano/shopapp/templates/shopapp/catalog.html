@@ -1,6 +1,5 @@
 {% extends "shopapp/base_main.html" %}
 {% load static %}
-
 {% block middle %}
     <div class="Middle Middle_top">
         <div class="Middle-top">
@@ -70,7 +69,6 @@
             </div>
         </div>
     </div>
-{% endblock %}
 <script>
     $(document).ready(function() {
     $('#filter-form').submit(function(event) {
@@ -88,7 +86,7 @@
 
         $.ajax({
             url: '/filter-products',
-            method: 'POST',
+            method: 'GET',
             data: {
                 priceFrom: priceFrom,
                 priceTo: priceTo,
@@ -106,3 +104,4 @@
     });
 });
 </script>
+{% endblock %}
