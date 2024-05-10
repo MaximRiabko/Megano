@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import json
 from datetime import timedelta
 
@@ -242,23 +240,23 @@ def catalog(request, pk):
     the_id = category.id
 
     if the_id:
-        cache_key = f'catalog_{pk}'
+        cache_key = f"catalog_{pk}"
         products = cache.get(cache_key)
         if not products:
             products = Product.objects.filter(category=the_id, archived=False)
             cache.set(cache_key, products, timeout=86400)
     else:
-        cache_key = 'catalog_all'
+        cache_key = "catalog_all"
         products = cache.get(cache_key)
         if not products:
             products = Product.objects.filter(archived=False)
             cache.set(cache_key, products, timeout=86400)
 
     context = {
-        'category': category,
-        'products': products,
+        "category": category,
+        "products": products,
     }
-    return render(request, 'shopapp/catalog.html', context)
+    return render(request, "shopapp/catalog.html", context)
 
 
 class LastOrderDetailView(DetailView):
@@ -334,13 +332,13 @@ class CompareManager(TemplateView):
 
 class FilterProducts(ListView):
     def get(self, request):
-        price_from = request.GET.get('priceFrom')
-        price_to = request.GET.get('priceTo')
-        name_filter = request.GET.get('nameFilter')
-        description_filter = request.GET.get('descriptionFilter')
-        selected_sellers = request.GET.getlist('selectedSellers')
-        boolean_filter = request.GET.get('booleanFilter')
-        selected_options = request.GET.getlist('selectedOptions')
+        price_from = request.GET.get("priceFrom")
+        price_to = request.GET.get("priceTo")
+        name_filter = request.GET.get("nameFilter")
+        description_filter = request.GET.get("descriptionFilter")
+        selected_sellers = request.GET.getlist("selectedSellers")
+        boolean_filter = request.GET.get("booleanFilter")
+        selected_options = request.GET.getlist("selectedOptions")
 
         products = Product.objects.all()
         if price_from and price_to:
@@ -351,14 +349,12 @@ class FilterProducts(ListView):
             products = products.filter(description__icontains=description_filter)
         if selected_sellers:
             products = products.filter(seller__in=selected_sellers)
-        if boolean_filter == 'yes':
+        if boolean_filter == "yes":
             products = products.filter(boolean_attr=True)
-        elif boolean_filter == 'no':
+        elif boolean_filter == "no":
             products = products.filter(boolean_attr=False)
         if selected_options:
             products = products.filter(list_attr__in=selected_options)
 
-        context = {
-            'products': products
-        }
-        return render(request, 'filtered_product_list.html', context)
+        context = {"products": products}
+        return render(request, "filtered_product_list.html", context)
