@@ -37,3 +37,4 @@ def payment_invoice(request):
 
 def proof_payment(request):
     return render(request, "pay/progress_payment.html")
+

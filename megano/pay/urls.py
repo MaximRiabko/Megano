@@ -9,3 +9,4 @@ urlpatterns = [
     path("paymentsomeone/", payment_invoice, name="paymentsomeone"),
     path("progressPayment/", proof_payment, name="progressPayment"),
 ]
+
