@@ -48,11 +48,11 @@ class OrderItem(models.Model):
         null=True,
         blank=True,
         on_delete=models.CASCADE,
-        related_name="order_items",
+        related_name="items",
     )
     price = models.FloatField()
-    old_price = models.FloatField()
-    count = models.IntegerField()
+    old_price = models.DecimalField(max_digits=10, decimal_places=2)
+    count = models.IntegerField(default=1)
     product = models.ForeignKey(
         ProductSeller,
         null=True,
