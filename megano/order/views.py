@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Order
+from cart.cart import Cart
 
 
 
@@ -14,7 +15,8 @@ def order_view(request):
 
     if request.method == 'POST':
         data = request.POST
-
+        cart = Cart(request)
+        context = {"cart": cart}
         # request.POST содержит:
         # <QueryDict: {'csrfmiddlewaretoken': ['CtqbedzZMgi8TOSDHMNUZ5ZIR12EEA04DNQn7TnitUo1zZ3OMwxfjtC6jhpvimfm'],
         #              'name': ['asdasd'],
@@ -38,6 +40,6 @@ def order_view(request):
 
 
         if pay_type == 'online':
-            return redirect("pay:payment")
+            return redirect("pay:payment", context=context)
         else:
-            return redirect("pay:paymentsomeone")
+            return redirect("pay:paymentsomeone", context=context)
