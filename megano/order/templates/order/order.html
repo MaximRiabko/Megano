@@ -30,7 +30,9 @@
                     </div>
 
                     <div class="Section-content">
-                        <form class="form" action="#" method="post">
+
+                        <form class="form" action="" method="post">
+                            {% csrf_token %}
                             <div class="Order-block Order-block_OPEN" id="step1">
                                 <header class="Section-header Section-header_sm">
                                     <h2 class="Section-title">Шаг 1. Параметры пользователя
