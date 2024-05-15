@@ -170,6 +170,6 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True, upload_to=avatar_directory_path)
-    phone = models.IntegerField()
-    middle_name = models.CharField(max_length=255)
-    seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
+    phone = models.IntegerField(null=True, blank=True)
+    middle_name = models.CharField(max_length=255, null=True, blank=True)
+    seller = models.ForeignKey(Seller, on_delete=models.PROTECT, null=True, blank=True)
