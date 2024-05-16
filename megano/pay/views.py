@@ -11,7 +11,7 @@ from .forms import PaymentForm
 from django.shortcuts import render, redirect
 from .models import Order
 from cart.cart import Cart
-from .forms import UserRegistrationForm, ProfileForm
+from .forms import UserRegistrationForm
 
 
 
@@ -54,7 +54,6 @@ from .forms import UserRegistrationForm, ProfileForm
 def order_step_1(request):
     context = {
         'form_user': UserRegistrationForm,
-        'form_profile': ProfileForm,
     }
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -62,12 +61,11 @@ def order_step_1(request):
         return render(request, "pay/order_step_1.html", context=context)
     elif request.method == "POST":
         user_form = UserRegistrationForm(request.POST)
-        profile_form = ProfileForm(request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid():
             name = user_form.cleaned_data['username']
             email = user_form.cleaned_data['email']
             password = user_form.cleaned_data['password']
-            phone = profile_form.cleaned_data['phone']
+            phone = user_form.cleaned_data['phone']
             user = User.objects.create_user(
                 username=email, first_name=name, email=email, password=password
             )
