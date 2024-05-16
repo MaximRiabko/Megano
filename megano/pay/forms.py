@@ -2,13 +2,11 @@ from django import forms
 from django.contrib.auth.models import User
 from shopapp.models import Profile
 
-class OrderRegistrationForm(forms.Form):
+class UserRegistrationForm(forms.Form):
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(label="Confirm password", widget=forms.PasswordInput)
-
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
+    username = forms.CharField(label='Full name', widget=forms.TextInput)
+    email = forms.EmailField(label='Email', widget=forms.EmailInput)
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -18,9 +16,7 @@ class OrderRegistrationForm(forms.Form):
             return cd['password2']
 
 class ProfileForm(forms.Form):
-    class Meta:
-        model = Profile
-        fields = ('phone',)
+    phone = forms.CharField(label='Phone number', widget=forms.TextInput)
 
 class PaymentForm(forms.Form):
     card_number = forms.CharField(
