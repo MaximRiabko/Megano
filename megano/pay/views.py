@@ -3,17 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
-from megano.settings import ON_PAYMENT
-
-from shopapp.models import Profile
-from .forms import PaymentForm
-
-from django.shortcuts import render, redirect
-from .models import Order
 from cart.cart import Cart
-from .forms import UserRegistrationForm
+from megano.settings import ON_PAYMENT
+from shopapp.models import Profile
 
-
+from .forms import PaymentForm, UserRegistrationForm
+from .models import Order
 
 # def order_view(request):
 #     if request.method == 'GET':
@@ -51,21 +46,22 @@ from .forms import UserRegistrationForm
 #         else:
 #             return redirect("pay:paymentsomeone", context=context)
 
+
 def order_step_1(request):
     context = {
-        'form_user': UserRegistrationForm,
+        "form_user": UserRegistrationForm,
     }
     if request.method == "GET":
         if request.user.is_authenticated:
-            return redirect('pay:step_2')
+            return redirect("pay:step_2")
         return render(request, "pay/order_step_1.html", context=context)
     elif request.method == "POST":
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
-            name = user_form.cleaned_data['username']
-            email = user_form.cleaned_data['email']
-            password = user_form.cleaned_data['password']
-            phone = user_form.cleaned_data['phone']
+            name = user_form.cleaned_data["username"]
+            email = user_form.cleaned_data["email"]
+            password = user_form.cleaned_data["password"]
+            phone = user_form.cleaned_data["phone"]
             user = User.objects.create_user(
                 username=email, first_name=name, email=email, password=password
             )
@@ -79,6 +75,7 @@ def order_step_1(request):
                 return redirect("pay:step_2")
 
     return render(request, "pay/order_step_1.html", context=context)
+
 
 @login_required
 def order_step_2(request):

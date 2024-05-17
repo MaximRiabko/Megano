@@ -1,6 +1,12 @@
 from django.urls import path
 
-from .views import payment_card, payment_invoice, proof_payment, order_step_1, order_step_2
+from .views import (
+    order_step_1,
+    order_step_2,
+    payment_card,
+    payment_invoice,
+    proof_payment,
+)
 
 app_name = "pay"
 
