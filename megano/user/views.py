@@ -9,17 +9,24 @@ from django.contrib.auth.views import (
 )
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 
 
 class Login(LoginView):
     template_name = "login.html"
     redirect_authenticated_user = True
-    next_page = "index.html"
 
     def form_invalid(self, form):
         response = super().form_invalid(form)
         errors = form.errors
         return JsonResponse({"errors": errors}, status=400)
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        if next_url:
+            print(next_url)
+            return next_url
+        return reverse_lazy("shopapp:index")
 
 
 def logout_view(request):
