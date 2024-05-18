@@ -7,44 +7,8 @@ from cart.cart import Cart
 from megano.settings import ON_PAYMENT
 from shopapp.models import Profile
 
-from .forms import PaymentForm, UserRegistrationForm
+from .forms import PaymentForm, UserRegistrationForm, DeliveryForm
 from .models import Order
-
-# def order_view(request):
-#     if request.method == 'GET':
-#
-#         return render(request, "pay/order.html")
-#
-#     if request.method == 'POST':
-#         data = request.POST
-#         cart = Cart(request)
-#         context = {"cart": cart}
-#         # request.POST содержит:
-#         # <QueryDict: {'csrfmiddlewaretoken': ['CtqbedzZMgi8TOSDHMNUZ5ZIR12EEA04DNQn7TnitUo1zZ3OMwxfjtC6jhpvimfm'],
-#         #              'name': ['asdasd'],
-#         #              'phone': ['asdasd'],
-#         #              'mail': ['Sam_ctc'],
-#         #              'password': ['Djghjc871'],
-#         #              'passwordReply': ['asdasd'],
-#         #              'delivery': ['ordinary'],
-#         #              'city': ['asdasd'],
-#         #              'address': ['asdasda'],
-#         #              'pay': ['online']
-#         #              }>
-#
-#         name = data.get('name')
-#         phone = data.get('phone')
-#         mail = data.get('mail')
-#         city = data.get('city')
-#         address = data.get('address')
-#         delivery = data.get('delivery')
-#         pay_type = data.get('pay')
-#
-#
-#         if pay_type == 'online':
-#             return redirect("pay:payment", context=context)
-#         else:
-#             return redirect("pay:paymentsomeone", context=context)
 
 
 def order_step_1(request):
@@ -79,8 +43,35 @@ def order_step_1(request):
 
 @login_required
 def order_step_2(request):
+    context = {
+        "form_order": DeliveryForm,
+    }
+    if request.method == "GET":
+        return render(request, "pay/order_step_2.html", context=context)
+    elif request.method == "POST":
+        order_form = DeliveryForm(request.POST)
+        if order_form.is_valid():
+            delivery = order_form.cleaned_data['delivery']
+            city = order_form.cleaned_data['city']
+            address = order_form.cleaned_data['address']
+            user = request.user
+            print(user)
+            print(delivery, city, address)
+            order = Order(
+                user=user,
+                city=city,
+                address=address,
+                delivery=delivery
+            )
+            order.save()
+            return redirect("pay:step_3")
+
     return render(request, "pay/order_step_2.html")
 
+
+@login_required
+def order_step_3(request):
+    return render(request, "pay/order_step_3.html")
 
 def payment_card(request):
     if request.method == "GET":
