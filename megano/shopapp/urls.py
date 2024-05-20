@@ -44,7 +44,7 @@ urlpatterns = [
         OrderDetailView.as_view(),
         name="order_details",
     ),
-    path("categories/products/<int:pk>", catalog, name="catalog"),
+    path("categories/products/<int:pk>/", catalog, name="catalog"),
     path(
         "profile/<int:pk>/order/last/",
         LastOrderDetailView.as_view(),
