@@ -18,11 +18,11 @@ class PaymentStatus(models.TextChoices):
     PAID = ("paid", "Paid")
     CANCELLED = ("cancelled", "Cancelled")
 
+
 class TransactionStatus(models.TextChoices):
     PAID = ("paid", "Paid")
-    RUNNING = ('running', "Running")
+    RUNNING = ("running", "Running")
     CANCELLED = ("cancelled", "Cancelled")
-
 
 
 class Order(models.Model):
@@ -72,7 +72,9 @@ class Transaction(models.Model):
     uuid = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(
-        choices=TransactionStatus.choices, default=TransactionStatus.RUNNING, max_length=100
+        choices=TransactionStatus.choices,
+        default=TransactionStatus.RUNNING,
+        max_length=100,
     )
     order = models.ForeignKey(
         Order,

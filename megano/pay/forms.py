@@ -41,19 +41,27 @@ class PaymentForm(forms.Form):
 
 class DeliveryForm(forms.Form):
     delivery_options = [
-        ('ordinary', 'Обычная доставка'),
-        ('express', 'Экспресс доставка')
+        ("ordinary", "Обычная доставка"),
+        ("express", "Экспресс доставка"),
     ]
 
-    delivery = forms.ChoiceField(label='Способ доставки', choices=delivery_options, widget=forms.RadioSelect())
-    city = forms.CharField(label='Город', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    address = forms.CharField(label='Адрес', widget=forms.Textarea(attrs={'class': 'form-textarea'}))
+    delivery = forms.ChoiceField(
+        label="Способ доставки", choices=delivery_options, widget=forms.RadioSelect()
+    )
+    city = forms.CharField(
+        label="Город", widget=forms.TextInput(attrs={"class": "form-input"})
+    )
+    address = forms.CharField(
+        label="Адрес", widget=forms.Textarea(attrs={"class": "form-textarea"})
+    )
 
 
 class PaymentTypeForm(forms.Form):
     payment_options = [
-        ('online', 'Онлайн картой'),
-        ('someone', 'Онлайн со случайного чужого счета')
+        ("online", "Онлайн картой"),
+        ("someone", "Онлайн со случайного чужого счета"),
     ]
 
-    type = forms.ChoiceField(label='Способ доставки', choices=payment_options, widget=forms.RadioSelect())
+    type = forms.ChoiceField(
+        label="Способ доставки", choices=payment_options, widget=forms.RadioSelect()
+    )

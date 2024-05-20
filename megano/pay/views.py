@@ -7,7 +7,7 @@ from cart.cart import Cart
 from megano.settings import ON_PAYMENT
 from shopapp.models import Profile
 
-from .forms import PaymentForm, UserRegistrationForm, DeliveryForm, PaymentTypeForm
+from .forms import DeliveryForm, PaymentForm, PaymentTypeForm, UserRegistrationForm
 from .models import Order
 
 
@@ -39,7 +39,6 @@ def order_step_1(request):
                 return redirect("pay:step_2")
 
 
-
 def order_step_2(request):
     context = {
         "form_order": DeliveryForm,
@@ -51,19 +50,13 @@ def order_step_2(request):
     elif request.method == "POST":
         order_form = DeliveryForm(request.POST)
         if order_form.is_valid():
-            delivery = order_form.cleaned_data['delivery']
-            city = order_form.cleaned_data['city']
-            address = order_form.cleaned_data['address']
+            delivery = order_form.cleaned_data["delivery"]
+            city = order_form.cleaned_data["city"]
+            address = order_form.cleaned_data["address"]
             user = request.user
-            order = Order(
-                user=user,
-                city=city,
-                address=address,
-                delivery=delivery
-            )
+            order = Order(user=user, city=city, address=address, delivery=delivery)
             order.save()
             return redirect("pay:step_3", id=order.id)
-
 
 
 def order_step_3(request, id):
@@ -76,9 +69,9 @@ def order_step_3(request, id):
             return redirect("pay:step_1")
         return render(request, "pay/order_step_3.html", context=context)
     elif request.method == "POST":
-        payment_form  = PaymentTypeForm(request.POST)
+        payment_form = PaymentTypeForm(request.POST)
         if payment_form.is_valid():
-            payment_type = payment_form.cleaned_data['type']
+            payment_type = payment_form.cleaned_data["type"]
             order = Order.objects.get(pk=id)
             order.payment_type = payment_type
             order.save()
