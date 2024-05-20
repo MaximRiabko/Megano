@@ -31,7 +31,7 @@
 
                     <div class="Section-content">
 
-                        <form class="form" action="{% url 'pay:step_3' %}" method="post">
+                        <form class="form" action="{% url 'pay:step_3' id=order_id %}" method="post">
                             {% csrf_token %}
                             <div class="Order-block Order-block_OPEN" id="step2">
                                 <header class="Section-header Section-header_sm">
@@ -39,19 +39,11 @@
                                     </h2>
                                 </header>
                                 <div class="form-group">
-                                           {% for choice in form_order.delivery %}
+                                           {% for type in form_payment_type.type %}
                                             <span class="toggle-box"></span>
-                                            <span class="toggle-text">{{ choice }}</span>
+                                            <span class="toggle-text">{{ type }}</span>
+                                           <br>
                                             {% endfor %}
-                                </div>
-
-                                <div class="form-group">
-                                    {{ form_order.city.label }}
-                                    {{ form_order.city }}
-                                </div>
-                                <div class="form-group">
-                                    {{ form_order.address.label }}
-                                    {{ form_order.address }}
                                 </div>
                                 <div class="Order-footer">
                                     <button class="btn btn_success" type="submit">Дальше</button>

@@ -7,7 +7,7 @@ from cart.cart import Cart
 from megano.settings import ON_PAYMENT
 from shopapp.models import Profile
 
-from .forms import PaymentForm, UserRegistrationForm, DeliveryForm
+from .forms import PaymentForm, UserRegistrationForm, DeliveryForm, PaymentTypeForm
 from .models import Order
 
 
@@ -38,15 +38,15 @@ def order_step_1(request):
                 login(request, new_user)
                 return redirect("pay:step_2")
 
-    return render(request, "pay/order_step_1.html", context=context)
 
 
-@login_required
 def order_step_2(request):
     context = {
         "form_order": DeliveryForm,
     }
     if request.method == "GET":
+        if not request.user.is_authenticated:
+            return redirect("pay:step_1")
         return render(request, "pay/order_step_2.html", context=context)
     elif request.method == "POST":
         order_form = DeliveryForm(request.POST)
@@ -55,8 +55,6 @@ def order_step_2(request):
             city = order_form.cleaned_data['city']
             address = order_form.cleaned_data['address']
             user = request.user
-            print(user)
-            print(delivery, city, address)
             order = Order(
                 user=user,
                 city=city,
@@ -64,14 +62,27 @@ def order_step_2(request):
                 delivery=delivery
             )
             order.save()
-            return redirect("pay:step_3")
-
-    return render(request, "pay/order_step_2.html")
+            return redirect("pay:step_3", id=order.id)
 
 
-@login_required
-def order_step_3(request):
-    return render(request, "pay/order_step_3.html")
+
+def order_step_3(request, id):
+    context = {
+        "form_payment_type": PaymentTypeForm,
+        "order_id": id,
+    }
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return redirect("pay:step_1")
+        return render(request, "pay/order_step_3.html", context=context)
+    elif request.method == "POST":
+        payment_form  = PaymentTypeForm(request.POST)
+        if payment_form.is_valid():
+            payment_type = payment_form.cleaned_data['type']
+            order = Order.objects.get(pk=id)
+            order.payment_type = payment_type
+            return redirect("pay:step_4", id=id)
+
 
 def payment_card(request):
     if request.method == "GET":
