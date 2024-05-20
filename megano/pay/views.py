@@ -81,6 +81,7 @@ def order_step_3(request, id):
             payment_type = payment_form.cleaned_data['type']
             order = Order.objects.get(pk=id)
             order.payment_type = payment_type
+            order.save()
             return redirect("pay:step_4", id=id)
 
 
