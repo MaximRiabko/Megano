@@ -77,6 +77,7 @@ def order_step_3(request, id):
             order.save()
             return redirect("pay:step_4", id=id)
 
+
 def order_step_4(request, id):
     cart = Cart(request)
     order = Order.objects.get(pk=id)
@@ -94,10 +95,10 @@ def order_step_4(request, id):
         for item in cart:
             OrderItem.objects.create(
                 order=order,
-                product=item['product_seller'],
-                price=item['price'],
-                old_price=item['price'],
-                count=item['quantity'],
+                product=item["product_seller"],
+                price=item["price"],
+                old_price=item["price"],
+                count=item["quantity"],
             )
         cart.clear()
         return redirect("pay:payment")
