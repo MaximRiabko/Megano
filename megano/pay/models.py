@@ -5,8 +5,8 @@ from shopapp.models import ProductSeller
 
 
 class PaymentChoices(models.TextChoices):
-    CASH = ("cash", "Cash")
-    CREDIT_CARD = ("credit_card", "Credit Card")
+    CASH = ("someone", "Someone")
+    CREDIT_CARD = ("online", "Online")
 
 
 class DeliveryChoices(models.TextChoices):
@@ -19,16 +19,22 @@ class PaymentStatus(models.TextChoices):
     CANCELLED = ("cancelled", "Cancelled")
 
 
+class TransactionStatus(models.TextChoices):
+    PAID = ("paid", "Paid")
+    RUNNING = ("running", "Running")
+    CANCELLED = ("cancelled", "Cancelled")
+
+
 class Order(models.Model):
     class Meta:
         get_latest_by = "created_at"
 
     user = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.PROTECT, related_name="orders"
+        User, null=True, blank=True, on_delete=models.PROTECT, related_name="users"
     )
-    city = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
-    payment = models.CharField(
+    city = models.CharField(max_length=100, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    payment_type = models.CharField(
         choices=PaymentChoices.choices, default=PaymentChoices.CASH, max_length=100
     )
     payment_status = models.CharField(
@@ -38,8 +44,8 @@ class Order(models.Model):
         choices=DeliveryChoices.choices, default=DeliveryChoices.PICKUP, max_length=100
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    comment = models.CharField(max_length=200)
-    reference_num = models.CharField(max_length=100)
+    comment = models.CharField(max_length=200, null=True, blank=True)
+    reference_num = models.CharField(max_length=100, null=True, blank=True)
 
 
 class OrderItem(models.Model):
@@ -48,11 +54,11 @@ class OrderItem(models.Model):
         null=True,
         blank=True,
         on_delete=models.CASCADE,
-        related_name="order_items",
+        related_name="orders",
     )
     price = models.FloatField()
-    old_price = models.FloatField()
-    count = models.IntegerField()
+    old_price = models.DecimalField(max_digits=10, decimal_places=2)
+    count = models.IntegerField(default=1)
     product = models.ForeignKey(
         ProductSeller,
         null=True,
@@ -66,7 +72,9 @@ class Transaction(models.Model):
     uuid = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(
-        choices=PaymentStatus.choices, default=PaymentStatus.CANCELLED, max_length=100
+        choices=TransactionStatus.choices,
+        default=TransactionStatus.RUNNING,
+        max_length=100,
     )
     order = models.ForeignKey(
         Order,

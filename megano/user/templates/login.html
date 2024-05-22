@@ -23,6 +23,7 @@
                     <input type="password" name="password" id="pass" placeholder="*********"/>
                 </div>
                 <div>
+                    <input type="hidden" name="next" value="{{ next }}">
                     <input onclick="login()" type="submit" value="Войти"/>
                 </div>
                 <a class="forgot-label" href="{% url 'auth:recovery_password' %}">Забыли пароль?</a>

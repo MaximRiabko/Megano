@@ -39,7 +39,8 @@ class ProductDetailView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        ViewHistory.objects.create(user=self.request.user, product=product)
+        if self.request.user.is_authenticated:
+            ViewHistory.objects.create(user=self.request.user, product=product)
         product_sellers = product.product_sellers.filter(quantity__gt=0).order_by(
             "price"
         )
