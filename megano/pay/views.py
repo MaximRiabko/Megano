@@ -8,7 +8,7 @@ from megano.settings import ON_PAYMENT
 from shopapp.models import Profile
 
 from .forms import DeliveryForm, PaymentForm, PaymentTypeForm, UserRegistrationForm
-from .models import Order
+from .models import Order, OrderItem
 
 
 def order_step_1(request):
@@ -76,6 +76,32 @@ def order_step_3(request, id):
             order.payment_type = payment_type
             order.save()
             return redirect("pay:step_4", id=id)
+
+
+def order_step_4(request, id):
+    cart = Cart(request)
+    order = Order.objects.get(pk=id)
+    context = {
+        "order_id": id,
+        "order": order,
+        "cart": cart,
+    }
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return redirect("pay:step_1")
+        return render(request, "pay/order_step_4.html", context=context)
+    elif request.method == "POST":
+        order = Order.objects.get(pk=id)
+        for item in cart:
+            OrderItem.objects.create(
+                order=order,
+                product=item["product_seller"],
+                price=item["price"],
+                old_price=item["price"],
+                count=item["quantity"],
+            )
+        cart.clear()
+        return redirect("pay:payment")
 
 
 def payment_card(request):
