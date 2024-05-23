@@ -57,11 +57,9 @@
                                 <strong class="Card-title"><a href="product.html">{{ contact.name }}</a>
                                 </strong>
                                 <div class="Card-description">
-                                    {% for p in seller %}
-                                    <div class="Card-cost"><span class="Card-price">{{ p.price }}</span>
+                                    <div class="Card-cost"><span class="Card-price">{{ contact.min_price }}</span>
                                     </div>
-                                    {% endfor %}
-                                    <div class="Card-category">{{ contact.category }}
+                                    <div class="Card-category">{{ contact.category.name }}
                                     </div>
                                     <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg" /></a>
                                     </div>
@@ -71,9 +69,15 @@
                     </div>
                     {% endfor %}
                     <div class="Pagination">
-                        {% for p in page_obj.paginator.page_range %}
-                            <div class="Pagination-ins"><a class="Pagination-element Pagination-element_prev" href="#"><img src="{% static 'assets/img/icons/prevPagination.svg' %}" alt="prevPagination.svg" /></a><a class="Pagination-element Pagination-element_current" href="?page={{ p }}"><span class="Pagination-text">{{ p }}</span></a><a class="Pagination-element Pagination-element_prev" href="#"><img src="{% static 'assets/img/icons/nextPagination.svg' %}" alt="nextPagination.svg" /></a></div>
-                        {% endfor %}
+                            <div class="Pagination-ins">
+                                <a class="Pagination-element Pagination-element_prev" href="#">
+                                    <img src="{% static 'assets/img/icons/prevPagination.svg' %}" alt="prevPagination.svg" /></a>
+                                {% for p in page_obj.paginator.page_range %}
+                                <a class="Pagination-element Pagination-element_current" href="?page={{ p }}"><span class="Pagination-text">{{ p }}</span></a>
+                                {% endfor %}
+                                <a class="Pagination-element Pagination-element_prev" href="#">
+                                    <img src="{% static 'assets/img/icons/nextPagination.svg' %}" alt="nextPagination.svg" /></a>
+                            </div>
                     </div>
                 </div>
             </div>
