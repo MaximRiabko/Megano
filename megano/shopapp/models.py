@@ -69,6 +69,7 @@ class Product(models.Model):
         Categories, on_delete=models.PROTECT, related_name="products"
     )
     details = models.JSONField(blank=True, verbose_name="Характеристики", default=dict)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"Product(pk={self.pk}, name={self.name!r})"

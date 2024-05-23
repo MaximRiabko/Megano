@@ -17,6 +17,7 @@ from .views import (
     ProfileUpdateView,
     SellerDetailView,
     catalog,
+    SortProducts,
 )
 
 app_name = "shopapp"
@@ -54,6 +55,11 @@ urlpatterns = [
         "categories/products/filtered-products/",
         FilterProducts.as_view(),
         name="filter-products",
+    ),
+    path(
+        "categories/products/sorted-products/",
+        SortProducts.as_view(),
+        name="sort-products",
     ),
 ]
 

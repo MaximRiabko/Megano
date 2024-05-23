@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Min
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -359,3 +359,26 @@ class FilterProducts(ListView):
 
         context = {"products": products}
         return render(request, "filtered_product_list.html", context)
+
+
+class SortProducts(ListView):
+    def get(self, request):
+        sort = request.GET.get("sort")
+        products = Product.objects.all()
+        if sort == "price":
+            products = products.annotate(
+                min_price=Min('product_sellers__price')
+            ).order_by("min_price")
+        if sort == "popularity":
+            products = products.annotate(
+                pop=Count("product_sellers__order_items")
+            ).order_by("pop")
+        if sort == "novelty":
+            products = products.order_by("created_at")
+        if sort == "reviews":
+            products = products.annotate(
+                reviews=Count("reviews_product")
+            ).order_by("reviews")
+
+        context = {"products": products}
+        return render(request, "catalog.html", context)

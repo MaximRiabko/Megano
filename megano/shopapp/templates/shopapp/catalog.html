@@ -6,6 +6,20 @@
             <div class="wrap">
                 <div class="Middle-header">
                     <h1>{{ category }}</h1>
+                     <ul class="product-list">
+                        {% for product in products %}
+                            <li class="product-item">
+                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                                <div class="product-details">
+                                    <h3 class="product-title">{{ product.name }}</h3>
+                                    <p class="product-price">{{ product.price }}</p>
+                                    <p class="product-description">{{ product.description }}</p>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>Нет товаров</li>
+                        {% endfor %}
+                    </ul>
                     <form id="filter-form">
                         <div class="filter-group">
                             <label for="price-from">Цена от:</label>
@@ -50,21 +64,22 @@
                         </div>
                         <button type="submit">Применить фильтры</button>
                     </form>
+                   <form id="sort-form">
+                       <div>
+                           <label for="sort-select">Сортировать по:</label>
+                           <input type="checkbox" id="price" name="list-filter" value="price">
+                           <label for="price">Цена</label>
+                           <input type="checkbox" id="popularity" name="list-filter" value="popularity">
+                           <label for="popularity">Популярность</label>
+                           <input type="checkbox" id="novelty" name="list-filter" value="novelty">
+                           <label for="novelty">Новизна</label>
+                           <input type="checkbox" id="reviews" name="list-filter" value="reviews">
+                           <label for="reviews">Отзывы</label>
+                       </div>
 
-                    <ul class="product-list">
-                        {% for product in products %}
-                            <li class="product-item">
-                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
-                                <div class="product-details">
-                                    <h3 class="product-title">{{ product.name }}</h3>
-                                    <p class="product-price">{{ product.price }}</p>
-                                    <p class="product-description">{{ product.description }}</p>
-                                </div>
-                            </li>
-                        {% empty %}
-                            <li>Нет товаров</li>
-                        {% endfor %}
-                    </ul>
+                       <button type="submit">Применить сортировку</button>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -103,5 +118,25 @@
         });
     });
 });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#sort-form').submit(function(event) {
+            event.preventDefault();
+            var sort = $('input[name="sort-select"]:checked').map(function() {
+                return this.value;
+            }).get();
+            var params = { sort: selectedValue };
+
+            $.ajax({
+                url: "/categories/products/sorted-products/",
+                method: 'GET',
+                data: params,
+                success: function(response) {
+                    $('.product-list').html(response);
+                }
+            });
+        });
+    });
 </script>
 {% endblock %}
