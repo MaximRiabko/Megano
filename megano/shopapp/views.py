@@ -1,10 +1,11 @@
 import json
 from datetime import timedelta
-
+from django.db.models import Min
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator
 from django.db.models import Count, Sum
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
@@ -239,23 +240,33 @@ class OrderDetailView(DetailView):
 def catalog(request, pk):
     category = Categories.objects.filter(id=pk).first()
     the_id = category.id
+    grocery_list = Product.objects.all().filter(category=the_id, archived=False).annotate(
+        min_price=Min('product_sellers__price')
+    )
+
+    paginator = Paginator(grocery_list, 3)
+
+    seller = ProductSeller.objects.all()
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if the_id:
         cache_key = f"catalog_{pk}"
-        products = cache.get(cache_key)
-        if not products:
-            products = Product.objects.filter(category=the_id, archived=False)
-            cache.set(cache_key, products, timeout=86400)
+        grocery_list = cache.get(cache_key)
+        if not grocery_list:
+            cache.set(cache_key, grocery_list, timeout=86400)
     else:
         cache_key = "catalog_all"
-        products = cache.get(cache_key)
-        if not products:
-            products = Product.objects.filter(archived=False)
-            cache.set(cache_key, products, timeout=86400)
+        grocery_list = cache.get(cache_key)
+        if not grocery_list:
+            cache.set(cache_key, grocery_list, timeout=86400)
+
 
     context = {
         "category": category,
-        "products": products,
+        "page_obj": page_obj,
+        "seller": seller,
     }
     return render(request, "shopapp/catalog.html", context)
 
