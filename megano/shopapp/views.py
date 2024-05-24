@@ -362,9 +362,10 @@ class FilterProducts(ListView):
 
 
 class SortProducts(ListView):
-    def get(self, request):
-        sort = request.GET.get("sort")
-        products = Product.objects.all()
+    def get(self, request, pk, *args, **kwargs):
+        category = Categories.objects.filter(pk=pk).first()
+        sort = request.GET.get('param')
+        products = Product.objects.filter(category=category)
         if sort == "price":
             products = products.annotate(
                 min_price=Min('product_sellers__price')
@@ -380,5 +381,8 @@ class SortProducts(ListView):
                 reviews=Count("reviews_product")
             ).order_by("reviews")
 
-        context = {"products": products}
-        return render(request, "catalog.html", context)
+        context = {
+            "products": products,
+            "category": category,
+        }
+        return render(request, "shopapp/catalog.html", context)

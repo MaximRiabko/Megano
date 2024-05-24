@@ -6,84 +6,90 @@
             <div class="wrap">
                 <div class="Middle-header">
                     <h1>{{ category }}</h1>
-                     <ul class="product-list">
-                        {% for product in products %}
-                            <li class="product-item">
-                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
-                                <div class="product-details">
-                                    <h3 class="product-title">{{ product.name }}</h3>
-                                    <p class="product-price">{{ product.price }}</p>
-                                    <p class="product-description">{{ product.description }}</p>
-                                </div>
-                            </li>
-                        {% empty %}
-                            <li>Нет товаров</li>
-                        {% endfor %}
+                            <ul class="product-list">
+                                {% for product in products %}
+                                    <li class="product-item">
+                                        <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                                        <div class="product-details">
+                                            <h3 class="product-title">{{ product.name }}</h3>
+                                            <p class="product-price">{{ product.price }}</p>
+                                            <p class="product-description">{{ product.description }}</p>
+                                        </div>
+                                    </li>
+                                {% empty %}
+                                    <li>Нет товаров</li>
+                                {% endfor %}
+
                     </ul>
-                    <form id="filter-form">
-                        <div class="filter-group">
-                            <label for="price-from">Цена от:</label>
-                            <input type="number" id="price-from" name="price-from">
-                        </div>
-                        <div class="filter-group">
-                            <label for="price-to">Цена до:</label>
-                            <input type="number" id="price-to" name="price-to">
-                        </div>
-                        <div class="filter-group">
-                            <label for="name-filter">Поиск по названию:</label>
-                            <input type="text" id="name-filter" name="name-filter">
-                        </div>
-                        <div class="filter-group">
-                            <label for="description-filter">Поиск по описанию:</label>
-                            <input type="text" id="description-filter" name="description-filter">
-                        </div>
-                        <div class="filter-group">
-                            <label for="seller-filter">Фильтр по продавцу:</label>
-                            <select id="seller-filter" name="seller-filter" multiple>
-                                <option value="seller1">Продавец 1</option>
-                                <option value="seller2">Продавец 2</option>
-                                <option value="seller3">Продавец 3</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="boolean-filter">Фильтр по boolean характеристике:</label>
-                            <select id="boolean-filter" name="boolean-filter">
-                                <option value="yes">Да</option>
-                                <option value="no">Нет</option>
-                                <option value="">Не учитывать</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="list-filter">Фильтр по характеристике-списку:</label>
-                            <input type="checkbox" id="list-option1" name="list-filter" value="option1">
-                            <label for="list-option1">Опция 1</label>
-                            <input type="checkbox" id="list-option2" name="list-filter" value="option2">
-                            <label for="list-option2">Опция 2</label>
-                            <input type="checkbox" id="list-option3" name="list-filter" value="option3">
-                            <label for="list-option3">Опция 3</label>
-                        </div>
-                        <button type="submit">Применить фильтры</button>
+                     <div class="Section-columnSection">
+                        <header class="Section-header">
+                            <form id="filter-form">
+                            <div class="filter-group">
+                                <label for="price-from">Цена от:</label>
+                                <input type="number" id="price-from" name="price-from">
+                            </div>
+                            <div class="filter-group">
+                                <label for="price-to">Цена до:</label>
+                                <input type="number" id="price-to" name="price-to">
+                            </div>
+                            <div class="filter-group">
+                                <label for="name-filter">Поиск по названию:</label>
+                                <input type="text" id="name-filter" name="name-filter">
+                            </div>
+                            <div class="filter-group">
+                                <label for="description-filter">Поиск по описанию:</label>
+                                <input type="text" id="description-filter" name="description-filter">
+                            </div>
+                            <div class="filter-group">
+                                <label for="seller-filter">Фильтр по продавцу:</label>
+                                <select id="seller-filter" name="seller-filter" multiple>
+                                    <option value="seller1">Продавец 1</option>
+                                    <option value="seller2">Продавец 2</option>
+                                    <option value="seller3">Продавец 3</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="boolean-filter">Фильтр по boolean характеристике:</label>
+                                <select id="boolean-filter" name="boolean-filter">
+                                    <option value="yes">Да</option>
+                                    <option value="no">Нет</option>
+                                    <option value="">Не учитывать</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="list-filter">Фильтр по характеристике-списку:</label>
+                                <input type="checkbox" id="list-option1" name="list-filter" value="option1">
+                                <label for="list-option1">Опция 1</label>
+                                <input type="checkbox" id="list-option2" name="list-filter" value="option2">
+                                <label for="list-option2">Опция 2</label>
+                                <input type="checkbox" id="list-option3" name="list-filter" value="option3">
+                                <label for="list-option3">Опция 3</label>
+                            </div>
+                            <button type="submit">Применить фильтры</button>
                     </form>
-                   <form id="sort-form">
-                       <div>
-                           <label for="sort-select">Сортировать по:</label>
-                           <input type="checkbox" id="price" name="list-filter" value="price">
-                           <label for="price">Цена</label>
-                           <input type="checkbox" id="popularity" name="list-filter" value="popularity">
-                           <label for="popularity">Популярность</label>
-                           <input type="checkbox" id="novelty" name="list-filter" value="novelty">
-                           <label for="novelty">Новизна</label>
-                           <input type="checkbox" id="reviews" name="list-filter" value="reviews">
-                           <label for="reviews">Отзывы</label>
-                       </div>
+                        </header>
 
-                       <button type="submit">Применить сортировку</button>
-                    </form>
-
+                    <div class="Section-content">
+                        <form id="sort-form">
+                           <div>
+                               <label for="sort-select">Сортировать по:</label>
+                               <input type="radio" id="price" name="list-filter" value="price">
+                               <label for="price">Цена</label>
+                               <input type="radio" id="popularity" name="list-filter" value="popularity">
+                               <label for="popularity">Популярность</label>
+                               <input type="radio" id="novelty" name="list-filter" value="novelty">
+                               <label for="novelty">Новизна</label>
+                               <input type="radio" id="reviews" name="list-filter" value="reviews">
+                               <label for="reviews">Отзывы</label>
+                           </div>
+                           <a id="apply-button" href="{% url 'shopapp:sort-products' pk=category.pk %}">Применить</a>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
     $('#filter-form').submit(function(event) {
@@ -121,22 +127,20 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#sort-form').submit(function(event) {
-            event.preventDefault();
-            var sort = $('input[name="sort-select"]:checked').map(function() {
-                return this.value;
-            }).get();
-            var params = { sort: selectedValue };
 
-            $.ajax({
-                url: "/categories/products/sorted-products/",
-                method: 'GET',
-                data: params,
-                success: function(response) {
-                    $('.product-list').html(response);
-                }
-            });
-        });
+      var applyButton = $('#apply-button');
+      var checkboxes = $('input[name="list-filter"]');
+
+      applyButton.click(function(event) {
+        event.preventDefault();
+
+        var url = applyButton.attr('href');
+        var selectedParams = checkboxes.filter(':checked').val()
+
+        url += '?param=' + selectedParams;
+
+        window.location.href = url;
+      });
     });
 </script>
 {% endblock %}

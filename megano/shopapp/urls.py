@@ -57,7 +57,7 @@ urlpatterns = [
         name="filter-products",
     ),
     path(
-        "categories/products/sorted-products/",
+        "categories/products/sorted-products/<int:pk>",
         SortProducts.as_view(),
         name="sort-products",
     ),
