@@ -88,6 +88,7 @@ class ProductSeller(models.Model):
     quantity = models.SmallIntegerField(default=0)
     sale = models.IntegerField(blank=True, default=0)
 
+
     def get_sale(self):
         """Функция рассчитывает стоимость со скидкой"""
         price = int(self.price * (100 - self.sale) / 100)
