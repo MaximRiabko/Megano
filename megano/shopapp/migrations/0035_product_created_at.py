@@ -13,7 +13,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="product",
             name="created_at",
-            field=models.DateTimeField(auto_now_add=True, default="2024-05-23 13:00:00"),
+            field=models.DateTimeField(
+                auto_now_add=True, default="2024-05-23 13:00:00"
+            ),
             preserve_default=False,
         ),
     ]

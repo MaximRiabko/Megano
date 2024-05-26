@@ -4,6 +4,7 @@ from django.urls import path
 
 from .views import (
     AccountDetailView,
+    CatalogView,
     CompareManager,
     CompareView,
     DiscountDetailView,
@@ -16,7 +17,6 @@ from .views import (
     ProfileUpdateView,
     SellerDetailView,
     set_language,
-    CatalogView,
 )
 
 app_name = "shopapp"

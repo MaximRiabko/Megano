@@ -388,14 +388,15 @@ class CompareManager(TemplateView):
 #         return render(request, "filtered_product_list.html", context)
 #
 
+
 class CatalogView(ListView):
     def get(self, request, pk, *args, **kwargs):
         category = Categories.objects.filter(pk=pk).first()
-        sort = request.GET.get('param')
+        sort = request.GET.get("param")
         products = Product.objects.filter(category=category).annotate(
-            min_price=Min('product_sellers__price'),
-            pop = Count("product_sellers__order_items"),
-            reviews = Count("reviews_product"),
+            min_price=Min("product_sellers__price"),
+            pop=Count("product_sellers__order_items"),
+            reviews=Count("reviews_product"),
         )
 
         price_from = request.GET.get("priceFrom")
@@ -454,4 +455,3 @@ def set_language(request):
     response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
     return response
-
