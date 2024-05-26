@@ -1,80 +1,104 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from shopapp.models import ProductSeller
 
 
 class PaymentChoices(models.TextChoices):
-    CASH = ("someone", "Someone")
-    CREDIT_CARD = ("online", "Online")
+    CASH = ("cash", _("Cash"))
+    CREDIT_CARD = ("credit_card", _("Credit card"))
 
 
 class DeliveryChoices(models.TextChoices):
-    PICKUP = ("pickup", "Pickup")
-    COURIER = ("courier", "Courier")
+    PICKUP = ("pickup", _("Pickup"))
+    COURIER = ("courier", _("Courier"))
 
 
 class PaymentStatus(models.TextChoices):
-    PAID = ("paid", "Paid")
-    CANCELLED = ("cancelled", "Cancelled")
-
-
-class TransactionStatus(models.TextChoices):
-    PAID = ("paid", "Paid")
-    RUNNING = ("running", "Running")
-    CANCELLED = ("cancelled", "Cancelled")
+    PAID = ("paid", _("Paid"))
+    CANCELLED = ("cancelled", _("Cancelled"))
 
 
 class Order(models.Model):
     class Meta:
         get_latest_by = "created_at"
+        verbose_name = _("заказ")
+        verbose_name_plural = _("Заказы")
 
     user = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.PROTECT, related_name="users"
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="orders",
+        verbose_name=_("пользователь"),
     )
-    city = models.CharField(max_length=100, null=True, blank=True)
-    address = models.CharField(max_length=100, null=True, blank=True)
-    payment_type = models.CharField(
-        choices=PaymentChoices.choices, default=PaymentChoices.CASH, max_length=100
+    city = models.CharField(max_length=100, verbose_name=_("город"))
+    address = models.CharField(max_length=100, verbose_name=_("адрес"))
+    payment = models.CharField(
+        choices=PaymentChoices.choices,
+        default=PaymentChoices.CASH,
+        max_length=100,
+        verbose_name=_("оплата"),
     )
     payment_status = models.CharField(
-        choices=PaymentStatus.choices, default=PaymentStatus.CANCELLED, max_length=100
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.CANCELLED,
+        max_length=100,
+        verbose_name=_("статус оплаты"),
     )
     delivery = models.CharField(
-        choices=DeliveryChoices.choices, default=DeliveryChoices.PICKUP, max_length=100
+        choices=DeliveryChoices.choices,
+        default=DeliveryChoices.PICKUP,
+        max_length=100,
+        verbose_name=_("доставка"),
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    comment = models.CharField(max_length=200, null=True, blank=True)
-    reference_num = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("создан"))
+    comment = models.CharField(max_length=200, verbose_name=_("комментарий"))
+    reference_num = models.CharField(max_length=100, verbose_name=_("номер заказа"))
 
 
 class OrderItem(models.Model):
+    class Meta:
+        verbose_name = _("заказ-товар")
+        verbose_name_plural = _("Заказы-товары")
+
     order = models.ForeignKey(
         Order,
         null=True,
         blank=True,
         on_delete=models.CASCADE,
-        related_name="orders",
+        related_name="order_items",
+        verbose_name=_("заказ"),
     )
-    price = models.FloatField()
-    old_price = models.DecimalField(max_digits=10, decimal_places=2)
-    count = models.IntegerField(default=1)
+    price = models.FloatField(verbose_name=_("цена"))
+    old_price = models.FloatField(verbose_name=_("старая цена"))
+    count = models.IntegerField(verbose_name=_("количество"))
     product = models.ForeignKey(
         ProductSeller,
         null=True,
         blank=True,
         on_delete=models.PROTECT,
         related_name="order_items",
+        verbose_name=_("продукт"),
     )
 
 
 class Transaction(models.Model):
-    uuid = models.CharField(max_length=100)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        verbose_name = _("транзакцию")
+        verbose_name_plural = _("Транзакции")
+
+    uuid = models.CharField(max_length=100, verbose_name=_("uuid"))
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name=_("сумма")
+    )
     payment_status = models.CharField(
-        choices=TransactionStatus.choices,
-        default=TransactionStatus.RUNNING,
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.CANCELLED,
         max_length=100,
+        verbose_name=_("статус оплаты"),
     )
     order = models.ForeignKey(
         Order,
@@ -82,7 +106,12 @@ class Transaction(models.Model):
         blank=True,
         on_delete=models.CASCADE,
         related_name="transaction",
+        verbose_name=_("заказ"),
     )
     user = models.ForeignKey(
-        User, null=False, on_delete=models.PROTECT, related_name="transaction"
+        User,
+        null=False,
+        on_delete=models.PROTECT,
+        related_name="transaction",
+        verbose_name=_("пользователь"),
     )
