@@ -1,13 +1,21 @@
 import json
 from datetime import timedelta
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.checks import translation
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
-from django.db.models import Count, Min, Sum, Max
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.db.models import Count, Min, Sum
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -18,6 +26,7 @@ from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import FormMixin
 
 from cart.forms import CartAddProductForm
+from megano import settings
 from pay.models import Order
 
 from .comparison import Comparison
@@ -148,17 +157,19 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        view_history = self.request.user.view_historys.prefetch_related(
+        view_history = self.request.user.view_history.prefetch_related(
             "product"
         ).order_by("-creation_date")[:3]
         three_viewed = []
-        for history in view_history:
-            history.product.price = ProductSeller.objects.only("price").get(
-                product=history.product
-            )
-            history.product.price = history.product.price.price
-            three_viewed.append(history.product)
-        context["three_viewed"] = three_viewed
+        print(view_history)
+        if view_history:
+            for history in view_history:
+                history.product.price = ProductSeller.objects.only("price").get(
+                    product=history.product
+                )
+                history.product.price = history.product.price.price
+                three_viewed.append(history.product)
+            context["three_viewed"] = three_viewed
         return context
 
 
@@ -441,4 +452,14 @@ class CatalogView(ListView):
             "page_obj": page_obj,
             "seller": seller,
         }
-        return render(request, "shopapp/catalog.html", context)
+        return render(request, "shopapp/filtered_product_list.html", context)
+
+
+@login_required
+def set_language(request):
+    lang = request.GET.get("l", "en")
+    request.session[settings.LANGUAGE_SESSION_KEY] = lang
+    response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
+    return response
+

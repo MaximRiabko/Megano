@@ -1,4 +1,5 @@
 {% extends "shopapp/base_main.html" %}
+{% load i18n %}
 {% load static %}
 {% block middle %}
     <div class="Middle Middle_top">
@@ -82,7 +83,6 @@
                                     <img src="{% static 'assets/img/icons/nextPagination.svg' %}" alt="nextPagination.svg" /></a>
                             </div>
                     </div>
-                        </header>
                 </div>
             </div>
         </div>
@@ -127,5 +127,6 @@
         window.location.href = url;
       });
     });
+});
 </script>
 {% endblock %}

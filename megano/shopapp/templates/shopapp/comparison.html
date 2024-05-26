@@ -1,4 +1,5 @@
-{% extends 'base_main.html' %}
+{% extends 'shopapp/base_main.html' %}
+{% load i18n %}
 {% load static %}
 {% block middle %}
     <div class="Middle">
@@ -15,7 +16,7 @@
 
                                     <div class="ProductCard-photo">
                                         <img src="{{media_url}}{{image.image}}" alt="{{ product.name }}.png">
-                                        {#                                <img src="{% static "assets/img/content/home/bigGoods.png"%}" alt="bigGoods.png" />#}
+                                        {#                                <img src="{% static 'assets/img/content/home/bigGoods.png'%}" alt="bigGoods.png" />#}
                                     </div>
                                 </div>
                                 <div class="Tabs Tabs_default">
@@ -24,11 +25,11 @@
                                             <div class="table">
                                                 <table>
                                                     <tr>
-                                                        <th class="hed">Характеристика</th>
-                                                        <th class="hed">Значение</th>
+                                                        <th class="hed">{% translate 'Characteristic' %}</th>
+                                                        <th class="hed">{% translate 'Value' %}</th>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Общие параметры</b></td>
+                                                        <td><b>{% translate 'General parameters' %}</b></td>
                                                         <td></td>
                                                     </tr>
                                                     {% for key, value in product.details.items %}
@@ -58,8 +59,8 @@
                             </div>
                             <div class="ProductCard-cart">
                                 <div class="ProductCard-cartElement"><a class="btn btn_primary" href="cart.html"><img
-                                        class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}"
-                                        alt="cart_white.svg"/><span class="btn-content">Добавить в корзину</span></a>
+                                        class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
+                                        alt="cart_white.svg"/><span class="btn-content">{% translate 'Add to cart' %}</span></a>
                                 </div>
                             </div>
                         </div>

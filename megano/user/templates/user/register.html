@@ -1,15 +1,16 @@
-{% extends 'base_auth.html' %}
+{% extends 'user/base_auth.html' %}
 
 {% load static %}
+{% load i18n %}
 {% block middle %}
 <div class="wrap">
             <div class="row Header-rowMain">
-                <div class="row-block Header-logo"><a class="logo" href="index.html"><img class="logo-image" src="{% static "assets/img/logo.png" %}" alt="logo.png" /></a>
+                <div class="row-block Header-logo"><a class="logo" href="{% url 'shopapp:index'%}"><img class="logo-image" src="{% static 'assets/img/logo.png' %}" alt="logo.png" /></a>
                 </div>
             </div>
             <div class="wrapper">
                 <div class="header">
-                    <h3 class="sign-in">Регистрация</h3>
+                    <h3 class="sign-in">{% translate 'Registration' %}</h3>
 
                 </div>
                 <div class="clear"></div>
@@ -26,11 +27,11 @@
 
                         <input type="password" name="pass" id="pass" placeholder="Пароль" />
                     </div>
-                    <input onclick="register()" type="submit" value="Зарегистрироваться" />
+                    <input onclick="register()" type="submit" value="{% translate 'Register' %}" />
 
 
                     <a class="registr" href="{% url 'auth:login' %}">
-                        Вход
+                        {% translate 'Log in' %}
                     </a>
                     <div class="clear"></div>
                 </form>

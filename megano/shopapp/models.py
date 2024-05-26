@@ -4,14 +4,21 @@ from django.db import models
 
 
 class Seller(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    class Meta:
+        verbose_name = _("продавца")
+        verbose_name_plural = _("Продавцы")
+
+    name = models.CharField(max_length=255, verbose_name=_("имя"))
+    description = models.CharField(max_length=255, verbose_name=_("описание"))
     image = models.ImageField(
-        upload_to="seller_image_directory_path", blank=True, null=True
+        upload_to="seller_image_directory_path",
+        blank=True,
+        null=True,
+        verbose_name=_("картинка"),
     )
-    phone = models.IntegerField()
-    address = models.CharField(max_length=255)
-    email = models.EmailField()
+    phone = models.IntegerField(verbose_name=_("номер телефона"))
+    address = models.CharField(max_length=255, verbose_name=_("адрес"))
+    email = models.EmailField(verbose_name=_("email"))
 
     def __str__(self):
         return self.name
@@ -25,15 +32,12 @@ def seller_image_directory_path(instance: "Seller", filename: str) -> str:
 
 
 class Categories(models.Model):
-    name = models.CharField(max_length=255, default="")
-    archived = models.BooleanField(default=False)
-    parent = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        related_name="subcategories",
-        on_delete=models.PROTECT,
-    )
+    class Meta:
+        verbose_name = _("категорию")
+        verbose_name_plural = _("Категории")
+
+    name = models.CharField(max_length=50, null=True, blank=True, verbose_name=_("имя"))
+    archived = models.BooleanField(default=False, verbose_name=_("архивирован"))
 
     def __str__(self):
         return self.name
@@ -50,8 +54,14 @@ class ProductImage(models.Model):
     Модель ProductImage представляет изображение продукта.
     """
 
-    image = models.ImageField(upload_to=product_images_directory_path)
-    is_preview = models.BooleanField(default=False)
+    class Meta:
+        verbose_name = _("продукт-картинку")
+        verbose_name_plural = _("Продукты-картинки")
+
+    image = models.ImageField(
+        upload_to=product_images_directory_path, verbose_name=_("картинка")
+    )
+    is_preview = models.BooleanField(default=False, verbose_name=_("предпросмотр"))
 
 
 class Product(models.Model):
@@ -60,15 +70,26 @@ class Product(models.Model):
     который можно продавать в интернет-магазине.
     """
 
-    name = models.CharField(max_length=100, db_index=True)
-    description = models.TextField(null=False, blank=True)
-    archived = models.BooleanField(default=False)
-    preview = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
-    images = models.ManyToManyField(ProductImage, blank=True, related_name="products")
-    category = models.ForeignKey(
-        Categories, on_delete=models.PROTECT, related_name="products"
+    class Meta:
+        verbose_name = _("продукт")
+        verbose_name_plural = _("Продукты")
+
+    name = models.CharField(max_length=100, db_index=True, verbose_name=_("имя"))
+    description = models.TextField(null=False, blank=True, verbose_name=_("описание"))
+    archived = models.BooleanField(default=False, verbose_name=_("архивирован"))
+    preview = models.ForeignKey(
+        ProductImage, on_delete=models.CASCADE, verbose_name=_("предпросмотр")
     )
-    details = models.JSONField(blank=True, verbose_name="Характеристики", default=dict)
+    images = models.ManyToManyField(
+        ProductImage, blank=True, related_name="products", verbose_name=_("картинки")
+    )
+    category = models.ForeignKey(
+        Categories,
+        on_delete=models.PROTECT,
+        related_name="product_category",
+        verbose_name=_("категория"),
+    )
+    details = models.JSONField(blank=True, verbose_name=_("детали"), default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -80,14 +101,24 @@ class ProductSeller(models.Model):
     Модель ProductSeller представляет продукт с его ценой от продавца
     """
 
-    product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, related_name="product_sellers"
-    )
-    seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
-    price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
-    quantity = models.SmallIntegerField(default=0)
-    sale = models.IntegerField(blank=True, default=0)
+    class Meta:
+        verbose_name = _("продукт-продавца")
+        verbose_name_plural = _("Продукты-продавцы")
 
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        related_name="product_sellers",
+        verbose_name=_("продукт"),
+    )
+    seller = models.ForeignKey(
+        Seller, on_delete=models.PROTECT, verbose_name=_("продавец")
+    )
+    price = models.DecimalField(
+        default=0, max_digits=8, decimal_places=2, verbose_name=_("цена")
+    )
+    quantity = models.SmallIntegerField(default=0, verbose_name=_("количество"))
+    sale = models.IntegerField(blank=True, default=0, verbose_name=_("скидка"))
 
     def get_sale(self):
         """Функция рассчитывает стоимость со скидкой"""
@@ -100,16 +131,26 @@ class ViewHistory(models.Model):
     Модель ViewHistory представляет историю просмотренных продуктов
     """
 
+    class Meta:
+        verbose_name = _("просмотр истории")
+        verbose_name_plural = _("Просмотр историй")
+
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="view_historys"
+        User,
+        on_delete=models.CASCADE,
+        related_name="view_history",
+        verbose_name=_("пользователь"),
     )
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(
+        auto_now_add=True, verbose_name=_("дата создания")
+    )
     product = models.ForeignKey(
         Product,
         on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name="view_historys",
+        verbose_name=_("дата создания"),
     )
 
 
@@ -121,7 +162,7 @@ def discount_img_directory_path(instance: "Discount", filename: str) -> str:
 
 class DiscountTypeChoices(models.TextChoices):
     PERCENT = ("%", "%")
-    RUBLES = ("RUB", "RUB")
+    RUBLES = ("RUB", _("RUB"))
 
 
 class Discount(models.Model):
@@ -129,22 +170,32 @@ class Discount(models.Model):
     Модель ViewHistory представляет скидку на продукт
     """
 
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=False, blank=True)
-    products = models.ManyToManyField(Product)
-    date_start = models.DateTimeField(auto_now_add=True)
-    date_end = models.DateTimeField()
-    promocode = models.CharField(max_length=255)
-    is_group = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
-    value = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+    class Meta:
+        verbose_name = _("скидку")
+        verbose_name_plural = _("Скидки")
+
+    name = models.CharField(max_length=255, verbose_name=_("имя"))
+    description = models.TextField(null=False, blank=True, verbose_name=_("описание"))
+    products = models.ManyToManyField(Product, verbose_name=_("продукты"))
+    date_start = models.DateTimeField(auto_now_add=True, verbose_name=_("дата начала"))
+    date_end = models.DateTimeField(verbose_name=_("дата конца"))
+    promocode = models.CharField(max_length=255, verbose_name=_("промокод"))
+    is_group = models.BooleanField(default=False, verbose_name=_("группа"))
+    is_active = models.BooleanField(default=False, verbose_name=_("активная"))
+    value = models.DecimalField(
+        default=0, max_digits=8, decimal_places=2, verbose_name=_("значение")
+    )
     type = models.CharField(
         choices=DiscountTypeChoices.choices,
         default=DiscountTypeChoices.PERCENT,
         max_length=100,
+        verbose_name=_("тип"),
     )
     image = models.ImageField(
-        null=True, blank=True, upload_to=discount_img_directory_path
+        null=True,
+        blank=True,
+        upload_to=discount_img_directory_path,
+        verbose_name=_("картинка"),
     )
 
     def __str__(self) -> str:
@@ -154,12 +205,24 @@ class Discount(models.Model):
 class Review(models.Model):
     """Модель Review представляет отзывы на продукт"""
 
-    author = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
-    product = models.ForeignKey(
-        Product, null=True, on_delete=models.PROTECT, related_name="reviews_product"
+    class Meta:
+        verbose_name = _("отзыв")
+        verbose_name_plural = _("Отзывы")
+
+    author = models.ForeignKey(
+        User, null=True, on_delete=models.PROTECT, verbose_name=_("автор")
     )
-    content = models.TextField(null=False, blank=True)
-    created_reviews = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(
+        Product,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="reviews_product",
+        verbose_name=_("продукт"),
+    )
+    content = models.TextField(null=False, blank=True, verbose_name=_("содержание"))
+    created_reviews = models.DateTimeField(
+        auto_now_add=True, verbose_name=_("созданные отзывы")
+    )
 
 
 def avatar_directory_path(instance: "Profile", filename: str) -> str:
@@ -171,17 +234,18 @@ class Profile(models.Model):
     Модель Profile представляет профиль пользователя
     """
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, blank=True, upload_to=avatar_directory_path)
-    phone_regex = RegexValidator(
-        regex=r"^\+?1?\d{9,15}$",
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.",
+    class Meta:
+        verbose_name = _("профиль")
+        verbose_name_plural = _("Профили")
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, verbose_name=_("пользователь")
     )
-    phone = models.CharField(
-        validators=[phone_regex],
-        max_length=17,
-        blank=True,
-        null=True,
-    )  # Validators should be a list
-    middle_name = models.CharField(max_length=255, null=True, blank=True)
-    seller = models.ForeignKey(Seller, on_delete=models.PROTECT, null=True, blank=True)
+    avatar = models.ImageField(
+        null=True, blank=True, upload_to=avatar_directory_path, verbose_name=_("аватар")
+    )
+    phone = models.IntegerField(verbose_name=_("номер телефона"))
+    middle_name = models.CharField(max_length=255, verbose_name=_("отчество"))
+    seller = models.ForeignKey(
+        Seller, on_delete=models.PROTECT, verbose_name=_("продавец")
+    )

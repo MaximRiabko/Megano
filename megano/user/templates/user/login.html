@@ -1,5 +1,6 @@
 {% extends 'base_auth.html' %}
 
+{% load i18n %}
 {% load static %}
 {% block middle %}
     <div class="wrap">
@@ -11,7 +12,7 @@
         </div>
         <div class="wrapper">
             <div class="header">
-                <h3 class="sign-in">Вход</h3>
+                <h3 class="sign-in">{% translate 'Log in' %}</h3>
             </div>
             <div class="clear"></div>
             <form action="/auth/" method="post">
@@ -23,11 +24,10 @@
                     <input type="password" name="password" id="pass" placeholder="*********"/>
                 </div>
                 <div>
-                    <input type="hidden" name="next" value="{{ next }}">
-                    <input onclick="login()" type="submit" value="Войти"/>
+                    <input onclick="login()" type="submit" value="{% translate 'Log in' %}"/>
                 </div>
-                <a class="forgot-label" href="{% url 'auth:recovery_password' %}">Забыли пароль?</a>
-                <a class="registr" href="{% url 'auth:register' %}">Регистрация</a>
+                <a class="forgot-label" href="{% url 'auth:recovery_password' %}">{% translate 'Forgot password?' %}</a>
+                <a class="registr" href="{% url 'auth:register' %}">{% translate 'Registration' %}</a>
             </form>
         </div>
 
