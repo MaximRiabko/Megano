@@ -388,17 +388,12 @@ class CatalogView(ListView):
     def get(self, request, pk, *args, **kwargs):
         category = Categories.objects.filter(pk=pk).first()
         sort = request.GET.get('param')
-        products = Product.objects.filter(category=category)
+        products = Product.objects.filter(category=category).annotate(
+            min_price=Min('product_sellers__price'),
+            pop = Count("product_sellers__order_items"),
+            reviews = Count("reviews_product"),
+        )
 
-        products = products.annotate(
-            min_price=Min('product_sellers__price')
-        )
-        products = products.annotate(
-            pop=Count("product_sellers__order_items")
-        )
-        products = products.annotate(
-            reviews=Count("reviews_product")
-        )
 
         price_from = request.GET.get("priceFrom")
         price_to = request.GET.get("priceTo")
@@ -406,16 +401,14 @@ class CatalogView(ListView):
         descriptionFilter = request.GET.get("descriptionFilter")
 
         if price_from and price_to:
-            products = (products.annotate(
-                price=Min('product_sellers__price')
-            ).filter(price__gte=price_from, price__lte=price_to))
+            products = products.filter(price__gte=price_from, price__lte=price_to)
         if name_filter:
             products = products.filter(name__icontains=name_filter)
         if descriptionFilter:
             products = products.filter(description__icontains=descriptionFilter)
 
         if sort == "price":
-            products = products.order_by("min_price")
+            products = products.order_by("price")
         elif sort == "popularity":
             products = products.order_by("pop")
         elif sort == "novelty":
@@ -425,11 +418,7 @@ class CatalogView(ListView):
         else:
             products = products.order_by("id")
 
-        grocery_list = (
-            products
-        )
-
-        paginator = Paginator(grocery_list, 3)
+        paginator = Paginator(products, 3)
 
         seller = ProductSeller.objects.all()
 
@@ -438,14 +427,14 @@ class CatalogView(ListView):
 
         if pk:
             cache_key = f"catalog_{pk}"
-            grocery_list = cache.get(cache_key)
-            if not grocery_list:
-                cache.set(cache_key, grocery_list, timeout=86400)
+            products = cache.get(cache_key)
+            if not products:
+                cache.set(cache_key, products, timeout=86400)
         else:
             cache_key = "catalog_all"
-            grocery_list = cache.get(cache_key)
-            if not grocery_list:
-                cache.set(cache_key, grocery_list, timeout=86400)
+            products = cache.get(cache_key)
+            if not products:
+                cache.set(cache_key, products, timeout=86400)
 
         context = {
             "category": category,
