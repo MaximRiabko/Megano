@@ -9,12 +9,18 @@ urlpatterns = [
         "admin/",
         admin.site.urls,
     ),
-    path("cart/", include("cart.urls")),
-    path("pay/", include("pay.urls")),
-    path("", include("shopapp.urls", namespace="shopapp")),
-    path("auth/", include("user.urls", namespace="auth")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-urlpatterns += i18n_patterns(path("shopapp/", include("shopapp.urls")))
+urlpatterns += i18n_patterns(
+    path("cart/", include("cart.urls")),
+    path("pay/", include("pay.urls")),
+    path(
+        "",
+        include(
+            "shopapp.urls",
+        ),
+    ),
+    path("auth/", include("user.urls", namespace="auth")),
+)
 if settings.DEBUG:
     urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
