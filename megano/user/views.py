@@ -11,6 +11,8 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
+from shopapp.models import Profile
+
 
 class Login(LoginView):
     template_name = "user/login.html"
@@ -53,6 +55,7 @@ def register(request: HttpRequest) -> HttpResponse:
             user = User.objects.create_user(
                 username=email, first_name=name, email=email, password=password
             )
+            Profile.objects.create(user=user)
             user.save()
             user = authenticate(request=request, username=email, password=password)
             if user:
