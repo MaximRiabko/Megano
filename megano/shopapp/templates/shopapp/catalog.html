@@ -1,4 +1,5 @@
 {% extends "shopapp/base_main.html" %}
+{% load i18n %}
 {% load static %}
 {% block middle %}
     <div class="Middle Middle_top">
@@ -8,77 +9,63 @@
                     <h1>{{ category }}</h1>
                     <form id="filter-form">
                         <div class="filter-group">
-                            <label for="price-from">Цена от:</label>
+                            <label for="price-from">{% translate 'Price from' %}:</label>
                             <input type="number" id="price-from" name="price-from">
                         </div>
                         <div class="filter-group">
-                            <label for="price-to">Цена до:</label>
+                            <label for="price-to">{% translate 'Price to' %}:</label>
                             <input type="number" id="price-to" name="price-to">
                         </div>
                         <div class="filter-group">
-                            <label for="name-filter">Поиск по названию:</label>
+                            <label for="name-filter">{% translate 'Search on name' %}:</label>
                             <input type="text" id="name-filter" name="name-filter">
                         </div>
                         <div class="filter-group">
-                            <label for="description-filter">Поиск по описанию:</label>
+                            <label for="description-filter">{% translate 'Search on description' %}:</label>
                             <input type="text" id="description-filter" name="description-filter">
                         </div>
                         <div class="filter-group">
-                            <label for="seller-filter">Фильтр по продавцу:</label>
+                            <label for="seller-filter">{% translate 'Filter by seller' %}:</label>
                             <select id="seller-filter" name="seller-filter" multiple>
-                                <option value="seller1">Продавец 1</option>
-                                <option value="seller2">Продавец 2</option>
-                                <option value="seller3">Продавец 3</option>
+                                <option value="seller1">{% translate 'Seller 1' %}</option>
+                                <option value="seller2">{% translate 'Seller 2' %}</option>
+                                <option value="seller3">{% translate 'Seller 3' %}</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label for="boolean-filter">Фильтр по boolean характеристике:</label>
+                            <label for="boolean-filter">{% translate 'Filter by boolean characteristics' %}:</label>
                             <select id="boolean-filter" name="boolean-filter">
-                                <option value="yes">Да</option>
-                                <option value="no">Нет</option>
-                                <option value="">Не учитывать</option>
+                                <option value="yes">{% translate 'Yes' %}</option>
+                                <option value="no">{% translate 'No' %}</option>
+                                <option value="">{% translate 'Ignore' %}</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label for="list-filter">Фильтр по характеристике-списку:</label>
+                            <label for="list-filter">{% translate 'Filter by characteristic-list' %}:</label>
                             <input type="checkbox" id="list-option1" name="list-filter" value="option1">
-                            <label for="list-option1">Опция 1</label>
+                            <label for="list-option1">{% translate 'Option 1' %}</label>
                             <input type="checkbox" id="list-option2" name="list-filter" value="option2">
-                            <label for="list-option2">Опция 2</label>
+                            <label for="list-option2">{% translate 'Option 2' %}</label>
                             <input type="checkbox" id="list-option3" name="list-filter" value="option3">
-                            <label for="list-option3">Опция 3</label>
+                            <label for="list-option3">{% translate 'Option 3' %}</label>
                         </div>
-                        <button type="submit">Применить фильтры</button>
+                        <button type="submit">{% translate 'Apply filters' %}</button>
                     </form>
-                    {% for contact in page_obj %}
-                    <div class="Cards">
-                        <div class="Card"><a class="Card-picture" href="#"><img src="{{ contact.preview.image.url }}" alt="card.jpg" /></a>
-                            <div class="Card-content">
-                                <strong class="Card-title"><a href="product.html">{{ contact.name }}</a>
-                                </strong>
-                                <div class="Card-description">
-                                    <div class="Card-cost"><span class="Card-price">{{ contact.min_price }}</span>
-                                    </div>
-                                    <div class="Card-category">{{ contact.category.name }}
-                                    </div>
-                                    <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg" /></a>
-                                    </div>
+
+                    <ul class="product-list">
+                        {% for product in products %}
+                            <li class="product-item">
+                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                                <div class="product-details">
+                                    <h3 class="product-title">{{ product.name }}</h3>
+                                    <p class="product-price">{{ product.price }}</p>
+                                    <p class="product-description">{{ product.description }}</p>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <div class="Pagination">
-                            <div class="Pagination-ins">
-                                <a class="Pagination-element Pagination-element_prev" href="#">
-                                    <img src="{% static 'assets/img/icons/prevPagination.svg' %}" alt="prevPagination.svg" /></a>
-                                {% for p in page_obj.paginator.page_range %}
-                                <a class="Pagination-element Pagination-element_current" href="?page={{ p }}"><span class="Pagination-text">{{ p }}</span></a>
-                                {% endfor %}
-                                <a class="Pagination-element Pagination-element_prev" href="#">
-                                    <img src="{% static 'assets/img/icons/nextPagination.svg' %}" alt="nextPagination.svg" /></a>
-                            </div>
-                    </div>
+                            </li>
+                        {% empty %}
+                            <li>{% translate 'No products' %}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

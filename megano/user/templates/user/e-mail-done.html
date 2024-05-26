@@ -1,6 +1,6 @@
-{% extends 'base_auth.html' %}
-
+{% extends 'user/base_auth.html' %}
 {% load static %}
+{% load i18n %}
 {% block middle %}
     <div class="wrap">
         <div class="row Header-rowMain">
@@ -12,15 +12,15 @@
         </div>
         <div class="wrapper">
             <div class="header">
-                <h3 class="sign-in">Восстановление пароля (2/2)</h3>
-                <h5>Проверочный код отправлен, пожауйста проверьте почту!</h5>
+                <h3 class="sign-in">{% translate 'Password recovery (2/2)' %}</h3>
+                <h5>{% translate 'Verification code is sent, check your inbox!' %}</h5>
             </div>
 
             <form method="post">
                 {% csrf_token %}
                 {{ form }}
-                <a class="registr" href="{% url 'register' %}">
-                    Вход
+                <a class="registr" href="{% url 'auth:register' %}">
+                    {% translate 'Log in' %}
                 </a>
             </form>
         </div>
