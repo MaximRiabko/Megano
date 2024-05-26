@@ -252,8 +252,8 @@ class Profile(models.Model):
     avatar = models.ImageField(
         null=True, blank=True, upload_to=avatar_directory_path, verbose_name=_("аватар")
     )
-    phone = models.IntegerField(verbose_name=_("номер телефона"))
-    middle_name = models.CharField(max_length=255, verbose_name=_("отчество"))
+    phone = models.IntegerField(verbose_name=_("номер телефона"), null=True)
+    middle_name = models.CharField(max_length=255, verbose_name=_("отчество"), null=True)
     seller = models.ForeignKey(
-        Seller, on_delete=models.PROTECT, verbose_name=_("продавец")
+        Seller, null=True, blank=True, on_delete=models.PROTECT, verbose_name=_("продавец")
     )
