@@ -36,7 +36,7 @@ class Order(models.Model):
     )
     city = models.CharField(max_length=100, verbose_name=_("город"))
     address = models.CharField(max_length=100, verbose_name=_("адрес"))
-    payment = models.CharField(
+    payment_type = models.CharField(
         choices=PaymentChoices.choices,
         default=PaymentChoices.CASH,
         max_length=100,
