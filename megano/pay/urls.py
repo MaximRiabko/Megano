@@ -18,7 +18,7 @@ urlpatterns = [
     path("step_2/", order_step_2, name="step_2"),
     path("step_3/<int:id>/", order_step_3, name="step_3"),
     path("step_4/<int:id>/", order_step_4, name="step_4"),
-    path("payment/", payment_card, name="payment"),
-    path("paymentsomeone/", payment_invoice, name="paymentsomeone"),
+    path("payment/<int:id>/", payment_card, name="payment"),
+    path("paymentsomeone/<int:id>/", payment_invoice, name="paymentsomeone"),
     path("progressPayment/", proof_payment, name="progressPayment"),
 ]

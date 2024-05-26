@@ -8,7 +8,7 @@ from megano.settings import ON_PAYMENT
 from shopapp.models import Profile
 
 from .forms import DeliveryForm, PaymentForm, PaymentTypeForm, UserRegistrationForm
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Transaction
 
 
 def order_step_1(request):
@@ -91,7 +91,6 @@ def order_step_4(request, id):
             return redirect("pay:step_1")
         return render(request, "pay/order_step_4.html", context=context)
     elif request.method == "POST":
-        order = Order.objects.get(pk=id)
         for item in cart:
             OrderItem.objects.create(
                 order=order,
@@ -100,38 +99,52 @@ def order_step_4(request, id):
                 old_price=item["price"],
                 count=item["quantity"],
             )
+        amount = cart.get_total_price()
+        transaction = Transaction(
+            order_id=order.id,
+            amount=amount,
+            user=request.user,
+        )
+        transaction.save()
         cart.clear()
-        return redirect("pay:payment")
+        if order.payment_type == "online":
+            return redirect("pay:payment", id=transaction.id)
+        else:
+            return redirect("pay:paymentsomeone", id=transaction.id)
 
 
-def payment_card(request):
+def payment_card(request, id):
     if request.method == "GET":
         form = PaymentForm()
         return render(request, "pay/payment_card.html", {"form": form})
     elif request.method == "POST":
         form = PaymentForm(request.POST)
         if form.is_valid():
+            uuid = form.data["card_number"]
+            transaction = Transaction.objects.get(id=id)
             if ON_PAYMENT:
                 from .tasks import process_payment
+                process_payment.delay(transaction.id)
+            transaction.uuid = uuid
+            transaction.save()
+        return redirect("pay:progressPayment")
 
-                uuid = form.data["card_number"]
-                process_payment.delay(uuid)
-            return redirect("pay:progressPayment")
 
-
-def payment_invoice(request):
+def payment_invoice(request, id):
     if request.method == "GET":
         form = PaymentForm()
         return render(request, "pay/payment_invoice.html", {"form": form})
     elif request.method == "POST":
         form = PaymentForm(request.POST)
         if form.is_valid():
+            uuid = form.data["card_number"]
+            transaction = Transaction.objects.get(id=id)
             if ON_PAYMENT:
                 from .tasks import process_payment
-
-                uuid = form.data["card_number"]
-                process_payment.delay(uuid)
-            return redirect("pay:progressPayment")
+                process_payment.delay(transaction.id)
+            transaction.uuid = uuid
+            transaction.save()
+        return redirect("pay:progressPayment")
 
 
 def proof_payment(request):
