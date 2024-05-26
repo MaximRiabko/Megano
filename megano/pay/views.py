@@ -124,6 +124,7 @@ def payment_card(request, id):
             transaction = Transaction.objects.get(id=id)
             if ON_PAYMENT:
                 from .tasks import process_payment
+
                 process_payment.delay(transaction.id)
             transaction.uuid = uuid
             transaction.save()
@@ -141,6 +142,7 @@ def payment_invoice(request, id):
             transaction = Transaction.objects.get(id=id)
             if ON_PAYMENT:
                 from .tasks import process_payment
+
                 process_payment.delay(transaction.id)
             transaction.uuid = uuid
             transaction.save()
