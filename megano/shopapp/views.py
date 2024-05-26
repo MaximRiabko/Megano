@@ -379,6 +379,16 @@ class CatalogView(ListView):
         sort = request.GET.get('param')
         products = Product.objects.filter(category=category)
 
+        products = products.annotate(
+            min_price=Min('product_sellers__price')
+        )
+        products = products.annotate(
+            pop=Count("product_sellers__order_items")
+        )
+        products = products.annotate(
+            reviews=Count("reviews_product")
+        )
+
         price_from = request.GET.get("priceFrom")
         price_to = request.GET.get("priceTo")
         name_filter = request.GET.get("nameFilter")
@@ -394,23 +404,18 @@ class CatalogView(ListView):
             products = products.filter(description__icontains=descriptionFilter)
 
         if sort == "price":
-            products = products.annotate(
-                min_price=Min('product_sellers__price')
-            ).order_by("min_price")
+            products = products.order_by("min_price")
         elif sort == "popularity":
-            products = products.annotate(
-                pop=Count("product_sellers__order_items")
-            ).order_by("pop")
+            products = products.order_by("pop")
         elif sort == "novelty":
             products = products.order_by("created_at")
         elif sort == "reviews":
-            products = products.annotate(
-                reviews=Count("reviews_product")
-            ).order_by("reviews")
+            products = products.order_by("reviews")
+        else:
+            products = products.order_by("id")
 
         grocery_list = (
             products
-            .annotate(min_price=Min("product_sellers__price"))
         )
 
         paginator = Paginator(grocery_list, 3)
