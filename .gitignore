@@ -264,6 +264,7 @@ poetry.toml
 .DS_Store
 .AppleDouble
 .LSOverride
+uploads/
 
 # LSP config files
 pyrightconfig.json
