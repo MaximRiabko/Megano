@@ -8,7 +8,6 @@ from .views import (
     CompareView,
     DiscountDetailView,
     DiscountListView,
-    FilterProducts,
     HistoryOrder,
     LastOrderDetailView,
     MainPageView,

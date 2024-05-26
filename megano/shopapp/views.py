@@ -394,7 +394,6 @@ class CatalogView(ListView):
             reviews = Count("reviews_product"),
         )
 
-
         price_from = request.GET.get("priceFrom")
         price_to = request.GET.get("priceTo")
         name_filter = request.GET.get("nameFilter")
