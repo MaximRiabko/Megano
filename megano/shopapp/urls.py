@@ -8,7 +8,6 @@ from .views import (
     CompareView,
     DiscountDetailView,
     DiscountListView,
-    FilterProducts,
     HistoryOrder,
     LastOrderDetailView,
     MainPageView,
@@ -16,8 +15,8 @@ from .views import (
     ProductDetailView,
     ProfileUpdateView,
     SellerDetailView,
-    catalog,
     set_language,
+    CatalogView,
 )
 
 app_name = "shopapp"
@@ -44,16 +43,15 @@ urlpatterns = [
         OrderDetailView.as_view(),
         name="order_details",
     ),
-    path("categories/products/<int:pk>/", catalog, name="catalog"),
     path(
         "profile/<int:pk>/order/last/",
         LastOrderDetailView.as_view(),
         name="last_order_details",
     ),
     path(
-        "categories/products/filtered-products/",
-        FilterProducts.as_view(),
-        name="filter-products",
+        "categories/products/sorted-products/<int:pk>",
+        CatalogView.as_view(),
+        name="catalog",
     ),
 ]
 

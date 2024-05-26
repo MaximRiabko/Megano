@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 
 class Seller(models.Model):
@@ -97,6 +97,7 @@ class Product(models.Model):
         verbose_name=_("категория"),
     )
     details = models.JSONField(blank=True, verbose_name=_("детали"), default=dict)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"Product(pk={self.pk}, name={self.name!r})"
