@@ -242,9 +242,10 @@ class Profile(models.Model):
     Модель Profile представляет профиль пользователя
     """
 
-    class Meta:
-        verbose_name = _("профиль")
-        verbose_name_plural = _("Профили")
+    default_phone_validator = RegexValidator(
+        r"\+(\d){1,3} \((\d){2,3}\) (\d{3}) (\d{2}) (\d){2}$",
+        message=_("Введите правильный номер. Пример: +7 (999) 999 99 99"),
+    )
 
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, verbose_name=_("пользователь")
@@ -252,8 +253,24 @@ class Profile(models.Model):
     avatar = models.ImageField(
         null=True, blank=True, upload_to=avatar_directory_path, verbose_name=_("аватар")
     )
-    phone = models.IntegerField(verbose_name=_("номер телефона"), null=True)
-    middle_name = models.CharField(max_length=255, verbose_name=_("отчество"), null=True)
-    seller = models.ForeignKey(
-        Seller, null=True, blank=True, on_delete=models.PROTECT, verbose_name=_("продавец")
+    default_phone_validator = RegexValidator(
+        r"\+(\d){1,3} \((\d){2,3}\) (\d{3}) (\d{2}) (\d){2}$",
+        message=_("Введите правильный номер. Пример: +7 (999) 999 99 99"),
     )
+    phone = models.CharField(
+        validators=[default_phone_validator], max_length=60, null=True, blank=True
+    )
+    middle_name = models.CharField(
+        max_length=255, verbose_name=_("отчество"), null=True
+    )
+    seller = models.ForeignKey(
+        Seller,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        verbose_name=_("продавец"),
+    )
+
+    class Meta:
+        verbose_name = _("профиль")
+        verbose_name_plural = _("Профили")
