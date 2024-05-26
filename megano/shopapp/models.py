@@ -38,6 +38,13 @@ class Categories(models.Model):
 
     name = models.CharField(max_length=50, null=True, blank=True, verbose_name=_("имя"))
     archived = models.BooleanField(default=False, verbose_name=_("архивирован"))
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        related_name="subcategories",
+        on_delete=models.PROTECT,
+    )
 
     def __str__(self):
         return self.name

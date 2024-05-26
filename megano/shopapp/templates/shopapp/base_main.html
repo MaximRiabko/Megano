@@ -150,6 +150,32 @@
                                 <div class="CategoriesButton-arrow">
                                 </div>
                             </div>
+                            <div class="CategoriesButton-content">
+                                {% reference_to_products as categories %}
+                                {% for category in categories %}
+                                    <div class="CategoriesButton-link">
+                                        <a href="{% url 'shopapp:catalog' pk=category.pk %}">
+                                            <div class="CategoriesButton-icon">
+                                                <img src="{% static 'assets/img/icons/departments/1.svg' %}" alt="1.svg" />
+                                            </div>
+                                            <span class="CategoriesButton-text">{{ category.name }}</span>
+                                        </a>
+                                    {% if category.subcategories.exists %}
+                                    <a class="CategoriesButton-arrow" href="#"></a>
+                                    <div class="CategoriesButton-submenu">
+                                        {% for subcat in category.subcategories.all %}
+                                        <a class="CategoriesButton-link" href="{% url 'shopapp:catalog' pk=subcat.pk %}">
+                                            <div class="CategoriesButton-icon">
+                                                <img src="{% static 'assets/img/icons/departments/1.svg' %}" alt="1.svg" />
+                                            </div>
+                                            <span class="CategoriesButton-text">{{ subcat.name }}</span>
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
 
 
                         </div>
