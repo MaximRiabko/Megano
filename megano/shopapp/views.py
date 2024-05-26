@@ -293,10 +293,14 @@ class LastOrderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        order = Order.objects.latest()
+        try:
+            order = Order.objects.latest()
+            context["items"] = order.order_items.prefetch_related("product")
+            context.update(order.order_items.only("price").aggregate(Sum("price")))
+        except Order.DoesNotExist:
+            order = None
+            context["items"] = None
         context["order"] = order
-        context["items"] = order.order_items.prefetch_related("product")
-        context.update(order.order_items.only("price").aggregate(Sum("price")))
         return context
 
 
