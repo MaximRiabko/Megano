@@ -33,6 +33,7 @@ from .comparison import Comparison
 from .forms import ReviewForm
 from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
 
+from django.db.models import Max
 
 class ProductDetailView(
     FormMixin,
@@ -144,6 +145,17 @@ class MainPageView(TemplateView):
             cnt=Count("order_items")
         ).order_by("-cnt")[:8]
         context["top_order_products"] = top_order_products
+
+        if self.request.user.is_authenticated:
+            subquery = self.request.user.view_history.values('product').annotate(
+                max_date=Max('creation_date')).values('max_date')
+            print(subquery)
+            view_history = self.request.user.view_history.filter(
+                creation_date__in=subquery
+            ).select_related("product").order_by('-creation_date')[:8]
+
+            context["view_history"] = view_history
+
         return context
 
 
@@ -157,11 +169,13 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        view_history = self.request.user.view_history.prefetch_related(
-            "product"
-        ).order_by("-creation_date")[:3]
+        subquery = self.request.user.view_history.values('product').annotate(max_date=Max('creation_date')).values(
+            'max_date')
+        view_history = self.request.user.view_history.filter(
+            creation_date__in=subquery
+        ).select_related("product").order_by('-creation_date')[:3]
         three_viewed = []
-        print(view_history)
+
         if view_history:
             for history in view_history:
                 history.product.price = ProductSeller.objects.only("price").get(
@@ -170,6 +184,15 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
                 history.product.price = history.product.price.price
                 three_viewed.append(history.product)
             context["three_viewed"] = three_viewed
+
+        orders = self.request.user.orders.all()
+        if orders.exists():
+            last_order = orders.latest('created_at')
+            context['last_order'] = last_order
+            last_order_item = last_order.order_items.latest('id')
+            context['last_order_item'] = last_order_item
+
+
         return context
 
 
