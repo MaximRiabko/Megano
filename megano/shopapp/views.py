@@ -154,7 +154,16 @@ class MainPageView(TemplateView):
                 creation_date__in=subquery
             ).select_related("product").order_by('-creation_date')[:8]
 
-            context["view_history"] = view_history
+            eight_viewed = []
+
+            if view_history:
+                for history in view_history:
+                    history.product.price = ProductSeller.objects.only("price").get(
+                        product=history.product
+                    )
+                    history.product.price = history.product.price.price
+                    eight_viewed.append(history.product)
+                context["eight_viewed"] = eight_viewed
 
         return context
 
