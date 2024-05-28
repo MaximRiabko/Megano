@@ -147,12 +147,7 @@ class MainPageView(TemplateView):
         context["top_order_products"] = top_order_products
 
         if self.request.user.is_authenticated:
-            subquery = self.request.user.view_history.values('product').annotate(
-                max_date=Max('creation_date')).values('max_date')
-            print(subquery)
-            view_history = self.request.user.view_history.filter(
-                creation_date__in=subquery
-            ).select_related("product").order_by('-creation_date')[:8]
+            view_history = self.request.user.view_history.select_related("product").order_by('-creation_date')[:8]
 
             eight_viewed = []
 
@@ -178,13 +173,9 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        subquery = self.request.user.view_history.values('product').annotate(max_date=Max('creation_date')).values(
-            'max_date')
-        view_history = self.request.user.view_history.filter(
-            creation_date__in=subquery
-        ).select_related("product").order_by('-creation_date')[:3]
-        three_viewed = []
 
+        view_history = self.request.user.view_history.select_related("product").order_by('-creation_date')[:3]
+        three_viewed = []
         if view_history:
             for history in view_history:
                 history.product.price = ProductSeller.objects.only("price").get(
