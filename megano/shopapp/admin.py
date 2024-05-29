@@ -11,6 +11,7 @@ from .models import (
     Review,
     Seller,
     ViewHistory,
+    Banner
 )
 
 
@@ -62,6 +63,10 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = "pk", "name"
 
 
+class BannerAdmin(admin.ModelAdmin):
+    list_display = "pk", "title", "description", "url", "image", "is_active", "is_big"
+
+
 admin.site.register(Seller, SellerAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Product)
@@ -70,3 +75,4 @@ admin.site.register(ProductImage)
 admin.site.register(Categories, CategoryAdmin)
 admin.site.register(Profile)
 admin.site.register(ViewHistory)
+admin.site.register(Banner, BannerAdmin)
