@@ -7,8 +7,8 @@
         <div class="Header-slider">
             <div class="Slider Slider_main">
               <div class="Slider-box">
-                  {% reference_to_banners as banners %}
-                  {% for banner in banners %}
+                  {% reference_to_big_banners as big_banners %}
+                  {% for banner in big_banners %}
                         {% if banner.is_active and banner.is_big %}
                             <div class="Slider-item">
                               <div class="Slider-content">
@@ -41,7 +41,8 @@
         <div class="Section">
             <div class="wrap">
                 <div class="BannersHome">
-                        {% for banner in banners %}
+                    {% reference_to_small_banners as small_banners %}
+                        {% for banner in small_banners %}
                             {% if banner.is_active and not banner.is_big %}
                                 <a class="BannersHomeBlock" href="{{ banner.url }}">
                                 <div class="BannersHomeBlock-row">

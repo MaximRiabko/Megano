@@ -13,5 +13,10 @@ def reference_to_products():
 
 
 @register.simple_tag
-def reference_to_banners():
-    return Banner.objects.all()
+def reference_to_big_banners():
+    return Banner.objects.filter(is_big=True, is_active=True)
+
+
+@register.simple_tag
+def reference_to_small_banners():
+    return Banner.objects.filter(is_big=False, is_active=True)
