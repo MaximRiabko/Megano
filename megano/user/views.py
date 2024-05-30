@@ -11,9 +11,11 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
+from shopapp.models import Profile
+
 
 class Login(LoginView):
-    template_name = "login.html"
+    template_name = "user/login.html"
     redirect_authenticated_user = True
 
     def form_invalid(self, form):
@@ -38,7 +40,7 @@ def register(request: HttpRequest) -> HttpResponse:
     if request.method == "GET":
         if request.user.is_authenticated:
             redirect("index.html")
-        return render(request, "register.html")
+        return render(request, "user/register.html")
 
     elif request.method == "POST":
         name, email, password = (
@@ -49,29 +51,30 @@ def register(request: HttpRequest) -> HttpResponse:
         if name or email or password:
             exist = User.objects.filter(email=email).exists()
             if exist:
-                return render(request, "login.html")
+                return render(request, "user/login.html")
             user = User.objects.create_user(
                 username=email, first_name=name, email=email, password=password
             )
+            Profile.objects.create(user=user)
             user.save()
             user = authenticate(request=request, username=email, password=password)
             if user:
                 login(request, user)
                 return redirect("index.html")
-        return render(request, "register.html")
+        return render(request, "user/register.html")
 
 
 class Reset_Password(PasswordResetView):
-    template_name = "e-mail.html"
+    template_name = "user/e-mail.html"
 
 
 class Reset_Password_Done(PasswordResetDoneView):
-    template_name = "e-mail-done.html"
+    template_name = "user/e-mail-done.html"
 
 
 class Reset_Password_Confirm(PasswordResetConfirmView):
-    template_name = "e-mail-confirm.html"
+    template_name = "user/e-mail-confirm.html"
 
 
 class Reset_Password_Complete(PasswordResetCompleteView):
-    template_name = "e-mail-complete.html"
+    template_name = "user/e-mail-complete.html"

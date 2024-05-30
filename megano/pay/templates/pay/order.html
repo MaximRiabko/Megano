@@ -1,5 +1,6 @@
 {% extends 'shopapp/base_main.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block middle %}
     <div class="Middle Middle_top">
@@ -8,19 +9,19 @@
                     <div class="Section-column">
                         <div class="Section-columnSection">
                             <header class="Section-header">
-                                <strong class="Section-title">Прогресс заполнения
+                                <strong class="Section-title">Progress
                                 </strong>
                             </header>
                             <div class="Section-columnContent">
                                 <div class="NavigateProfile">
                                     <ul class="menu menu_vt">
-                                        <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                                        <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'pay:step_1' %}">{% translate "Step 1. User's parameters" %}</a>
                                         </li>
-                                        <li class="menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                                        <li class="menu-item"><a class="menu-link" href="{% url 'pay:step_2' %}">{% translate 'Step 2. Delivery type' %}</a>
                                         </li>
-                                        <li class="menu-item"><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
+                                        <li class="menu-item"><a class="menu-link" href="{% url 'pay:step_3' pk=order.pk %}">{% translate 'Step 3. Payment type' %}</a>
                                         </li>
-                                        <li class="menu-item"><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
+                                        <li class="menu-item"><a class="menu-link" href="{% url 'pay:step_4' pk=order.pk %}">{% translate 'Step 4. Order confirmation' %}</a>
                                         </li>
 
                                     </ul>
@@ -35,98 +36,98 @@
                             {% csrf_token %}
                             <div class="Order-block Order-block_OPEN" id="step1">
                                 <header class="Section-header Section-header_sm">
-                                    <h2 class="Section-title">Шаг 1. Параметры пользователя
+                                    <h2 class="Section-title">{% translate "Step 1. User's parameters" %}
                                     </h2>
                                 </header>
                                 <div class="row">
                                     <div class="row-block">
                                         <div class="form-group">
-                                            <label class="form-label" for="name">ФИО
+                                            <label class="form-label" for="name">{% translate "Surname Name Middle name" %}
                                             </label>
                                             <input class="form-input" id="name" name="name" type="text" value="Иванов Иван Иванович" />
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="phone">Телефон
+                                            <label class="form-label" for="phone">{% translate "Phone number" %}
                                             </label>
                                             <input class="form-input" id="phone" name="phone" type="text" value="+70000000000" />
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="mail">E-mail
+                                            <label class="form-label" for="mail">{% translate "E-mail" %}
                                             </label>
                                             <input class="form-input" id="mail" name="mail" type="text" value="" data-validate="require" />
                                         </div>
                                     </div>
                                     <div class="row-block">
                                         <div class="form-group">
-                                            <label class="form-label" for="password">Пароль
+                                            <label class="form-label" for="password">{% translate "Password" %}
                                             </label>
                                             <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль" />
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="passwordReply">Подтверждение пароля
+                                            <label class="form-label" for="passwordReply">{% translate "Password confirmation" %}
                                             </label>
                                             <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно" />
                                         </div>
-                                        <div class="form-group"><a class="btn btn_muted Order-btnReg" href="#">Я уже зарегистрирован</a>
+                                        <div class="form-group"><a class="btn btn_muted Order-btnReg" href="#">{% translate "I am already registered" %}</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">Дальше</a>
+                                <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">{% translate "Next" %}</a>
                                 </div>
                             </div>
                             <div class="Order-block" id="step2">
                                 <header class="Section-header Section-header_sm">
-                                    <h2 class="Section-title">Шаг 2. Способ доставки
+                                    <h2 class="Section-title">{% translate 'Step 2. Delivery type' %}
                                     </h2>
                                 </header>
                                 <div class="form-group">
                                     <div>
                                         <label class="toggle">
-                                            <input type="radio" name="delivery" value="ordinary" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
+                                            <input type="radio" name="delivery" value="ordinary" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">{% translate 'Ordinary delivery' %}</span>
                                         </label>
                                     </div>
                                     <div>
                                         <label class="toggle">
-                                            <input type="radio" name="delivery" value="express" /><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
+                                            <input type="radio" name="delivery" value="express" /><span class="toggle-box"></span><span class="toggle-text">{% translate 'Express delivery' %}</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="city">Город
+                                    <label class="form-label" for="city">{% translate 'City' %}
                                     </label>
                                     <input class="form-input" id="city" name="city" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="address">Адрес
+                                    <label class="form-label" for="address">{% translate 'Address' %}
                                     </label>
                                     <textarea class="form-textarea" name="address" id="address"></textarea>
                                 </div>
-                                <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">Дальше</a>
+                                <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">{% translate 'Next' %}</a>
                                 </div>
                             </div>
                             <div class="Order-block" id="step3">
                                 <header class="Section-header Section-header_sm">
-                                    <h2 class="Section-title">Шаг 3. Способ оплаты
+                                    <h2 class="Section-title">{% translate 'Step 3. Payment type' %}
                                     </h2>
                                 </header>
                                 <div class="form-group">
                                     <div>
                                         <label class="toggle">
-                                            <input type="radio" name="pay" value="online" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
+                                            <input type="radio" name="pay" value="online" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">{% translate 'Online by card' %}</span>
                                         </label>
                                     </div>
                                     <div>
                                         <label class="toggle">
-                                            <input type="radio" name="pay" value="someone" /><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
+                                            <input type="radio" name="pay" value="someone" /><span class="toggle-box"></span><span class="toggle-text">{% translate 'Online by randomly generated account' %}</span>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">Дальше</a>
+                                <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">{% translate 'Next' %}</a>
                                 </div>
                             </div>
                             <div class="Order-block" id="step4">
                                 <header class="Section-header Section-header_sm">
-                                    <h2 class="Section-title">Шаг 4. Подтверждение заказа
+                                    <h2 class="Section-title">{% translate 'Step 4. Order confirmation' %}
                                     </h2>
                                 </header>
                                 <!--+div.Order.-confirmation-->
@@ -135,19 +136,19 @@
                                         <div class="row">
                                             <div class="row-block">
                                                 <div class="Order-info">
-                                                    <div class="Order-infoType">ФИО:
+                                                    <div class="Order-infoType">{% translate 'Surname Name Middle name' %}:
                                                     </div>
-                                                    <div class="Order-infoContent">Иванов Иван Иванович
+                                                    <div class="Order-infoContent">{% translate 'Ivanov Ivan Ivanovich' %}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info">
-                                                    <div class="Order-infoType">Телефон:
+                                                    <div class="Order-infoType">{% translate 'Phone number' %}:
                                                     </div>
                                                     <div class="Order-infoContent">+7000000000
                                                     </div>
                                                 </div>
                                                 <div class="Order-info">
-                                                    <div class="Order-infoType">E-mail:
+                                                    <div class="Order-infoType">{% translate 'E-mail' %}:
                                                     </div>
                                                     <div class="Order-infoContent">send@test.test
                                                     </div>
@@ -155,27 +156,27 @@
                                             </div>
                                             <div class="row-block">
                                                 <div class="Order-info Order-info_delivery">
-                                                    <div class="Order-infoType">Тип доставки:
+                                                    <div class="Order-infoType">{% translate 'Delivery type' %}:
                                                     </div>
-                                                    <div class="Order-infoContent">Обычная доставка
-                                                    </div>
-                                                </div>
-                                                <div class="Order-info">
-                                                    <div class="Order-infoType">Город:
-                                                    </div>
-                                                    <div class="Order-infoContent">Москва
+                                                    <div class="Order-infoContent">{% translate 'Ordinary delivery' %}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info">
-                                                    <div class="Order-infoType">Адрес:
+                                                    <div class="Order-infoType">{% translate 'City' %}:
                                                     </div>
-                                                    <div class="Order-infoContent">Ул. Академика Арцимовича, д. 10, кв. 10
+                                                    <div class="Order-infoContent">{% translate 'Moscow' %}
+                                                    </div>
+                                                </div>
+                                                <div class="Order-info">
+                                                    <div class="Order-infoType">{% translate 'Address' %}:
+                                                    </div>
+                                                    <div class="Order-infoContent">{% translate 'Akademik Artsimovich str, 10, aprt. 10' %}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info Order-info_pay">
-                                                    <div class="Order-infoType">Оплата:
+                                                    <div class="Order-infoType">{% translate 'Payment' %}:
                                                     </div>
-                                                    <div class="Order-infoContent">Онлайн картой
+                                                    <div class="Order-infoContent">{% translate 'Online by card' %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -205,11 +206,11 @@
 
                                         <div class="Cart-total">
                                             <div class="Cart-block Cart-block_total">
-                                                <strong class="Cart-title">Итого:
+                                                <strong class="Cart-title">{% translate 'Total' %}:
                                                 </strong><span class="Cart-price">{{ cart.get_total_price }}$</span>
                                             </div>
                                             <div class="Cart-block">
-                                                <button class="btn btn_primary btn_lg" type="submit">Оплатить
+                                                <button class="btn btn_primary btn_lg" type="submit">{% translate 'Pay' %}
                                                 </button>
                                             </div>
                                         </div>

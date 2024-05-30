@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'shopapp/base_main.html' %}
+{% load i18n %}
 {% load static %}
 {% block middle %}
 
@@ -10,20 +11,20 @@
                 <div class="Section-column">
                     <div class="Section-columnSection">
                         <header class="Section-header">
-                            <strong class="Section-title">Навигация
+                            <strong class="Section-title">{% translate 'Navigation' %}
                             </strong>
                         </header>
                         <div class="Section-columnContent">
                             <div class="NavigateProfile">
                                 <ul class="menu menu_vt">
-                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:profile' pk=user.pk%}">Личный кабинет</a>
+                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:profile' pk=user.pk%}">{% translate 'Personal account' %}</a>
                                     </li>
-                                    <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'shopapp:profile_update'%}">Профиль</a>
+                                    <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'shopapp:profile_update'%}">{% translate 'Profile' %}</a>
                                     </li>
-                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:history_order'%}">История заказов</a>
+                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:history_order'%}">{% translate 'Orders history' %}</a>
                                     </li>
                                     </li>
-                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:last_order_details' pk=user.pk%}">Последний заказ</a>
+                                    <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:last_order_details' pk=user.pk%}">{% translate 'Last order' %}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -33,33 +34,34 @@
                 <div class="Section-content">
                     <div class="Orders">
                         {% if history_orders %}
+                        est
                         {% for order, price in history_orders.items %}
                         <div class="Order Order_anons">
                             <div class="Order-personal">
                                 <div class="row">
-                                    <div class="row-block"><a class="Order-title" href="{% url 'shopapp:order_details' pk=order.pk%}">Заказ&#32;<span class="Order-numberOrder">№{{ order.reference_num }}</span>&#32;от&#32;<span class="Order-dateOrder">{{ order.created_at|date:"m.d.Y" }}</span></a>
+                                    <div class="row-block"><a class="Order-title" href="{% url 'shopapp:order_details' pk=order.pk%}">{% translate 'Order' %}&#32;<span class="Order-numberOrder">№{{ order.reference_num }}</span>&#32;от&#32;<span class="Order-dateOrder">{{ order.created_at|date:"m.d.Y" }}</span></a>
                                     </div>
                                     <div class="row-block">
                                         <div class="Order-info Order-info_delivery">
-                                            <div class="Order-infoType">Тип доставки:
+                                            <div class="Order-infoType">{% translate 'Delivery type' %}:
                                             </div>
                                             <div class="Order-infoContent">{{ order.delivery }}
                                             </div>
                                         </div>
                                         <div class="Order-info Order-info_pay">
-                                            <div class="Order-infoType">Оплата:
+                                            <div class="Order-infoType">{% translate 'Payment' %}:
                                             </div>
                                             <div class="Order-infoContent">{{ order.payment }}
                                             </div>
                                         </div>
                                         <div class="Order-info">
-                                            <div class="Order-infoType">Общая стоимость:
+                                            <div class="Order-infoType">{% translate 'Total cost' %}:
                                             </div>
                                             <div class="Order-infoContent"><span class="Order-price"> {{ price }} </span>
                                             </div>
                                         </div>
                                         <div class="Order-info Order-info_status">
-                                            <div class="Order-infoType">Статус:
+                                            <div class="Order-infoType">{% translate 'Status' %}:
                                             </div>
                                             <div class="Order-infoContent">{{ order.payment_status }}
                                             </div>
@@ -71,7 +73,7 @@
                     </div>
                     {% endfor %}
                     {% else %}
-                    У Вас пока нет заказов.
+                    {% translate 'No orders yet' %}.
                         </div>
                     </div>
                     {% endif %}

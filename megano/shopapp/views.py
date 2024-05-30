@@ -1,13 +1,21 @@
 import json
 from datetime import timedelta
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.checks import translation
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
-from django.db.models import Count, Min, Sum
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.db.models import Count, Max, Min, Sum
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -18,6 +26,7 @@ from django.views.generic import DetailView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import FormMixin
 
 from cart.forms import CartAddProductForm
+from megano import settings
 from pay.models import Order
 
 from .comparison import Comparison
@@ -135,6 +144,23 @@ class MainPageView(TemplateView):
             cnt=Count("order_items")
         ).order_by("-cnt")[:8]
         context["top_order_products"] = top_order_products
+
+        if self.request.user.is_authenticated:
+            view_history = self.request.user.view_history.select_related(
+                "product"
+            ).order_by("-creation_date")[:8]
+
+            eight_viewed = []
+
+            if view_history:
+                for history in view_history:
+                    history.product.price = ProductSeller.objects.only("price").get(
+                        product=history.product
+                    )
+                    history.product.price = history.product.price.price
+                    eight_viewed.append(history.product)
+                context["eight_viewed"] = eight_viewed
+
         return context
 
 
@@ -148,17 +174,27 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
-        view_history = self.request.user.view_historys.prefetch_related(
+
+        view_history = self.request.user.view_history.select_related(
             "product"
         ).order_by("-creation_date")[:3]
         three_viewed = []
-        for history in view_history:
-            history.product.price = ProductSeller.objects.only("price").get(
-                product=history.product
-            )
-            history.product.price = history.product.price.price
-            three_viewed.append(history.product)
-        context["three_viewed"] = three_viewed
+        if view_history:
+            for history in view_history:
+                history.product.price = ProductSeller.objects.only("price").get(
+                    product=history.product
+                )
+                history.product.price = history.product.price.price
+                three_viewed.append(history.product)
+            context["three_viewed"] = three_viewed
+
+        orders = self.request.user.orders.all()
+        if orders.exists():
+            last_order = orders.latest("created_at")
+            context["last_order"] = last_order
+            last_order_item = last_order.order_items.latest("id")
+            context["last_order_item"] = last_order_item
+
         return context
 
 
@@ -237,39 +273,39 @@ class OrderDetailView(DetailView):
         return context
 
 
-def catalog(request, pk):
-    category = Categories.objects.filter(id=pk).first()
-    the_id = category.id
-    grocery_list = (
-        Product.objects.all()
-        .filter(category=the_id, archived=False)
-        .annotate(min_price=Min("product_sellers__price"))
-    )
-
-    paginator = Paginator(grocery_list, 3)
-
-    seller = ProductSeller.objects.all()
-
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    if the_id:
-        cache_key = f"catalog_{pk}"
-        grocery_list = cache.get(cache_key)
-        if not grocery_list:
-            cache.set(cache_key, grocery_list, timeout=86400)
-    else:
-        cache_key = "catalog_all"
-        grocery_list = cache.get(cache_key)
-        if not grocery_list:
-            cache.set(cache_key, grocery_list, timeout=86400)
-
-    context = {
-        "category": category,
-        "page_obj": page_obj,
-        "seller": seller,
-    }
-    return render(request, "shopapp/catalog.html", context)
+# def catalog(request, pk):
+#     category = Categories.objects.filter(id=pk).first()
+#     the_id = category.id
+#     grocery_list = (
+#         Product.objects.all()
+#         .filter(category=the_id, archived=False)
+#         .annotate(min_price=Min("product_sellers__price"))
+#     )
+#
+#     paginator = Paginator(grocery_list, 3)
+#
+#     seller = ProductSeller.objects.all()
+#
+#     page_number = request.GET.get("page")
+#     page_obj = paginator.get_page(page_number)
+#
+#     if the_id:
+#         cache_key = f"catalog_{pk}"
+#         grocery_list = cache.get(cache_key)
+#         if not grocery_list:
+#             cache.set(cache_key, grocery_list, timeout=86400)
+#     else:
+#         cache_key = "catalog_all"
+#         grocery_list = cache.get(cache_key)
+#         if not grocery_list:
+#             cache.set(cache_key, grocery_list, timeout=86400)
+#
+#     context = {
+#         "category": category,
+#         "page_obj": page_obj,
+#         "seller": seller,
+#     }
+#     return render(request, "shopapp/catalog.html", context)
 
 
 class LastOrderDetailView(DetailView):
@@ -282,10 +318,14 @@ class LastOrderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        order = Order.objects.latest()
+        try:
+            order = Order.objects.latest()
+            context["items"] = order.order_items.prefetch_related("product")
+            context.update(order.order_items.only("price").aggregate(Sum("price")))
+        except Order.DoesNotExist:
+            order = None
+            context["items"] = None
         context["order"] = order
-        context["items"] = order.order_items.prefetch_related("product")
-        context.update(order.order_items.only("price").aggregate(Sum("price")))
         return context
 
 
@@ -343,31 +383,100 @@ class CompareManager(TemplateView):
         return render(request, self.request.META.get("HTTP_REFERER"))
 
 
-class FilterProducts(ListView):
-    def get(self, request):
+# class FilterProducts(ListView):
+#     def get(self, request):
+#         price_from = request.GET.get("priceFrom")
+#         price_to = request.GET.get("priceTo")
+#         name_filter = request.GET.get("nameFilter")
+#         description_filter = request.GET.get("descriptionFilter")
+#         selected_sellers = request.GET.getlist("selectedSellers")
+#         boolean_filter = request.GET.get("booleanFilter")
+#         selected_options = request.GET.getlist("selectedOptions")
+#
+#         products = Product.objects.all()
+#         if price_from and price_to:
+#             products = products.filter(price__gte=price_from, price__lte=price_to)
+#         if name_filter:
+#             products = products.filter(name__icontains=name_filter)
+#         if description_filter:
+#             products = products.filter(description__icontains=description_filter)
+#         if selected_sellers:
+#             products = products.filter(seller__in=selected_sellers)
+#         if boolean_filter == "yes":
+#             products = products.filter(boolean_attr=True)
+#         elif boolean_filter == "no":
+#             products = products.filter(boolean_attr=False)
+#         if selected_options:
+#             products = products.filter(list_attr__in=selected_options)
+#
+#         context = {"products": products}
+#         return render(request, "filtered_product_list.html", context)
+#
+
+
+class CatalogView(ListView):
+    def get(self, request, pk, *args, **kwargs):
+        category = Categories.objects.filter(pk=pk).first()
+        sort = request.GET.get("param")
+        products = Product.objects.filter(category=category).annotate(
+            min_price=Min("product_sellers__price"),
+            pop=Count("product_sellers__order_items"),
+            reviews=Count("reviews_product"),
+        )
+
         price_from = request.GET.get("priceFrom")
         price_to = request.GET.get("priceTo")
         name_filter = request.GET.get("nameFilter")
-        description_filter = request.GET.get("descriptionFilter")
-        selected_sellers = request.GET.getlist("selectedSellers")
-        boolean_filter = request.GET.get("booleanFilter")
-        selected_options = request.GET.getlist("selectedOptions")
+        descriptionFilter = request.GET.get("descriptionFilter")
 
-        products = Product.objects.all()
         if price_from and price_to:
             products = products.filter(price__gte=price_from, price__lte=price_to)
         if name_filter:
             products = products.filter(name__icontains=name_filter)
-        if description_filter:
-            products = products.filter(description__icontains=description_filter)
-        if selected_sellers:
-            products = products.filter(seller__in=selected_sellers)
-        if boolean_filter == "yes":
-            products = products.filter(boolean_attr=True)
-        elif boolean_filter == "no":
-            products = products.filter(boolean_attr=False)
-        if selected_options:
-            products = products.filter(list_attr__in=selected_options)
+        if descriptionFilter:
+            products = products.filter(description__icontains=descriptionFilter)
 
-        context = {"products": products}
-        return render(request, "filtered_product_list.html", context)
+        if sort == "price":
+            products = products.order_by("price")
+        elif sort == "popularity":
+            products = products.order_by("pop")
+        elif sort == "novelty":
+            products = products.order_by("created_at")
+        elif sort == "reviews":
+            products = products.order_by("reviews")
+        else:
+            products = products.order_by("id")
+
+        paginator = Paginator(products, 3)
+
+        seller = ProductSeller.objects.all()
+
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        if pk:
+            cache_key = f"catalog_{pk}"
+            products = cache.get(cache_key)
+            if not products:
+                cache.set(cache_key, products, timeout=86400)
+        else:
+            cache_key = "catalog_all"
+            products = cache.get(cache_key)
+            if not products:
+                cache.set(cache_key, products, timeout=86400)
+
+        context = {
+            "category": category,
+            "page_obj": page_obj,
+            "seller": seller,
+        }
+        return render(request, "shopapp/filtered_product_list.html", context)
+
+
+@login_required
+def set_language(request):
+    lang = request.GET.get("l", "en")
+    request.session[settings.LANGUAGE_SESSION_KEY] = lang
+    response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
+    return response

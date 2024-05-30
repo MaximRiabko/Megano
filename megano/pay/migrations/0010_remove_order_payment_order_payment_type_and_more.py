@@ -10,10 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="order",
-            name="payment",
-        ),
         migrations.AddField(
             model_name="order",
             name="payment_type",

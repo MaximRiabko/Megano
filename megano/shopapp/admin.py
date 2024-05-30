@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.core.cache import cache
 
 from .models import (
+    Banner,
     Categories,
     Discount,
     Product,
@@ -26,7 +27,7 @@ class DiscountAdmin(admin.ModelAdmin):
     list_display = (
         "pk",
         "name",
-        "description_short",
+        "description",
         "date_start",
         "date_end",
         "promocode",
@@ -62,6 +63,10 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = "pk", "name"
 
 
+class BannerAdmin(admin.ModelAdmin):
+    list_display = "pk", "title", "description", "url", "image", "is_active", "is_big"
+
+
 admin.site.register(Seller, SellerAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Product)
@@ -70,3 +75,4 @@ admin.site.register(ProductImage)
 admin.site.register(Categories, CategoryAdmin)
 admin.site.register(Profile)
 admin.site.register(ViewHistory)
+admin.site.register(Banner, BannerAdmin)

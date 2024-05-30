@@ -1,5 +1,6 @@
 {% extends 'shopapp/base_main.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block middle %}
     <div class="Middle Middle_top">
@@ -8,19 +9,19 @@
                     <div class="Section-column">
                         <div class="Section-columnSection">
                             <header class="Section-header">
-                                <strong class="Section-title">Прогресс заполнения
+                                <strong class="Section-title">{% translate "Progress" %}
                                 </strong>
                             </header>
                             <div class="Section-columnContent">
                                 <div class="NavigateProfile">
                                     <ul class="menu menu_vt">
-                                        <li class="menu-item"><a class="menu-link" href="#step2">Шаг 1. Параметры пользователя</a>
+                                        <li class="menu-item"><a class="menu-link" href="#step2">{% translate "Step 1. User's parameters" %}</a>
                                         </li>
-                                        <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                                        <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step2">{% translate 'Step 2. Delivery type' %}</a>
                                         </li>
-                                        <li class="menu-item"><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
+                                        <li class="menu-item"><a class="menu-link" href="#step3">{% translate 'Step 3. Payment type' %}</a>
                                         </li>
-                                        <li class="menu-item"><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
+                                        <li class="menu-item"><a class="menu-link" href="#step4">{% translate 'Step 4. Order confirmation' %}</a>
                                         </li>
 
                                     </ul>
@@ -35,7 +36,7 @@
                             {% csrf_token %}
                             <div class="Order-block Order-block_OPEN" id="step2">
                                 <header class="Section-header Section-header_sm">
-                                    <h2 class="Section-title">Шаг 2. Способ доставки
+                                    <h2 class="Section-title">{% translate 'Step 2. Delivery type' %}
                                     </h2>
                                 </header>
                                 <div class="form-group">
@@ -54,7 +55,7 @@
                                     {{ form_order.address }}
                                 </div>
                                 <div class="Order-footer">
-                                    <button class="btn btn_success" type="submit">Дальше</button>
+                                    <button class="btn btn_success" type="submit">{% translate 'Next' %}</button>
                                 </div>
                             </div>
                         </form>

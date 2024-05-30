@@ -4,11 +4,11 @@ from django.urls import path
 
 from .views import (
     AccountDetailView,
+    CatalogView,
     CompareManager,
     CompareView,
     DiscountDetailView,
     DiscountListView,
-    FilterProducts,
     HistoryOrder,
     LastOrderDetailView,
     MainPageView,
@@ -16,7 +16,7 @@ from .views import (
     ProductDetailView,
     ProfileUpdateView,
     SellerDetailView,
-    catalog,
+    set_language,
 )
 
 app_name = "shopapp"
@@ -25,36 +25,38 @@ urlpatterns = [
     path("", MainPageView.as_view(), name="index"),
     path("about/<int:pk>/", SellerDetailView.as_view(), name="seller_detail"),
     path("discounts/", DiscountListView.as_view(), name="discounts"),
-    path("products/<int:pk>", ProductDetailView.as_view(), name="product"),
-    path("profile/<int:pk>/details/", AccountDetailView.as_view(), name="profile"),
+    path("products/<int:pk>/", ProductDetailView.as_view(), name="product"),
     path("comparison/", CompareView.as_view(), name="compare"),
     path(
         "comparison/compare_manager/", CompareManager.as_view(), name="compare_manager"
     ),
     path(
-        "discounts/<int:pk>",
+        "discounts/<int:pk>/",
         DiscountDetailView.as_view(),
         name="discount_details",
     ),
-    path("profile/details/<int:pk>", AccountDetailView.as_view(), name="profile"),
+    path("profile/details/<int:pk>/", AccountDetailView.as_view(), name="profile"),
     path("profile/details/update/", ProfileUpdateView.as_view(), name="profile_update"),
     path("profile/order/history/", HistoryOrder.as_view(), name="history_order"),
     path(
-        "profile/order/history/<int:pk>",
+        "profile/order/history/<int:pk>/",
         OrderDetailView.as_view(),
         name="order_details",
     ),
-    path("categories/products/<int:pk>/", catalog, name="catalog"),
     path(
         "profile/<int:pk>/order/last/",
         LastOrderDetailView.as_view(),
         name="last_order_details",
     ),
     path(
-        "categories/products/filtered-products/",
-        FilterProducts.as_view(),
-        name="filter-products",
+        "categories/products/sorted-products/<int:pk>",
+        CatalogView.as_view(),
+        name="catalog",
     ),
+]
+
+urlpatterns += [
+    path(r"set-language/", set_language, name="set_language"),
 ]
 
 if settings.DEBUG:
