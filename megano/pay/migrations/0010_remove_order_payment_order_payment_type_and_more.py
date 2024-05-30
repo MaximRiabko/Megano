@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="order",
-            name="payment_type",
+            name="payment",
             field=models.CharField(
                 choices=[("someone", "Someone"), ("online", "Online")],
                 default="someone",
