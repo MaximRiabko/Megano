@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-30 14:06+0000\n"
+"POT-Creation-Date: 2024-05-30 15:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,7 +115,7 @@ msgstr "Экспресс доставка"
 
 #: pay/forms.py:50 pay/forms.py:67 pay/templates/pay/order.html:159
 #: pay/templates/pay/order_step_4.html:67
-#: shopapp/templates/shopapp/historyorder.html:46
+#: shopapp/templates/shopapp/historyorder.html:45
 msgid "Delivery type"
 msgstr "Тип доставки"
 
@@ -140,11 +140,11 @@ msgstr "Онлайн рандомно сгенерированным счето�
 
 #: pay/models.py:9
 msgid "Cash"
-msgstr "Наличные"
+msgstr "Наличными"
 
 #: pay/models.py:10
 msgid "Credit card"
-msgstr "Кредитная карта"
+msgstr "Картой"
 
 #: pay/models.py:14
 msgid "Pickup"
@@ -255,7 +255,7 @@ msgstr ""
 #: pay/templates/pay/order_step_3.html:18
 #: pay/templates/pay/order_step_4.html:18
 msgid "Step 1. User's parameters"
-msgstr "Параметры пользователя"
+msgstr "Шаг 1. Параметры пользователя"
 
 #: pay/templates/pay/order.html:20 pay/templates/pay/order.html:80
 #: pay/templates/pay/order_step_1.html:21
@@ -264,7 +264,7 @@ msgstr "Параметры пользователя"
 #: pay/templates/pay/order_step_3.html:20
 #: pay/templates/pay/order_step_4.html:20
 msgid "Step 2. Delivery type"
-msgstr "Тип доставки"
+msgstr "Шаг 2. Тип доставки"
 
 #: pay/templates/pay/order.html:22 pay/templates/pay/order.html:110
 #: pay/templates/pay/order_step_1.html:22
@@ -326,7 +326,7 @@ msgstr "ул. Академика Арцимовича, д. 10, кв. 10"
 #: pay/templates/pay/payment_card.html:15
 #: pay/templates/pay/payment_invoice.html:10
 #: pay/templates/pay/payment_invoice.html:15
-#: shopapp/templates/shopapp/historyorder.html:52
+#: shopapp/templates/shopapp/historyorder.html:51
 msgid "Payment"
 msgstr "Оплата"
 
@@ -344,7 +344,7 @@ msgid "Progress"
 msgstr "Прогресс заполнение"
 
 #: pay/templates/pay/order_step_4.html:117
-#: shopapp/templates/shopapp/historyorder.html:58
+#: shopapp/templates/shopapp/historyorder.html:57
 msgid "Total cost"
 msgstr "Всего:"
 
@@ -577,7 +577,7 @@ msgid "Edit the profile"
 msgstr "Редактировать профиль"
 
 #: shopapp/templates/shopapp/account.html:56
-#: shopapp/templates/shopapp/historyorder.html:42
+#: shopapp/templates/shopapp/historyorder.html:41
 msgid "Order"
 msgstr "Заказ"
 
@@ -698,19 +698,15 @@ msgstr "Блог"
 msgid "Discount time"
 msgstr "Время действия скидки"
 
-#: shopapp/templates/shopapp/discountdetails.html:38
-msgid "More"
-msgstr "Больше"
-
-#: shopapp/templates/shopapp/discountdetails.html:44
+#: shopapp/templates/shopapp/discountdetails.html:42
 msgid "The following products are discounted"
 msgstr "На следующие товары распространяется скидка"
 
-#: shopapp/templates/shopapp/historyorder.html:64
+#: shopapp/templates/shopapp/historyorder.html:63
 msgid "Status"
 msgstr "Статус:"
 
-#: shopapp/templates/shopapp/historyorder.html:76
+#: shopapp/templates/shopapp/historyorder.html:75
 msgid "No orders yet"
 msgstr "Пока нет заказов"
 
@@ -802,78 +798,3 @@ msgstr "Забыли пароль?"
 #: user/templates/user/register.html:30
 msgid "Register"
 msgstr "Регистрация"
-
-#~ msgid "Online"
-#~ msgstr "Онлайн картой"
-
-#~ msgid "Not paid"
-#~ msgstr "Не оплачен"
-
-#~ msgid "Viewed products"
-#~ msgstr "Просмотренные товары"
-
-#~ msgid "Price from"
-#~ msgstr "Цена от"
-
-#~ msgid "Price to"
-#~ msgstr "Цена до"
-
-#~ msgid "Search on name"
-#~ msgstr "Поиск по имени"
-
-#~ msgid "Search on description"
-#~ msgstr "Поиск по описанию"
-
-#~ msgid "Filter by seller"
-#~ msgstr "Фильтр по продавцу"
-
-#~ msgid "Seller 1"
-#~ msgstr "Продавец 1"
-
-#~ msgid "Seller 2"
-#~ msgstr "Продавец 2"
-
-#~ msgid "Seller 3"
-#~ msgstr "Продавец 3"
-
-#~ msgid "Filter by boolean characteristics"
-#~ msgstr "Фильтр по булевым характеристикам"
-
-#~ msgid "Yes"
-#~ msgstr "Да"
-
-#~ msgid "No"
-#~ msgstr "Нет"
-
-#~ msgid "Ignore"
-#~ msgstr "Пропустить"
-
-#~ msgid "Filter by characteristic-list"
-#~ msgstr "Фильтр по списку характеристик"
-
-#~ msgid "Option 1"
-#~ msgstr "Опция 1"
-
-#~ msgid "Option 2"
-#~ msgstr "Опция 2"
-
-#~ msgid "Option 3"
-#~ msgstr "Опция 3"
-
-#~ msgid "Apply filters"
-#~ msgstr "Применить фильтры"
-
-#~ msgid "No products"
-#~ msgstr "Товаров нет"
-
-#~ msgid "Video Cards"
-#~ msgstr "Видео карты"
-
-#~ msgid "Head Phones"
-#~ msgstr "Гарнитура"
-
-#~ msgid "Bass Speakers"
-#~ msgstr "Басс колонки"
-
-#~ msgid "LIMITED EDITION"
-#~ msgstr "ОГРАНИЧЕННЫЙ ТИРАЖ "
