@@ -274,3 +274,18 @@ class Profile(models.Model):
     class Meta:
         verbose_name = _("профиль")
         verbose_name_plural = _("Профили")
+
+
+def banner_image_directory_path(instance: "Banner", filename: str) -> str:
+    return "banners/banner_{pk}/{filename}".format(pk=instance.pk, filename=filename)
+
+
+class Banner(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    image = models.ImageField(
+        null=True, blank=True, upload_to=banner_image_directory_path
+    )
+    is_active = models.BooleanField(default=False)
+    is_big = models.BooleanField(default=False)
