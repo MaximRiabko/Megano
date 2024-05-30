@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.core.cache import cache
 
 from .models import (
+    Banner,
     Categories,
     Discount,
     Product,
@@ -11,7 +12,6 @@ from .models import (
     Review,
     Seller,
     ViewHistory,
-    Banner
 )
 
 

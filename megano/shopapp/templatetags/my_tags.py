@@ -1,8 +1,7 @@
 from django import template
 from django.urls import reverse
 
-from shopapp.models import Categories, Banner
-
+from shopapp.models import Banner, Categories
 
 register = template.Library()
 

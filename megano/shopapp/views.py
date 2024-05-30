@@ -8,7 +8,7 @@ from django.core.cache import cache
 from django.core.checks import translation
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
-from django.db.models import Count, Min, Sum
+from django.db.models import Count, Max, Min, Sum
 from django.http import (
     HttpRequest,
     HttpResponse,
@@ -33,7 +33,6 @@ from .comparison import Comparison
 from .forms import ReviewForm
 from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
 
-from django.db.models import Max
 
 class ProductDetailView(
     FormMixin,
@@ -147,7 +146,9 @@ class MainPageView(TemplateView):
         context["top_order_products"] = top_order_products
 
         if self.request.user.is_authenticated:
-            view_history = self.request.user.view_history.select_related("product").order_by('-creation_date')[:8]
+            view_history = self.request.user.view_history.select_related(
+                "product"
+            ).order_by("-creation_date")[:8]
 
             eight_viewed = []
 
@@ -174,7 +175,9 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["profile"] = self.request.user.profile
 
-        view_history = self.request.user.view_history.select_related("product").order_by('-creation_date')[:3]
+        view_history = self.request.user.view_history.select_related(
+            "product"
+        ).order_by("-creation_date")[:3]
         three_viewed = []
         if view_history:
             for history in view_history:
@@ -187,11 +190,10 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
 
         orders = self.request.user.orders.all()
         if orders.exists():
-            last_order = orders.latest('created_at')
-            context['last_order'] = last_order
-            last_order_item = last_order.order_items.latest('id')
-            context['last_order_item'] = last_order_item
-
+            last_order = orders.latest("created_at")
+            context["last_order"] = last_order
+            last_order_item = last_order.order_items.latest("id")
+            context["last_order_item"] = last_order_item
 
         return context
 

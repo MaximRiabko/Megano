@@ -284,6 +284,8 @@ class Banner(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     url = models.CharField(max_length=255)
-    image = models.ImageField(null=True, blank=True, upload_to=banner_image_directory_path)
+    image = models.ImageField(
+        null=True, blank=True, upload_to=banner_image_directory_path
+    )
     is_active = models.BooleanField(default=False)
     is_big = models.BooleanField(default=False)
