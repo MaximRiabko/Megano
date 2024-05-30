@@ -1,4 +1,5 @@
 import datetime
+from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -10,7 +11,17 @@ from .models import (
     Seller,
     Discount,
 )
+
 from pay.models import Order
+
+class UrlTestCase(TestCase):
+    def test_url(self):
+        responce = self.client.get(
+            reverse(
+                "shopapp:compare"
+            )
+        )
+        self.assertEqual(responce.status_code, 200)
 
 
 User = get_user_model()
@@ -62,28 +73,30 @@ class OrderDetailViewTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.user = User.objects.create(
-            username="Test name",
+            username="Name",
             password="password",
         )
         cls.order = Order.objects.create(
             user=cls.user,
             city="Test city",
             address="UL. Test, D.18",
-            delivery="Delivery Test",
-            payment_type="Cash",
-            payment_status="Cancelled",
-            created_at=datetime.date(2024, 5, 1),
+            delivery="DeliveryChoices.PICKUP",
+            payment_type="PaymentChoices.CASH",
+            payment_status="PaymentStatus.CANCELLED",
+            created_at=timezone.now(),
             comment="Test Order Comment",
-            reference_num="reference num test",
+            reference_num=2000,
         )
     @classmethod
     def tearDownClass(cls):
         cls.order.delete()
 
     def test_get_order(self):
-        self.client.get(
+        responce = self.client.get(
             reverse("shopapp:order_details", kwargs={"pk": self.order.pk})
         )
+        self.assertEqual(responce.status_code, 200)
+
 class AccountDetailViewTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -104,6 +117,7 @@ class AccountDetailViewTestCase(TestCase):
 class DiscountDetailViewTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        cls.product = Product.objects.all()
         cls.discount = Discount.objects.create(
             name="Test Discount",
             description="Test description Discount",
@@ -116,6 +130,9 @@ class DiscountDetailViewTestCase(TestCase):
                 content=b'',
                 content_type="image/jpg"
             ),
+            is_group=False,
+            is_active=False,
+            type="Test type",
         )
 
     @classmethod
@@ -179,6 +196,9 @@ class ProductDetailViewTestCase(TestCase):
         cls.product = Product.objects.create(
             name="Test name product",
             description="Test description product",
+            archived=False,
+            details="",
+            created_at=datetime.date(2024, 5, 1),
             category=cls.categories,
             preview=cls.preview,
         )
