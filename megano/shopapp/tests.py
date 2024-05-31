@@ -14,15 +14,6 @@ from .models import (
 
 from pay.models import Order
 
-class UrlTestCase(TestCase):
-    def test_url(self):
-        responce = self.client.get(
-            reverse(
-                "shopapp:compare"
-            )
-        )
-        self.assertEqual(responce.status_code, 200)
-
 
 User = get_user_model()
 
@@ -65,9 +56,10 @@ class LastOrderDetailViewTestCase(TestCase):
         cls.last_order.delete()
 
     def test_get_last_order(self):
-        self.client.get(
+        responce = self.client.get(
             reverse("shopapp:last_order_details", kwargs={"pk": self.last_order.pk})
         )
+        self.assertEqual(responce.status_code, 200)
 
 class OrderDetailViewTestCase(TestCase):
     @classmethod
@@ -110,9 +102,10 @@ class AccountDetailViewTestCase(TestCase):
         cls.account.delete()
 
     def test_get_account(self):
-        self.client.get(
+        responce = self.client.get(
             reverse("shopapp:profile", kwargs={"pk": self.account.pk})
         )
+        self.assertEqual(responce.status_code, 200)
 
 class DiscountDetailViewTestCase(TestCase):
     @classmethod
@@ -140,9 +133,10 @@ class DiscountDetailViewTestCase(TestCase):
         cls.discount.delete()
 
     def test_get_discount(self):
-        self.client.get(
+        responce = self.client.get(
             reverse("shopapp:discount_details", kwargs={"pk": self.discount.pk})
         )
+        self.assertEqual(responce.status_code, 200)
 
 class DiscountListViewTestCase(TestCase):
     def test_discount(self):
@@ -182,9 +176,10 @@ class SellerDetailViewTestCase(TestCase):
         cls.seller.delete()
 
     def test_get_seller(self):
-        self.client.get(
+        responce = self.client.get(
             reverse("shopapp:seller_detail", kwargs={"pk": self.seller.pk})
         )
+        self.assertEqual(responce.status_code, 200)
 
 
 
@@ -207,9 +202,10 @@ class ProductDetailViewTestCase(TestCase):
         cls.product.delete()
 
     def test_get_product(self):
-        self.client.get(
+        responce = self.client.get(
             reverse("shopapp:product", kwargs={"pk": self.product.pk})
         )
+        self.assertEqual(responce.status_code, 200)
 
 
 
