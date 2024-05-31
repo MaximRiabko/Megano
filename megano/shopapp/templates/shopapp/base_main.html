@@ -119,11 +119,10 @@
                                 <div class="dropdown-content">
                                     {% if user.is_authenticated %}
                                         <a class="dropdown-content-a" href="{% url 'shopapp:profile' pk=user.pk %}">{% translate 'Personal account' %}</a>
-                                        <a class="dropdown-content-a" href="{% url 'shopapp:profile' pk=user.pk %}">{% translate 'Viewed products' %}</a>
                                         <a class="dropdown-content-a" href="{% url 'auth:logout' %}">{% translate 'Log out' %}</a>
                                     {% endif %}
 
-                                    <a class="dropdown-content-a" href="account.html">{% translate 'Administrative section' %}</a>
+                                    <a class="dropdown-content-a" href="{% url 'admin:index' %}">{% translate 'Administrative section' %}</a>
                                 </div>
                             </div>
                             <a class="CartBlock-block" href="{% url 'cart:cart_detail' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg" /><span class="CartBlock-amount">{{ cart|length }}</span></a>

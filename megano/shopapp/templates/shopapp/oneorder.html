@@ -116,7 +116,7 @@
                                     </strong>
                                 </div>
                                 {% if order.payment_status == "cancelled" %}
-                                <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay:payment'%}">Оплатить</a>
+                                <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay:step_1'%}">Оплатить</a>
                                 </div>
                                 {% endif %}
                             </div>

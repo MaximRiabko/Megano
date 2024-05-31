@@ -19,8 +19,8 @@
                                         <a class="menu-link" href="{% url 'pay:step_1' %}">{% translate "Step 1. User's parameters" %}</a>
                                     </li>
                                     <li class="menu-item"><a class="{% url 'pay:step_2' %}">{% translate 'Step 2. Delivery type' %}</a></li>
-                                    <li class="menu-item"><a class="">{% translate 'Step 3. Payment type' %}</a></li>
-                                    <li class="menu-item"><a class="">{% translate 'Step 4. Order confirmation' %}а</a></li>
+                                    <li class="menu-item"><a class="menu-link" href="{% url 'pay:step_3' pk=order.pk %}">>{% translate 'Step 3. Payment type' %}</a></li>
+                                    <li class="menu-item"><a class="menu-link" href="{% url 'pay:step_4' pk=order.pk %}">{% translate 'Step 4. Order confirmation' %}а</a></li>
                                 </ul>
                             </div>
                         </div>
