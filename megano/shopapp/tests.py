@@ -1,21 +1,17 @@
 import datetime
-from django.utils import timezone
+
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.contrib.auth import get_user_model
-from .models import (
-    Product,
-    Categories,
-    ProductImage,
-    Seller,
-    Discount,
-)
+from django.utils import timezone
 
 from pay.models import Order
 
+from .models import Categories, Discount, Product, ProductImage, Seller
 
 User = get_user_model()
+
 
 class HistoryOrderTestCase(TestCase):
     @classmethod
@@ -44,6 +40,7 @@ class HistoryOrderTestCase(TestCase):
             self.assertContains(responce, history.reference_num)
             self.assertTemplateUsed(responce, "shopapp/historyorder.html")
 
+
 class LastOrderDetailViewTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -51,6 +48,7 @@ class LastOrderDetailViewTestCase(TestCase):
             username="Test name",
             password="password",
         )
+
     @classmethod
     def tearDownClass(cls):
         cls.last_order.delete()
@@ -60,6 +58,7 @@ class LastOrderDetailViewTestCase(TestCase):
             reverse("shopapp:last_order_details", kwargs={"pk": self.last_order.pk})
         )
         self.assertEqual(responce.status_code, 200)
+
 
 class OrderDetailViewTestCase(TestCase):
     @classmethod
@@ -79,6 +78,7 @@ class OrderDetailViewTestCase(TestCase):
             comment="Test Order Comment",
             reference_num=2000,
         )
+
     @classmethod
     def tearDownClass(cls):
         cls.order.delete()
@@ -88,6 +88,7 @@ class OrderDetailViewTestCase(TestCase):
             reverse("shopapp:order_details", kwargs={"pk": self.order.pk})
         )
         self.assertEqual(responce.status_code, 200)
+
 
 class AccountDetailViewTestCase(TestCase):
     @classmethod
@@ -107,6 +108,7 @@ class AccountDetailViewTestCase(TestCase):
         )
         self.assertEqual(responce.status_code, 200)
 
+
 class DiscountDetailViewTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -119,9 +121,7 @@ class DiscountDetailViewTestCase(TestCase):
             date_end=datetime.date(2024, 7, 3),
             value=875,
             image=SimpleUploadedFile(
-                "Test Discount.jpg",
-                content=b'',
-                content_type="image/jpg"
+                "Test Discount.jpg", content=b"", content_type="image/jpg"
             ),
             is_group=False,
             is_active=False,
@@ -137,6 +137,7 @@ class DiscountDetailViewTestCase(TestCase):
             reverse("shopapp:discount_details", kwargs={"pk": self.discount.pk})
         )
         self.assertEqual(responce.status_code, 200)
+
 
 class DiscountListViewTestCase(TestCase):
     def test_discount(self):
@@ -155,6 +156,7 @@ class DiscountListViewTestCase(TestCase):
             self.assertContains(responce, discount.image)
             self.assertTemplateUsed(responce, "shopapp/discount_list.html")
 
+
 class SellerDetailViewTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -162,13 +164,11 @@ class SellerDetailViewTestCase(TestCase):
             name="Test name Seller",
             description="Test description seller",
             image=SimpleUploadedFile(
-                "Test seller.jpg",
-                content=b'',
-                content_type="image/jpg"
+                "Test seller.jpg", content=b"", content_type="image/jpg"
             ),
             phone=+79998887766,
             address="Ul. Test",
-            email="test@gmail.com"
+            email="test@gmail.com",
         )
 
     @classmethod
@@ -180,7 +180,6 @@ class SellerDetailViewTestCase(TestCase):
             reverse("shopapp:seller_detail", kwargs={"pk": self.seller.pk})
         )
         self.assertEqual(responce.status_code, 200)
-
 
 
 class ProductDetailViewTestCase(TestCase):
@@ -197,6 +196,7 @@ class ProductDetailViewTestCase(TestCase):
             category=cls.categories,
             preview=cls.preview,
         )
+
     @classmethod
     def tearDownClass(cls):
         cls.product.delete()
@@ -206,6 +206,3 @@ class ProductDetailViewTestCase(TestCase):
             reverse("shopapp:product", kwargs={"pk": self.product.pk})
         )
         self.assertEqual(responce.status_code, 200)
-
-
-
