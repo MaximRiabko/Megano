@@ -383,37 +383,6 @@ class CompareManager(TemplateView):
         return render(request, self.request.META.get("HTTP_REFERER"))
 
 
-# class FilterProducts(ListView):
-#     def get(self, request):
-#         price_from = request.GET.get("priceFrom")
-#         price_to = request.GET.get("priceTo")
-#         name_filter = request.GET.get("nameFilter")
-#         description_filter = request.GET.get("descriptionFilter")
-#         selected_sellers = request.GET.getlist("selectedSellers")
-#         boolean_filter = request.GET.get("booleanFilter")
-#         selected_options = request.GET.getlist("selectedOptions")
-#
-#         products = Product.objects.all()
-#         if price_from and price_to:
-#             products = products.filter(price__gte=price_from, price__lte=price_to)
-#         if name_filter:
-#             products = products.filter(name__icontains=name_filter)
-#         if description_filter:
-#             products = products.filter(description__icontains=description_filter)
-#         if selected_sellers:
-#             products = products.filter(seller__in=selected_sellers)
-#         if boolean_filter == "yes":
-#             products = products.filter(boolean_attr=True)
-#         elif boolean_filter == "no":
-#             products = products.filter(boolean_attr=False)
-#         if selected_options:
-#             products = products.filter(list_attr__in=selected_options)
-#
-#         context = {"products": products}
-#         return render(request, "filtered_product_list.html", context)
-#
-
-
 class CatalogView(ListView):
     def get(self, request, pk, *args, **kwargs):
         category = Categories.objects.filter(pk=pk).first()
