@@ -43,7 +43,10 @@
                                 </div>
                             </div>
                             <div class="Account-column">
-                                <div class="Account-name">{{ profile.user.last_name }} {{ profile.user.username }} {{profile.middle_name }}
+                                <div class="Account-name">{{ profile.user.last_name }} {{ profile.user.username }}
+                                    {% if profile.middle_name %}
+                                    {{ profile.middle_name }}
+                                    {% endif %}
                                 </div><a class="Account-editLink" href="{% url 'shopapp:profile_update' %}">{% translate 'Edit the profile' %}</a>
                             </div>
                         </div>
