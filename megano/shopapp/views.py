@@ -1,3 +1,4 @@
+import datetime
 import json
 from datetime import timedelta
 
@@ -127,6 +128,7 @@ class DiscountDetailView(DetailView):
             discount = context["discount"]
             if discount.type == "%":
                 discounted_price = price - (price * discount.value / 100)
+                discounted_price = round(discounted_price, 2)
             elif discount.type == "RUB":
                 discounted_price = price - discount.value
             product.price = discounted_price
@@ -138,11 +140,52 @@ class DiscountDetailView(DetailView):
 class MainPageView(TemplateView):
     template_name = "shopapp/index.html"
 
+    def create_new_limited_discount(self):
+        random_product = Product.objects.all().order_by("?").first()
+        new_discount = Discount.objects.create(
+            name="Ограниченная скидка",
+            date_start=datetime.datetime.today(),
+            date_end=datetime.datetime.today() + timedelta(days=1),
+            promocode="LIMITED",
+            is_group=False,
+            is_active=True,
+            value=10,
+        )
+        random_product.discount_set.add(new_discount)
+        return random_product
+
+    def get_limited_offer(self):
+        limited_offer = Discount.objects.filter(
+            promocode="LIMITED", is_active=1
+        ).first()
+        if limited_offer:
+            if limited_offer.date_end.date() != datetime.datetime.today().date():
+                limited_product = limited_offer.products.all()
+            else:
+                limited_offer.is_active = False
+                limited_offer.save()
+                limited_product = self.create_new_limited_discount()
+        else:
+            limited_product = self.create_new_limited_discount()
+        discount = limited_offer.value
+        return limited_product.first(), discount
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         top_order_products = ProductSeller.objects.annotate(
             cnt=Count("order_items")
         ).order_by("-cnt")[:8]
+        limited_product, discount = self.get_limited_offer()
+        product_seller = ProductSeller.objects.filter(
+            product_id=limited_product.id
+        ).first()
+        costs = {
+            "old_cost": product_seller.sale,
+            "new_cost": int(product_seller.sale) - int(discount),
+        }
+
+        context["limited_product"] = limited_product
+        context["limited_cost"] = costs
         context["top_order_products"] = top_order_products
 
         if self.request.user.is_authenticated:

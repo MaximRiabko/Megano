@@ -29,26 +29,34 @@
                             <div class="row">
                                 <div class="row-block">
                                     <div class="Order-info Order-info_date">
-                                        <div class="Order-infoType">{% translate 'Discount time' %}:
+                                        <div class="Order-infoContent">{% translate 'Discount time' %}:
                                         </div>
-                                        <div class="Order-infoContent">с {{ discount.date_start|date:"d.m.y" }} по {{ discount.date_start|date:"d.m.y" }}
-                                        </div>
-                                    </div>
-                                    <div class="Order-info">
-                                        <div class="Order-infoContent">{{ discount.description }}
+                                        <div class="Order-infoType">с {{ discount.date_start|date:"d.m.y" }} по {{ discount.date_start|date:"d.m.y" }}
                                         </div>
                                     </div>
-                                    <div class="Order-info">
-                                        <div class="Order-infoType">{% translate 'The following products are discounted' %}:
+                                    <div class="Order-info Order-info_date">
+                                        <div class="Order-infoContent">{% translate 'Description' %}:
+                                        </div>
+                                        <div class="Order-infoType">{{ discount.description }}
                                         </div>
                                     </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="Order-info Order-info_date">
+                                        <div class="Middle-title">{% translate 'The following products are discounted' %}:
+                                        </div>
+                                </div>
+
                         <div class="Cart Cart_order">
                         {% if products %}
                         {% for product in products %}
                             <div class="Cart-product">
                                 <div class="Cart-block Cart-block_row">
-                                    <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="{{ product.preview.url }}" alt="card.jpg" /></a>
+                                    {% if product.preview.image.url %}
+                                    <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="{{ product.preview.image.url }}" alt="card.jpg" /></a>
                                     </div>
+                                    {% endif %}
                                     <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ product.name }}</a>
                                         <div class="Cart-desc">{{ product.description }}
                                         </div>
