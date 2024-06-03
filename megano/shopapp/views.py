@@ -127,6 +127,7 @@ class DiscountDetailView(DetailView):
             discount = context["discount"]
             if discount.type == "%":
                 discounted_price = price - (price * discount.value / 100)
+                discounted_price = round(discounted_price, 2)
             elif discount.type == "RUB":
                 discounted_price = price - discount.value
             product.price = discounted_price
