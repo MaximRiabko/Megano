@@ -6,24 +6,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
-from django.core.checks import translation
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
-from django.db.models import Count, Max, Min, Sum
+from django.db.models import Count, Min, Sum
 from django.http import (
     HttpRequest,
     HttpResponse,
-    HttpResponseBadRequest,
     HttpResponseRedirect,
-    JsonResponse,
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, ListView, TemplateView, UpdateView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
 
 from cart.forms import CartAddProductForm
@@ -32,7 +28,7 @@ from pay.models import Order
 
 from .comparison import Comparison
 from .forms import ReviewForm
-from .models import Categories, Discount, Product, ProductSeller, Seller, ViewHistory
+from .models import Product
 
 
 class ProductDetailView(
@@ -487,8 +483,10 @@ class CatalogView(ListView):
 
 @login_required
 def set_language(request):
-    lang = request.GET.get("l", "en")
+    lang = request.GET.get('l')
     request.session[settings.LANGUAGE_SESSION_KEY] = lang
-    response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+    referer = str(request.META.get('HTTP'))
+    request.META['HTTP_ACCEPT_LANGUAGE'] = lang
+    response = HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
     return response
