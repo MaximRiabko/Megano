@@ -26,7 +26,6 @@ class Login(LoginView):
     def get_success_url(self):
         next_url = self.request.POST.get("next")
         if next_url:
-            print(next_url)
             return next_url
         return reverse_lazy("shopapp:index")
 
@@ -51,7 +50,7 @@ def register(request: HttpRequest) -> HttpResponse:
         if name or email or password:
             exist = User.objects.filter(email=email).exists()
             if exist:
-                return render(request, "user/login.html")
+                return render(request, "user/user_exists.html")
             user = User.objects.create_user(
                 username=email, first_name=name, email=email, password=password
             )
@@ -60,7 +59,7 @@ def register(request: HttpRequest) -> HttpResponse:
             user = authenticate(request=request, username=email, password=password)
             if user:
                 login(request, user)
-                return redirect("index.html")
+                return redirect("shopapp:index")
         return render(request, "user/register.html")
 
 

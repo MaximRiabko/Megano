@@ -36,7 +36,6 @@ class Comparison(object):
                 "price": float(product_seller.price),
                 "img": img,
             }
-
         self.save()
 
     def save(self):
@@ -81,12 +80,6 @@ class Comparison(object):
         """
         Перебор элементов в сравнении и получение продуктов из базы данных.
         """
-        product_ids = self.compare.keys()
-        # получение объектов product и добавление их в сравнение
-        products = Product.objects.filter(id__in=product_ids)
-        for product in products:
-            self.compare[str(product.id)]["product"] = product
-
         for item in self.compare.values():
             yield item
 

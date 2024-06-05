@@ -9,6 +9,7 @@ urlpatterns = [
         "admin/",
         admin.site.urls,
     ),
+    path("auth/", include("user.urls", namespace="auth")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += i18n_patterns(
