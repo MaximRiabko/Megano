@@ -13,7 +13,6 @@ from .views import (
 app_name = "pay"
 
 urlpatterns = [
-    # path("", order_view, name="order"),
     path("step_1/", order_step_1, name="step_1"),
     path("step_2/", order_step_2, name="step_2"),
     path("step_3/<int:id>/", order_step_3, name="step_3"),

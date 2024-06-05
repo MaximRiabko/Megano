@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_SESSION_KEY = "session_language_appname"
 LANGUAGE_COOKIE_NAME = "cookie_language_appname"
 
-LANGUAGES = (('en', _("English")), ('ru', _("Русский")))
+LANGUAGES = (("en", _("English")), ("ru", _("Русский")))
 
 TIME_ZONE = "UTC"
 

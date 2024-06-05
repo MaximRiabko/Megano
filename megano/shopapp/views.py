@@ -9,11 +9,7 @@ from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.db.models import Count, Min, Sum
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-    HttpResponseRedirect,
-)
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -313,41 +309,6 @@ class OrderDetailView(DetailView):
         return context
 
 
-# def catalog(request, pk):
-#     category = Categories.objects.filter(id=pk).first()
-#     the_id = category.id
-#     grocery_list = (
-#         Product.objects.all()
-#         .filter(category=the_id, archived=False)
-#         .annotate(min_price=Min("product_sellers__price"))
-#     )
-#
-#     paginator = Paginator(grocery_list, 3)
-#
-#     seller = ProductSeller.objects.all()
-#
-#     page_number = request.GET.get("page")
-#     page_obj = paginator.get_page(page_number)
-#
-#     if the_id:
-#         cache_key = f"catalog_{pk}"
-#         grocery_list = cache.get(cache_key)
-#         if not grocery_list:
-#             cache.set(cache_key, grocery_list, timeout=86400)
-#     else:
-#         cache_key = "catalog_all"
-#         grocery_list = cache.get(cache_key)
-#         if not grocery_list:
-#             cache.set(cache_key, grocery_list, timeout=86400)
-#
-#     context = {
-#         "category": category,
-#         "page_obj": page_obj,
-#         "seller": seller,
-#     }
-#     return render(request, "shopapp/catalog.html", context)
-
-
 class LastOrderDetailView(DetailView):
     """
     This page displays the details of the last user's order
@@ -367,13 +328,6 @@ class LastOrderDetailView(DetailView):
             context["items"] = None
         context["order"] = order
         return context
-
-
-#
-# def compare_view(request):
-#     products = Comparison(request)  # Получаем товары для сравнения из сессии
-#     return render(request, 'shopapp/comparison.html', {'products': products})
-#
 
 
 class CompareView(TemplateView):
@@ -484,10 +438,10 @@ class CatalogView(ListView):
 
 @login_required
 def set_language(request):
-    lang = request.GET.get('l')
+    lang = request.GET.get("l")
     request.session[settings.LANGUAGE_SESSION_KEY] = lang
-    referer = str(request.META.get('HTTP'))
-    request.META['HTTP_ACCEPT_LANGUAGE'] = lang
-    response = HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    referer = str(request.META.get("HTTP"))
+    request.META["HTTP_ACCEPT_LANGUAGE"] = lang
+    response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
     return response
