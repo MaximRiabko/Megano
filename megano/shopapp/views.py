@@ -17,6 +17,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
+from django.urls import translate_url
 
 from cart.forms import CartAddProductForm
 from megano import settings
@@ -160,7 +161,6 @@ class MainPageView(TemplateView):
         else:
             limited_product = self.create_new_limited_discount()
         discount = limited_offer.value
-        print(limited_product.first())
         return limited_product.first(), discount
 
     def get_context_data(self, **kwargs):
@@ -438,10 +438,14 @@ class CatalogView(ListView):
 
 @login_required
 def set_language(request):
-    lang = request.GET.get("l")
-    request.session[settings.LANGUAGE_SESSION_KEY] = lang
-    referer = str(request.META.get("HTTP"))
-    request.META["HTTP_ACCEPT_LANGUAGE"] = lang
-    response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
-    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
+    next_url = request.META.get("HTTP_REFERER")
+    response = HttpResponseRedirect(next_url)
+    lang_code = request.GET.get("l")
+    next_trans = translate_url(next_url, lang_code)
+    if next_trans != next_url:
+        response = HttpResponseRedirect(next_trans)
+        response.set_cookie(
+            settings.LANGUAGE_COOKIE_NAME,
+            lang_code
+        )
     return response
