@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-05 21:13+0000\n"
+"POT-Creation-Date: 2024-06-04 13:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,7 @@ msgid "English"
 msgstr ""
 
 #: megano/settings.py:111
-msgid "Русский"
+msgid "Russian"
 msgstr ""
 
 #: pay/apps.py:8
@@ -79,7 +79,6 @@ msgid "pay"
 msgstr "Оплата"
 
 #: pay/forms.py:10 pay/templates/pay/order.html:62
-#: shopapp/templates/shopapp/profile.html:68
 msgid "Password"
 msgstr "Пароль"
 
@@ -91,14 +90,13 @@ msgstr "Забыли пароль?"
 msgid "Full name"
 msgstr "Полное имя"
 
-#: pay/forms.py:13 shopapp/templates/shopapp/base_main.html:227
+#: pay/forms.py:13 shopapp/templates/shopapp/base_main.html:229
 #: user/templates/user/base_auth.html:120
 msgid "Email"
 msgstr "Email"
 
 #: pay/forms.py:15 pay/templates/pay/order.html:50
 #: pay/templates/pay/order.html:145 pay/templates/pay/order_step_4.html:53
-#: shopapp/templates/shopapp/profile.html:57
 msgid "Phone number"
 msgstr "Номер телефона"
 
@@ -293,11 +291,10 @@ msgstr "ФИО"
 
 #: pay/templates/pay/order.html:55 pay/templates/pay/order.html:151
 #: pay/templates/pay/order_step_4.html:59
-#: shopapp/templates/shopapp/profile.html:62
 msgid "E-mail"
 msgstr "Email"
 
-#: pay/templates/pay/order.html:67 shopapp/templates/shopapp/profile.html:73
+#: pay/templates/pay/order.html:67
 msgid "Password confirmation"
 msgstr "Подтверждение пароля"
 
@@ -545,24 +542,21 @@ msgid "Профили"
 msgstr ""
 
 #: shopapp/templates/shopapp/account.html:14
-#: shopapp/templates/shopapp/base_main.html:209
+#: shopapp/templates/shopapp/base_main.html:211
 #: shopapp/templates/shopapp/historyorder.html:14
-#: shopapp/templates/shopapp/profile.html:13
 #: user/templates/user/base_auth.html:103
 msgid "Navigation"
 msgstr "Навигация"
 
 #: shopapp/templates/shopapp/account.html:20
-#: shopapp/templates/shopapp/base_main.html:119
+#: shopapp/templates/shopapp/base_main.html:121
 #: shopapp/templates/shopapp/historyorder.html:20
-#: shopapp/templates/shopapp/profile.html:19
 msgid "Personal account"
 msgstr "Личный кабинет"
 
 #: shopapp/templates/shopapp/account.html:22
-#: shopapp/templates/shopapp/base_main.html:219
+#: shopapp/templates/shopapp/base_main.html:221
 #: shopapp/templates/shopapp/historyorder.html:22
-#: shopapp/templates/shopapp/profile.html:21
 #: user/templates/user/base_auth.html:112
 msgid "Profile"
 msgstr "Профиль"
@@ -570,13 +564,11 @@ msgstr "Профиль"
 #: shopapp/templates/shopapp/account.html:24
 #: shopapp/templates/shopapp/account.html:60
 #: shopapp/templates/shopapp/historyorder.html:24
-#: shopapp/templates/shopapp/profile.html:23
 msgid "Orders history"
 msgstr "История заказов"
 
 #: shopapp/templates/shopapp/account.html:27
 #: shopapp/templates/shopapp/historyorder.html:27
-#: shopapp/templates/shopapp/profile.html:25
 msgid "Last order"
 msgstr "Последний заказ"
 
@@ -605,16 +597,11 @@ msgstr "Всего:"
 msgid "Status:"
 msgstr "Статус:"
 
-#: shopapp/templates/shopapp/account.html:93
-#: shopapp/templates/shopapp/historyorder.html:75
-msgid "No orders yet"
-msgstr "Пока нет заказов"
-
-#: shopapp/templates/shopapp/account.html:107
+#: shopapp/templates/shopapp/account.html:105
 msgid "Last viewed products"
 msgstr "Последние просмотренные товары"
 
-#: shopapp/templates/shopapp/account.html:140
+#: shopapp/templates/shopapp/account.html:138
 msgid "No views yet"
 msgstr "Нет просмотренных товаров"
 
@@ -634,55 +621,55 @@ msgstr "Войти"
 msgid "Registration"
 msgstr "Регистрация"
 
-#: shopapp/templates/shopapp/base_main.html:103
-#: shopapp/templates/shopapp/base_main.html:212
+#: shopapp/templates/shopapp/base_main.html:105
+#: shopapp/templates/shopapp/base_main.html:214
 #: shopapp/templates/shopapp/discount_list.html:13
 #: user/templates/user/base_auth.html:106
 msgid "Main"
 msgstr "Главная"
 
-#: shopapp/templates/shopapp/base_main.html:105
+#: shopapp/templates/shopapp/base_main.html:107
 msgid "Discounts"
 msgstr "Скидки"
 
-#: shopapp/templates/shopapp/base_main.html:105
-#: shopapp/templates/shopapp/base_main.html:214
+#: shopapp/templates/shopapp/base_main.html:107
+#: shopapp/templates/shopapp/base_main.html:216
 #: user/templates/user/base_auth.html:108
 msgid "Catalogue"
 msgstr "Каталог"
 
-#: shopapp/templates/shopapp/base_main.html:107
-#: shopapp/templates/shopapp/base_main.html:216
+#: shopapp/templates/shopapp/base_main.html:109
+#: shopapp/templates/shopapp/base_main.html:218
 #: user/templates/user/base_auth.html:110
 msgid "Compare"
 msgstr "Сравнить"
 
-#: shopapp/templates/shopapp/base_main.html:120
+#: shopapp/templates/shopapp/base_main.html:122
 msgid "Log out"
 msgstr "Выйти"
 
-#: shopapp/templates/shopapp/base_main.html:123
+#: shopapp/templates/shopapp/base_main.html:125
 msgid "Administrative section"
 msgstr "Административный раздел"
 
-#: shopapp/templates/shopapp/base_main.html:134
+#: shopapp/templates/shopapp/base_main.html:136
 msgid "Show navigation"
 msgstr "Показать навигацию"
 
-#: shopapp/templates/shopapp/base_main.html:146
+#: shopapp/templates/shopapp/base_main.html:148
 msgid "All categories"
 msgstr "Все категории"
 
-#: shopapp/templates/shopapp/base_main.html:186
+#: shopapp/templates/shopapp/base_main.html:188
 msgid "Search"
 msgstr "Поиск"
 
-#: shopapp/templates/shopapp/base_main.html:225
+#: shopapp/templates/shopapp/base_main.html:227
 #: user/templates/user/base_auth.html:118
 msgid "Contacts"
 msgstr "Контакты"
 
-#: shopapp/templates/shopapp/base_main.html:227
+#: shopapp/templates/shopapp/base_main.html:229
 #: user/templates/user/base_auth.html:120
 msgid "Phone"
 msgstr "Номер телефона"
@@ -725,6 +712,10 @@ msgstr "На следующие товары распространяется с
 msgid "Status"
 msgstr "Статус:"
 
+#: shopapp/templates/shopapp/historyorder.html:75
+msgid "No orders yet"
+msgstr "Пока нет заказов"
+
 #: shopapp/templates/shopapp/index.html:21
 msgid "Get Started"
 msgstr "Приступить"
@@ -764,22 +755,6 @@ msgstr "Изображение остутсвует"
 #: shopapp/templates/shopapp/index.html:165
 msgid "LAST VIEWED PRODUCTS"
 msgstr "ПОСЛЕДНИЕ ПРОСМОТРЕННЫЕ ТОВАРЫ"
-
-#: shopapp/templates/shopapp/profile.html:40
-msgid "Avatar"
-msgstr "Аватар"
-
-#: shopapp/templates/shopapp/profile.html:50
-msgid "User's name"
-msgstr "Имя пользователя"
-
-#: shopapp/templates/shopapp/profile.html:79
-msgid "Save"
-msgstr "Сохранить"
-
-#: shopapp/templates/shopapp/profile.html:82
-msgid "The password is saved successfully"
-msgstr "Пароль успешно сохранён"
 
 #: shopapp/templates/shopapp/seller_detail.html:9
 msgid "Top Products:"
