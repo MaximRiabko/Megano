@@ -72,15 +72,13 @@
                                 <div class="row-block"><a class="ControlPanel-title" href="{% url 'auth:login' %}">{% translate 'Log in' %}</a>
                                     <a class="ControlPanel-title" href="{% url 'auth:register' %}">{% translate 'Registration' %}</a>
                                 </div>
+                                <div> <a class="ControlPanel-title"></a>
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang in LANGUAGES %}
+                                <a href="{% url 'shopapp:set_language' %}?l={{lang.0}}">{{lang.1}} ({{lang.0}})</a>|
+                                {% endfor %}
+                                </div>
                             </div>
-                            {% get_available_languages as LANGUAGES %}
-                            {% for lang in LANGUAGES %}
-                            {% if LANGUAGE_CODE == lang.0 %}
-                            {{lang.1}} ({{lang.0}})
-                            {% else %}
-                            <a href="{% url 'shopapp:set_language' %}?l={{lang.0}}">{{lang.1}} ({{lang.0}})</a>
-                            {% endif %} |
-                            {% endfor %}
                         </nav>
                     </div>
                 </div>

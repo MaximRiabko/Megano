@@ -23,7 +23,7 @@
                     <div class="Cards Cards_blog">
                         {% if object_list %}
                         {% for discount in object_list %}
-                        {% if discount.image.url %}
+                        {% if discount.image %}
                             <div class="Card"><a class="Card-picture" href="#"><img src="{{ discount.image.url }}" alt="product.png" /></a>
                         {% endif %}
                                 <div class="Card-date">

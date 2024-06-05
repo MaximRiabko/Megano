@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-30 15:23+0000\n"
+"POT-Creation-Date: 2024-06-04 13:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -562,7 +562,7 @@ msgid "Profile"
 msgstr "Профиль"
 
 #: shopapp/templates/shopapp/account.html:24
-#: shopapp/templates/shopapp/account.html:57
+#: shopapp/templates/shopapp/account.html:60
 #: shopapp/templates/shopapp/historyorder.html:24
 msgid "Orders history"
 msgstr "История заказов"
@@ -572,36 +572,36 @@ msgstr "История заказов"
 msgid "Last order"
 msgstr "Последний заказ"
 
-#: shopapp/templates/shopapp/account.html:47
+#: shopapp/templates/shopapp/account.html:50
 msgid "Edit the profile"
 msgstr "Редактировать профиль"
 
-#: shopapp/templates/shopapp/account.html:56
+#: shopapp/templates/shopapp/account.html:59
 #: shopapp/templates/shopapp/historyorder.html:41
 msgid "Order"
 msgstr "Заказ"
 
-#: shopapp/templates/shopapp/account.html:62
+#: shopapp/templates/shopapp/account.html:65
 msgid "Delivery type:"
 msgstr "Тип доставки"
 
-#: shopapp/templates/shopapp/account.html:68
+#: shopapp/templates/shopapp/account.html:71
 msgid "Payment:"
 msgstr "Оплата:"
 
-#: shopapp/templates/shopapp/account.html:74
+#: shopapp/templates/shopapp/account.html:77
 msgid "Total cost:"
 msgstr "Всего:"
 
-#: shopapp/templates/shopapp/account.html:80
+#: shopapp/templates/shopapp/account.html:83
 msgid "Status:"
 msgstr "Статус:"
 
-#: shopapp/templates/shopapp/account.html:102
+#: shopapp/templates/shopapp/account.html:105
 msgid "Last viewed products"
 msgstr "Последние просмотренные товары"
 
-#: shopapp/templates/shopapp/account.html:135
+#: shopapp/templates/shopapp/account.html:138
 msgid "No views yet"
 msgstr "Нет просмотренных товаров"
 
@@ -623,7 +623,7 @@ msgstr "Регистрация"
 
 #: shopapp/templates/shopapp/base_main.html:105
 #: shopapp/templates/shopapp/base_main.html:214
-#: shopapp/templates/shopapp/discount_list.html:12
+#: shopapp/templates/shopapp/discount_list.html:13
 #: user/templates/user/base_auth.html:106
 msgid "Main"
 msgstr "Главная"
@@ -690,7 +690,7 @@ msgstr "Общие параметры"
 msgid "Add to cart"
 msgstr "Добавить в корзину"
 
-#: shopapp/templates/shopapp/discount_list.html:14
+#: shopapp/templates/shopapp/discount_list.html:15
 msgid "Blog"
 msgstr "Блог"
 
@@ -698,7 +698,13 @@ msgstr "Блог"
 msgid "Discount time"
 msgstr "Время действия скидки"
 
-#: shopapp/templates/shopapp/discountdetails.html:42
+#: shopapp/templates/shopapp/discountdetails.html:38
+#, fuzzy
+#| msgid "Registration"
+msgid "Description"
+msgstr "Регистрация"
+
+#: shopapp/templates/shopapp/discountdetails.html:47
 msgid "The following products are discounted"
 msgstr "На следующие товары распространяется скидка"
 
