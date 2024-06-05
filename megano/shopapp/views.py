@@ -164,6 +164,7 @@ class MainPageView(TemplateView):
         else:
             limited_product = self.create_new_limited_discount()
         discount = limited_offer.value
+        print(limited_product.first())
         return limited_product.first(), discount
 
     def get_context_data(self, **kwargs):
@@ -478,7 +479,7 @@ class CatalogView(ListView):
             "page_obj": page_obj,
             "seller": seller,
         }
-        return render(request, "shopapp/filtered_product_list.html", context)
+        return render(request, "shopapp/catalog.html", context)
 
 
 @login_required
