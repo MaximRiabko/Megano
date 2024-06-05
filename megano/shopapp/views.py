@@ -147,9 +147,9 @@ class MainPageView(TemplateView):
         return random_product
 
     def get_limited_offer(self):
-        limited_offer = Discount.objects.filter(
+        limited_offer, _ = Discount.objects.get_or_create(
             promocode="LIMITED", is_active=1
-        ).first()
+        )
         if limited_offer:
             if limited_offer.date_end.date() != datetime.datetime.today().date():
                 limited_product = limited_offer.products.all()
