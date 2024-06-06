@@ -25,6 +25,8 @@
                         {% for discount in object_list %}
                         {% if discount.image %}
                             <div class="Card"><a class="Card-picture" href="#"><img src="{{ discount.image.url }}" alt="product.png" /></a>
+                        {% else %}
+                        <div class="Card"><a class="Card-picture" href="#"><img/></a>
                         {% endif %}
                                 <div class="Card-date">
                                     <strong class="Card-date-number">{{ discount.date_start.day }}

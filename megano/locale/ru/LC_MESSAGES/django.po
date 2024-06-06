@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-04 13:24+0000\n"
+"POT-Creation-Date: 2024-06-06 13:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,68 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: base_templates/base_auth.html:71 shopapp/templates/shopapp/base_main.html:72
+#: user/templates/user/e-mail-complete.html:22
+#: user/templates/user/e-mail-confirm.html:21
+#: user/templates/user/e-mail-done.html:23 user/templates/user/e-mail.html:26
+#: user/templates/user/login.html:15 user/templates/user/login.html:27
+#: user/templates/user/register.html:34 user/templates/user/user_exists.html:21
+msgid "Log in"
+msgstr "Войти"
+
+#: base_templates/base_auth.html:72 shopapp/templates/shopapp/base_main.html:73
+#: user/templates/user/login.html:30 user/templates/user/register.html:13
+msgid "Registration"
+msgstr "Регистрация"
+
+#: base_templates/base_auth.html:103 shopapp/templates/shopapp/account.html:14
+#: shopapp/templates/shopapp/base_main.html:209
+#: shopapp/templates/shopapp/historyorder.html:14
+#: shopapp/templates/shopapp/profile.html:14
+msgid "Navigation"
+msgstr "Навигация"
+
+#: base_templates/base_auth.html:106
+#: shopapp/templates/shopapp/base_main.html:103
+#: shopapp/templates/shopapp/base_main.html:212
+#: shopapp/templates/shopapp/discount_list.html:13
+msgid "Main"
+msgstr "Главная"
+
+#: base_templates/base_auth.html:108
+#: shopapp/templates/shopapp/base_main.html:105
+#: shopapp/templates/shopapp/base_main.html:214
+msgid "Catalogue"
+msgstr "Каталог"
+
+#: base_templates/base_auth.html:110
+#: shopapp/templates/shopapp/base_main.html:107
+#: shopapp/templates/shopapp/base_main.html:216
+msgid "Compare"
+msgstr "Сравнить"
+
+#: base_templates/base_auth.html:112 shopapp/templates/shopapp/account.html:22
+#: shopapp/templates/shopapp/base_main.html:219
+#: shopapp/templates/shopapp/historyorder.html:22
+#: shopapp/templates/shopapp/profile.html:22
+msgid "Profile"
+msgstr "Профиль"
+
+#: base_templates/base_auth.html:118
+#: shopapp/templates/shopapp/base_main.html:225
+msgid "Contacts"
+msgstr "Контакты"
+
+#: base_templates/base_auth.html:120
+#: shopapp/templates/shopapp/base_main.html:227
+msgid "Phone"
+msgstr "Номер телефона"
+
+#: base_templates/base_auth.html:120 pay/forms.py:13
+#: shopapp/templates/shopapp/base_main.html:227
+msgid "Email"
+msgstr "Email"
 
 #: cart/apps.py:8
 msgid "корзина"
@@ -71,7 +133,7 @@ msgid "English"
 msgstr ""
 
 #: megano/settings.py:111
-msgid "Russian"
+msgid "Русский"
 msgstr ""
 
 #: pay/apps.py:8
@@ -79,6 +141,7 @@ msgid "pay"
 msgstr "Оплата"
 
 #: pay/forms.py:10 pay/templates/pay/order.html:62
+#: shopapp/templates/shopapp/profile.html:69
 msgid "Password"
 msgstr "Пароль"
 
@@ -90,13 +153,11 @@ msgstr "Забыли пароль?"
 msgid "Full name"
 msgstr "Полное имя"
 
-#: pay/forms.py:13 shopapp/templates/shopapp/base_main.html:229
-#: user/templates/user/base_auth.html:120
-msgid "Email"
-msgstr "Email"
-
 #: pay/forms.py:15 pay/templates/pay/order.html:50
 #: pay/templates/pay/order.html:145 pay/templates/pay/order_step_4.html:53
+#: shopapp/templates/shopapp/lastorder.html:39
+#: shopapp/templates/shopapp/oneorder.html:39
+#: shopapp/templates/shopapp/profile.html:58
 msgid "Phone number"
 msgstr "Номер телефона"
 
@@ -116,16 +177,22 @@ msgstr "Экспресс доставка"
 #: pay/forms.py:50 pay/forms.py:67 pay/templates/pay/order.html:159
 #: pay/templates/pay/order_step_4.html:67
 #: shopapp/templates/shopapp/historyorder.html:45
+#: shopapp/templates/shopapp/lastorder.html:53
+#: shopapp/templates/shopapp/oneorder.html:53
 msgid "Delivery type"
 msgstr "Тип доставки"
 
 #: pay/forms.py:53 pay/templates/pay/order.html:96
 #: pay/templates/pay/order.html:165 pay/templates/pay/order_step_4.html:73
+#: shopapp/templates/shopapp/lastorder.html:59
+#: shopapp/templates/shopapp/oneorder.html:59
 msgid "City"
 msgstr "Город"
 
 #: pay/forms.py:56 pay/templates/pay/order.html:101
 #: pay/templates/pay/order.html:171 pay/templates/pay/order_step_4.html:79
+#: shopapp/templates/shopapp/lastorder.html:65
+#: shopapp/templates/shopapp/oneorder.html:65
 msgid "Address"
 msgstr "Адрес"
 
@@ -286,15 +353,20 @@ msgstr "Шаг 4. Подтверждение заказа"
 
 #: pay/templates/pay/order.html:45 pay/templates/pay/order.html:139
 #: pay/templates/pay/order_step_4.html:47
+#: shopapp/templates/shopapp/lastorder.html:33
+#: shopapp/templates/shopapp/oneorder.html:33
 msgid "Surname Name Middle name"
 msgstr "ФИО"
 
 #: pay/templates/pay/order.html:55 pay/templates/pay/order.html:151
 #: pay/templates/pay/order_step_4.html:59
+#: shopapp/templates/shopapp/lastorder.html:45
+#: shopapp/templates/shopapp/oneorder.html:45
+#: shopapp/templates/shopapp/profile.html:63
 msgid "E-mail"
 msgstr "Email"
 
-#: pay/templates/pay/order.html:67
+#: pay/templates/pay/order.html:67 shopapp/templates/shopapp/profile.html:74
 msgid "Password confirmation"
 msgstr "Подтверждение пароля"
 
@@ -327,12 +399,16 @@ msgstr "ул. Академика Арцимовича, д. 10, кв. 10"
 #: pay/templates/pay/payment_invoice.html:10
 #: pay/templates/pay/payment_invoice.html:15
 #: shopapp/templates/shopapp/historyorder.html:51
+#: shopapp/templates/shopapp/lastorder.html:71
+#: shopapp/templates/shopapp/oneorder.html:71
 msgid "Payment"
 msgstr "Оплата"
 
 #: pay/templates/pay/order.html:213 pay/templates/pay/order_step_4.html:121
 #: pay/templates/pay/payment_card.html:36
 #: pay/templates/pay/payment_invoice.html:54
+#: shopapp/templates/shopapp/lastorder.html:119
+#: shopapp/templates/shopapp/oneorder.html:120
 msgid "Pay"
 msgstr "Оплата"
 
@@ -541,34 +617,23 @@ msgstr ""
 msgid "Профили"
 msgstr ""
 
-#: shopapp/templates/shopapp/account.html:14
-#: shopapp/templates/shopapp/base_main.html:211
-#: shopapp/templates/shopapp/historyorder.html:14
-#: user/templates/user/base_auth.html:103
-msgid "Navigation"
-msgstr "Навигация"
-
 #: shopapp/templates/shopapp/account.html:20
-#: shopapp/templates/shopapp/base_main.html:121
+#: shopapp/templates/shopapp/base_main.html:119
 #: shopapp/templates/shopapp/historyorder.html:20
+#: shopapp/templates/shopapp/profile.html:20
 msgid "Personal account"
 msgstr "Личный кабинет"
-
-#: shopapp/templates/shopapp/account.html:22
-#: shopapp/templates/shopapp/base_main.html:221
-#: shopapp/templates/shopapp/historyorder.html:22
-#: user/templates/user/base_auth.html:112
-msgid "Profile"
-msgstr "Профиль"
 
 #: shopapp/templates/shopapp/account.html:24
 #: shopapp/templates/shopapp/account.html:60
 #: shopapp/templates/shopapp/historyorder.html:24
+#: shopapp/templates/shopapp/profile.html:24
 msgid "Orders history"
 msgstr "История заказов"
 
 #: shopapp/templates/shopapp/account.html:27
 #: shopapp/templates/shopapp/historyorder.html:27
+#: shopapp/templates/shopapp/profile.html:26
 msgid "Last order"
 msgstr "Последний заказ"
 
@@ -578,6 +643,8 @@ msgstr "Редактировать профиль"
 
 #: shopapp/templates/shopapp/account.html:59
 #: shopapp/templates/shopapp/historyorder.html:41
+#: shopapp/templates/shopapp/lastorder.html:11
+#: shopapp/templates/shopapp/oneorder.html:11
 msgid "Order"
 msgstr "Заказ"
 
@@ -605,74 +672,29 @@ msgstr "Последние просмотренные товары"
 msgid "No views yet"
 msgstr "Нет просмотренных товаров"
 
-#: shopapp/templates/shopapp/base_main.html:72
-#: user/templates/user/base_auth.html:71
-#: user/templates/user/e-mail-complete.html:22
-#: user/templates/user/e-mail-confirm.html:21
-#: user/templates/user/e-mail-done.html:23 user/templates/user/e-mail.html:26
-#: user/templates/user/login.html:15 user/templates/user/login.html:27
-#: user/templates/user/register.html:34
-msgid "Log in"
-msgstr "Войти"
-
-#: shopapp/templates/shopapp/base_main.html:73
-#: user/templates/user/base_auth.html:72 user/templates/user/login.html:30
-#: user/templates/user/register.html:13
-msgid "Registration"
-msgstr "Регистрация"
-
 #: shopapp/templates/shopapp/base_main.html:105
-#: shopapp/templates/shopapp/base_main.html:214
-#: shopapp/templates/shopapp/discount_list.html:13
-#: user/templates/user/base_auth.html:106
-msgid "Main"
-msgstr "Главная"
-
-#: shopapp/templates/shopapp/base_main.html:107
 msgid "Discounts"
 msgstr "Скидки"
 
-#: shopapp/templates/shopapp/base_main.html:107
-#: shopapp/templates/shopapp/base_main.html:216
-#: user/templates/user/base_auth.html:108
-msgid "Catalogue"
-msgstr "Каталог"
-
-#: shopapp/templates/shopapp/base_main.html:109
-#: shopapp/templates/shopapp/base_main.html:218
-#: user/templates/user/base_auth.html:110
-msgid "Compare"
-msgstr "Сравнить"
-
-#: shopapp/templates/shopapp/base_main.html:122
+#: shopapp/templates/shopapp/base_main.html:120
 msgid "Log out"
 msgstr "Выйти"
 
-#: shopapp/templates/shopapp/base_main.html:125
+#: shopapp/templates/shopapp/base_main.html:123
 msgid "Administrative section"
 msgstr "Административный раздел"
 
-#: shopapp/templates/shopapp/base_main.html:136
+#: shopapp/templates/shopapp/base_main.html:134
 msgid "Show navigation"
 msgstr "Показать навигацию"
 
-#: shopapp/templates/shopapp/base_main.html:148
+#: shopapp/templates/shopapp/base_main.html:146
 msgid "All categories"
 msgstr "Все категории"
 
-#: shopapp/templates/shopapp/base_main.html:188
+#: shopapp/templates/shopapp/base_main.html:186
 msgid "Search"
 msgstr "Поиск"
-
-#: shopapp/templates/shopapp/base_main.html:227
-#: user/templates/user/base_auth.html:118
-msgid "Contacts"
-msgstr "Контакты"
-
-#: shopapp/templates/shopapp/base_main.html:229
-#: user/templates/user/base_auth.html:120
-msgid "Phone"
-msgstr "Номер телефона"
 
 #: shopapp/templates/shopapp/comparison.html:28
 msgid "Characteristic"
@@ -709,6 +731,8 @@ msgid "The following products are discounted"
 msgstr "На следующие товары распространяется скидка"
 
 #: shopapp/templates/shopapp/historyorder.html:63
+#: shopapp/templates/shopapp/lastorder.html:77
+#: shopapp/templates/shopapp/oneorder.html:77
 msgid "Status"
 msgstr "Статус:"
 
@@ -716,45 +740,84 @@ msgstr "Статус:"
 msgid "No orders yet"
 msgstr "Пока нет заказов"
 
-#: shopapp/templates/shopapp/index.html:21
+#: shopapp/templates/shopapp/index.html:20
 msgid "Get Started"
 msgstr "Приступить"
 
-#: shopapp/templates/shopapp/index.html:52
+#: shopapp/templates/shopapp/index.html:49
 msgid "from"
 msgstr "от"
 
-#: shopapp/templates/shopapp/index.html:71
+#: shopapp/templates/shopapp/index.html:68
 msgid "LIMITED OFFERS"
 msgstr "ОГРАНИЧЕННОЕ ПРЕДЛОЖЕНИЕ"
 
-#: shopapp/templates/shopapp/index.html:88
+#: shopapp/templates/shopapp/index.html:85
 msgid "days"
 msgstr "дней"
 
-#: shopapp/templates/shopapp/index.html:94
+#: shopapp/templates/shopapp/index.html:91
 msgid "hours"
 msgstr "ч"
 
-#: shopapp/templates/shopapp/index.html:100
+#: shopapp/templates/shopapp/index.html:97
 msgid "mins"
 msgstr "мин"
 
-#: shopapp/templates/shopapp/index.html:106
+#: shopapp/templates/shopapp/index.html:103
 msgid "secs"
 msgstr "сек"
 
-#: shopapp/templates/shopapp/index.html:116
+#: shopapp/templates/shopapp/index.html:114
 msgid "Top-products"
 msgstr "Топ Продукты"
 
-#: shopapp/templates/shopapp/index.html:125
+#: shopapp/templates/shopapp/index.html:123
 msgid "No image"
 msgstr "Изображение остутсвует"
 
-#: shopapp/templates/shopapp/index.html:165
+#: shopapp/templates/shopapp/index.html:149
 msgid "LAST VIEWED PRODUCTS"
 msgstr "ПОСЛЕДНИЕ ПРОСМОТРЕННЫЕ ТОВАРЫ"
+
+#: shopapp/templates/shopapp/lastorder.html:27
+#: shopapp/templates/shopapp/oneorder.html:27
+msgid "Order date"
+msgstr "Дата заказа"
+
+#: shopapp/templates/shopapp/lastorder.html:84
+#: shopapp/templates/shopapp/oneorder.html:84
+msgid "The payment failed"
+msgstr "Оплата не прошла"
+
+#: shopapp/templates/shopapp/lastorder.html:86
+#: shopapp/templates/shopapp/oneorder.html:86
+msgid "The payment didn't occur"
+msgstr "Оплата не выполнена"
+
+#: shopapp/templates/shopapp/profile.html:41
+msgid "Avatar"
+msgstr "Аватар"
+
+#: shopapp/templates/shopapp/profile.html:51
+msgid "User's name"
+msgstr "Имя пользователя"
+
+#: shopapp/templates/shopapp/profile.html:71
+msgid "Here your password can be changed"
+msgstr "Здесь можно изменить пароль"
+
+#: shopapp/templates/shopapp/profile.html:76
+msgid "Key in the password again"
+msgstr "Введите пароль повторно"
+
+#: shopapp/templates/shopapp/profile.html:80
+msgid "Save"
+msgstr "Сохранить"
+
+#: shopapp/templates/shopapp/profile.html:83
+msgid "The profile is saved successfully"
+msgstr "Пароль успешно сохранен"
 
 #: shopapp/templates/shopapp/seller_detail.html:9
 msgid "Top Products:"
@@ -804,3 +867,7 @@ msgstr "Забыли пароль?"
 #: user/templates/user/register.html:30
 msgid "Register"
 msgstr "Регистрация"
+
+#: user/templates/user/user_exists.html:15
+msgid "User exists"
+msgstr "Пользователь существует"
