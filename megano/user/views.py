@@ -66,7 +66,8 @@ def register(request: HttpRequest) -> HttpResponse:
 class Reset_Password(PasswordResetView):
     template_name = "user/e-mail.html"
     success_url = reverse_lazy("auth:password_reset_done")
-    email_template_name = 'user/e-mail-recovery.html'
+    email_template_name = "user/e-mail-recovery.html"
+
 
 class Reset_Password_Done(PasswordResetDoneView):
     template_name = "user/e-mail-done.html"
