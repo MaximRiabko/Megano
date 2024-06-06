@@ -202,8 +202,10 @@ class MainPageView(TemplateView):
 
             if view_history:
                 for history in view_history:
-                    history.product.price = ProductSeller.objects.only("price").get(
-                        product=history.product
+                    history.product.price = (
+                        ProductSeller.objects.only("price")
+                        .filter(product=history.product)
+                        .first()
                     )
                     history.product.price = history.product.price.price
                     eight_viewed.append(history.product)
@@ -229,8 +231,10 @@ class AccountDetailView(UserPassesTestMixin, DetailView):
         three_viewed = []
         if view_history:
             for history in view_history:
-                history.product.price = ProductSeller.objects.only("price").get(
-                    product=history.product
+                history.product.price = (
+                    ProductSeller.objects.only("price")
+                    .filter(product=history.product)
+                    .first()
                 )
                 history.product.price = history.product.price.price
                 three_viewed.append(history.product)
