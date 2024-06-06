@@ -115,7 +115,7 @@ class DiscountDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         products = []
         for product in context["discount"].products.all():
-            price = ProductSeller.objects.only("price").get(product=product)
+            price = ProductSeller.objects.only("price").filter(product=product).first()
             price = getattr(price, "price")
             discounted_price = price
             discount = context["discount"]
