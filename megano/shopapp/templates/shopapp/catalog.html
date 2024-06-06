@@ -74,13 +74,17 @@
                     </div>
                     <div class="Pagination">
                             <div class="Pagination-ins">
-                                <a class="Pagination-element Pagination-element_prev" href="#">
+                                {% if page_obj.has_previous %}
+                                <a class="Pagination-element Pagination-element_prev" href="?page={{ page_obj.previous_page_number }}">
                                     <img src="{% static 'assets/img/icons/prevPagination.svg' %}" alt="prevPagination.svg" /></a>
+                                {% endif %}
                                 {% for p in page_obj.paginator.page_range %}
                                 <a class="Pagination-element Pagination-element_current" href="?page={{ p }}"><span class="Pagination-text">{{ p }}</span></a>
                                 {% endfor %}
-                                <a class="Pagination-element Pagination-element_prev" href="#">
+                                {% if page_obj.has_next %}
+                                <a class="Pagination-element Pagination-element_prev" href="?page={{ page_obj.next_page_number }}">
                                     <img src="{% static 'assets/img/icons/nextPagination.svg' %}" alt="nextPagination.svg" /></a>
+                                {% endif %}
                             </div>
                     </div>
                 </div>
