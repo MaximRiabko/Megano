@@ -271,8 +271,8 @@ class ProfileUpdateView(UserPassesTestMixin, TemplateView):
                 user.profile.avatar = img_url
 
             user.username = request.POST.get("name")
-            if request.POST.get("password") == request.POST.get("passwordReply"):
-                user.password = request.POST.get("password")
+            # if request.POST.get("password") == request.POST.get("passwordReply"):
+            #     user.password = request.POST.get("password")
             user.email = request.POST.get("mail")
             user.profile.phone = request.POST.get("phone")
             user.profile.phone = request.POST.get("phone")
