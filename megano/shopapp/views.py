@@ -169,7 +169,9 @@ class MainPageView(TemplateView):
         else:
             discount = Discount.objects.filter(
                 promocode="LIMITED", is_active=1
-            ).first().value
+            ).first()
+            if not discount:
+                discount = None
 
         return limited_product, discount
 
