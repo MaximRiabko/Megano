@@ -9,7 +9,7 @@ urlpatterns = [
         "admin/",
         admin.site.urls,
     ),
-    path("auth/", include("user.urls", namespace="auth")),
+    path("user/", include("user.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += i18n_patterns(
@@ -21,7 +21,6 @@ urlpatterns += i18n_patterns(
             "shopapp.urls",
         ),
     ),
-    path("auth/", include("user.urls", namespace="auth")),
 )
 if settings.DEBUG:
     urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
