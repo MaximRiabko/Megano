@@ -109,7 +109,7 @@ LANGUAGE_SESSION_KEY = "session_language_appname"
 LANGUAGE_COOKIE_NAME = "cookie_language_appname"
 
 LANGUAGES = (("en", _("English")), ("ru", _("Русский")))
-
+EMAIL_BACKEND =  'django.core.mail.backends.console.EmailBackend'
 TIME_ZONE = "UTC"
 
 USE_I18N = True

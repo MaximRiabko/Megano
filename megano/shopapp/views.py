@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.db.models import Count, Min, Sum
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -134,34 +134,47 @@ class MainPageView(TemplateView):
     template_name = "shopapp/index.html"
 
     def create_new_limited_discount(self):
-        random_product = Product.objects.all().order_by("?").first()
-        new_discount = Discount.objects.create(
-            name="Ограниченная скидка",
-            date_start=datetime.datetime.today(),
-            date_end=datetime.datetime.today() + timedelta(days=1),
-            promocode="LIMITED",
-            is_group=False,
-            is_active=True,
-            value=10,
-        )
-        random_product.discount_set.add(new_discount)
+        random_product = Product.objects.all().order_by("?")
+        if random_product:
+            random_product = random_product.first()
+            new_discount = Discount.objects.create(
+                name="Ограниченная скидка",
+                date_start=datetime.datetime.today(),
+                date_end=datetime.datetime.today() + timedelta(days=1),
+                promocode="LIMITED",
+                is_group=False,
+                is_active=True,
+                value=10,
+            )
+            random_product.discount_set.add(new_discount)
+            new_discount.save()
         return random_product
 
     def get_limited_offer(self):
-        limited_offer, _ = Discount.objects.get_or_create(
+        limited_offer = Discount.objects.filter(
             promocode="LIMITED", is_active=1
-        )
+        ).first()
         if limited_offer:
             if limited_offer.date_end.date() != datetime.datetime.today().date():
-                limited_product = limited_offer.products.all()
+                limited_product = limited_offer.products.all().first()
             else:
                 limited_offer.is_active = False
                 limited_offer.save()
                 limited_product = self.create_new_limited_discount()
         else:
             limited_product = self.create_new_limited_discount()
-        discount = limited_offer.value
-        return limited_product.first(), discount
+
+        if limited_offer:
+            discount = limited_offer.value
+        else:
+            discount = Discount.objects.filter(
+                promocode="LIMITED", is_active=1
+            ).first()
+            if not discount:
+                discount = None
+            else:
+                discount = discount.value
+        return limited_product, discount
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -169,16 +182,18 @@ class MainPageView(TemplateView):
             cnt=Count("order_items")
         ).order_by("-cnt")[:8]
         limited_product, discount = self.get_limited_offer()
-        product_seller = ProductSeller.objects.filter(
-            product_id=limited_product.id
-        ).first()
-        costs = {
-            "old_cost": product_seller.sale,
-            "new_cost": int(product_seller.sale) - int(discount),
-        }
+        if limited_product:
+            product_seller = ProductSeller.objects.filter(
+                product_id=limited_product.id
+            ).first()
+            if product_seller and discount:
+                costs = {
+                    "old_cost": product_seller.sale,
+                    "new_cost": int(product_seller.sale) - int(discount),
+                }
+                context["limited_cost"] = costs
 
         context["limited_product"] = limited_product
-        context["limited_cost"] = costs
         context["top_order_products"] = top_order_products
 
         if self.request.user.is_authenticated:
@@ -330,51 +345,37 @@ class LastOrderDetailView(DetailView):
         return context
 
 
-class CompareView(TemplateView):
-    template_name = "shopapp/comparison.html"
 
-    def get_context_data(self, **kwargs):
-        context = super(CompareView, self).get_context_data(**kwargs)
-        context["products"] = Comparison(self.request)
-        return context
-
-
-@method_decorator(csrf_exempt, name="dispatch")
+@method_decorator(csrf_exempt, name='dispatch')
 class CompareManager(TemplateView):
-    template_name = "shopapp/comparison.html"
+    template_name = 'shopapp/comparison.html'
 
     def get_context_data(self, **kwargs):
         context = super(CompareManager, self).get_context_data(**kwargs)
         products = tuple(product for product in Comparison(self.request))
         similar = Comparison.get_similar(products)
         for product in products:
-            product_id = product.get("id")
+            product_id = product.get('id')
             sim = similar.get(str(product_id))
-            product["similar"] = sim
-        context["products"] = products
+            product['similar'] = sim
+        context['products'] = products
         return context
 
     def post(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        pk = body_data["product_pk"]
-        product = (
-            ProductSeller.objects.filter(product_id=pk)
-            .prefetch_related("product")
-            .first()
-        )
+        pk = body_data['product_pk']
+        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
         Comparison(request).add(product)
-        return render(request, self.request.META.get("HTTP_REFERER"))
+        return JsonResponse({'status': 'ok'})
+        # return render(request, self.request.META.get("HTTP_REFERER"))
 
     def delete(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        pk = body_data["product_pk"]
-        product = (
-            ProductSeller.objects.filter(product_id=pk)
-            .prefetch_related("product")
-            .first()
-        )
+        pk = body_data['product_pk']
+        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
         Comparison(request).remove(product)
-        return render(request, self.request.META.get("HTTP_REFERER"))
+        return JsonResponse({'status': 'ok'})
+        # return render(request, self.request.META.get('HTTP_REFERER'))
 
 
 class CatalogView(ListView):

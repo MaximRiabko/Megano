@@ -61,6 +61,7 @@
         </div>
         <div class="Section Section_column Section_columnLeft Section_columnDesktop">
             <div class="wrap">
+                {% if limited_product %}
                 <div class="Section-column">
                     <div class="Section-columnSection Section-columnSection_mark">
                       <header class="Section-columnHeader">
@@ -107,6 +108,7 @@
                       </div>
                     </div>
                 </div>
+                {% endif %}
                 <div class="Section-content">
                     <header class="Section-header">
                         <h2 class="Section-title">{% translate 'Top-products' %}

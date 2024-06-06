@@ -104,7 +104,7 @@
                                 </li>
                                 <li class="menu-item"><span class="menu-label menu-label_success">{% translate 'Discounts' %}</span><a class="menu-link" href="{% url 'shopapp:catalog' pk=1%}">{% translate 'Catalogue' %}</a>
                                 </li>
-                                <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:compare_manager'%}">{% translate 'Compare' %}</a>
+                                <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:compare'%}">{% translate 'Compare' %}</a>
                                 </li>
                             </ul>
                         </div>
@@ -213,7 +213,7 @@
                             </li>
                             <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:catalog' pk=1%}">{% translate 'Catalogue' %}</a>
                             </li>
-                            <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:compare_manager'%}">{% translate 'Compare' %}</a>
+                            <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:compare'%}">{% translate 'Compare' %}</a>
                             </li>
                             {% if user.is_authenticated %}
                             <li class="menu-item"><a class="menu-link" href="{% url 'shopapp:profile' pk=user.pk %}">{% translate 'Profile' %}</a>

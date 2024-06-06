@@ -1,11 +1,11 @@
-{% extends 'user/base_auth.html' %}
+{% extends 'base_auth.html' %}
 {% load static %}
 {% load i18n %}
 {% block middle %}
     <div class="wrap">
         <div class="row Header-rowMain">
             <div class="row-block Header-logo">
-                <a class="logo" href="{% url 'shopapp:index'%}">
+                <a class="logo" href="{% url 'shopapp:index' %}">
                     <img class="logo-image" src="{% static "assets/img/logo.png" %}" alt="logo.png"/>
                 </a>
             </div>
