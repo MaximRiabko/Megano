@@ -339,6 +339,7 @@ class LastOrderDetailView(DetailView):
             order = None
             context["items"] = None
         context["order"] = order
+        print(order)
         return context
 
 
