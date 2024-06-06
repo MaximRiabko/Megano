@@ -38,7 +38,7 @@ def logout_view(request):
 def register(request: HttpRequest) -> HttpResponse:
     if request.method == "GET":
         if request.user.is_authenticated:
-            redirect("index.html")
+            return redirect("shopapp:index")
         return render(request, "user/register.html")
 
     elif request.method == "POST":
@@ -59,7 +59,7 @@ def register(request: HttpRequest) -> HttpResponse:
             user = authenticate(request=request, username=email, password=password)
             if user:
                 login(request, user)
-                return redirect("index.html")
+                return redirect("shopapp:index")
         return render(request, "user/register.html")
 
 
