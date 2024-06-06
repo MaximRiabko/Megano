@@ -6,7 +6,6 @@ from .views import (
     AccountDetailView,
     CatalogView,
     CompareManager,
-    CompareView,
     DiscountDetailView,
     DiscountListView,
     HistoryOrder,

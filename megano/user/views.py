@@ -50,7 +50,7 @@ def register(request: HttpRequest) -> HttpResponse:
         if name or email or password:
             exist = User.objects.filter(email=email).exists()
             if exist:
-                return render(request, "user/user_exists.html")
+                return render(request, "user/login.html")
             user = User.objects.create_user(
                 username=email, first_name=name, email=email, password=password
             )
@@ -59,7 +59,7 @@ def register(request: HttpRequest) -> HttpResponse:
             user = authenticate(request=request, username=email, password=password)
             if user:
                 login(request, user)
-                return redirect("shopapp:index")
+                return redirect("index.html")
         return render(request, "user/register.html")
 
 
