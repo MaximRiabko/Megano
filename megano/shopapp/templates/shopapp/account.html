@@ -50,7 +50,7 @@
                                 </div><a class="Account-editLink" href="{% url 'shopapp:profile_update' %}">{% translate 'Edit the profile' %}</a>
                             </div>
                         </div>
-                            {% if request.user.orders == None %}
+                            {% if request.user.orders %}
                         <div class="Account-group">
                             <div class="Account-column Account-column_full">
                                     <div class="Order Order_anons">
