@@ -172,7 +172,8 @@ class MainPageView(TemplateView):
             ).first()
             if not discount:
                 discount = None
-
+            else:
+                discount = discount.value
         return limited_product, discount
 
     def get_context_data(self, **kwargs):
