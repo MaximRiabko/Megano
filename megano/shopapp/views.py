@@ -11,13 +11,12 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Min, Sum
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, translate_url
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
-from django.urls import translate_url
 
 from cart.forms import CartAddProductForm
 from megano import settings
@@ -167,9 +166,7 @@ class MainPageView(TemplateView):
         if limited_offer:
             discount = limited_offer.value
         else:
-            discount = Discount.objects.filter(
-                promocode="LIMITED", is_active=1
-            ).first()
+            discount = Discount.objects.filter(promocode="LIMITED", is_active=1).first()
             if not discount:
                 discount = None
             else:
@@ -345,36 +342,43 @@ class LastOrderDetailView(DetailView):
         return context
 
 
-
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class CompareManager(TemplateView):
-    template_name = 'shopapp/comparison.html'
+    template_name = "shopapp/comparison.html"
 
     def get_context_data(self, **kwargs):
         context = super(CompareManager, self).get_context_data(**kwargs)
         products = tuple(product for product in Comparison(self.request))
         similar = Comparison.get_similar(products)
         for product in products:
-            product_id = product.get('id')
+            product_id = product.get("id")
             sim = similar.get(str(product_id))
-            product['similar'] = sim
-        context['products'] = products
+            product["similar"] = sim
+        context["products"] = products
         return context
 
     def post(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        pk = body_data['product_pk']
-        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
+        pk = body_data["product_pk"]
+        product = (
+            ProductSeller.objects.filter(product_id=pk)
+            .prefetch_related("product")
+            .first()
+        )
         Comparison(request).add(product)
-        return JsonResponse({'status': 'ok'})
+        return JsonResponse({"status": "ok"})
         # return render(request, self.request.META.get("HTTP_REFERER"))
 
     def delete(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        pk = body_data['product_pk']
-        product = ProductSeller.objects.filter(product_id=pk).prefetch_related('product').first()
+        pk = body_data["product_pk"]
+        product = (
+            ProductSeller.objects.filter(product_id=pk)
+            .prefetch_related("product")
+            .first()
+        )
         Comparison(request).remove(product)
-        return JsonResponse({'status': 'ok'})
+        return JsonResponse({"status": "ok"})
         # return render(request, self.request.META.get('HTTP_REFERER'))
 
 
@@ -394,13 +398,13 @@ class CatalogView(ListView):
         descriptionFilter = request.GET.get("descriptionFilter")
 
         if price_from and price_to:
-            products = products.filter(min_price__gte=price_from, min_price__lte=price_to)
+            products = products.filter(
+                min_price__gte=price_from, min_price__lte=price_to
+            )
         if name_filter:
             products = products.filter(name__icontains=name_filter)
         if descriptionFilter:
             products = products.filter(description__icontains=descriptionFilter)
-
-
 
         if sort == "price":
             products = products.order_by("min_price")
@@ -447,8 +451,5 @@ def set_language(request):
     next_trans = translate_url(next_url, lang_code)
     if next_trans != next_url:
         response = HttpResponseRedirect(next_trans)
-        response.set_cookie(
-            settings.LANGUAGE_COOKIE_NAME,
-            lang_code
-        )
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code)
     return response
