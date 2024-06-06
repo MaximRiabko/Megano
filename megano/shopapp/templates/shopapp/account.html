@@ -56,8 +56,8 @@
                                     <div class="Order Order_anons">
                                         <div class="Order-personal">
                                             <div class="row">
-                                                <div class="row-block"><a class="Order-title" href="">{% translate 'Order' %}&#32;<span class="Order-numberOrder">№{{ last_order.id }}</span>&#32;от&#32;<span class="Order-dateOrder">{{ last_order.created_at }}</span></a>
-                                                    <div class="Account-editLink"><a href="">{% translate 'Orders history' %}</a>
+                                                <div class="row-block"><a class="Order-title" href="{% url 'shopapp:order_details' pk=last_order.pk %}">{% translate 'Order' %}&#32;<span class="Order-numberOrder">№{{ last_order.id }}</span>&#32;от&#32;<span class="Order-dateOrder">{{ last_order.created_at }}</span></a>
+                                                    <div class="Account-editLink"><a href="{% url 'shopapp:history_order' %}">{% translate 'Orders history' %}</a>
                                                     </div>
                                                 </div>
                                                 <div class="row-block">
