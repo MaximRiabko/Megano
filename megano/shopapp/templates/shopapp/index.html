@@ -9,7 +9,6 @@
               <div class="Slider-box">
                   {% reference_to_big_banners as big_banners %}
                   {% for banner in big_banners %}
-                        {% if banner.is_active and banner.is_big %}
                             <div class="Slider-item">
                               <div class="Slider-content">
                                 <div class="row">
@@ -28,7 +27,6 @@
                                 </div>
                               </div>
                             </div>
-                        {% endif %}
                   {% endfor %}
               </div>
               <div class="Slider-navigateWrap">
@@ -43,7 +41,6 @@
                 <div class="BannersHome">
                     {% reference_to_small_banners as small_banners %}
                         {% for banner in small_banners %}
-                            {% if banner.is_active and not banner.is_big %}
                                 <a class="BannersHomeBlock" href="{{ banner.url }}">
                                 <div class="BannersHomeBlock-row">
                                     <div class="BannersHomeBlock-block">
@@ -53,13 +50,12 @@
                                         </div>
                                     </div>
                                     <div class="BannersHomeBlock-block">
-                                        <div class="BannersHomeBlock-img"><img src="{{ banner.image }}" alt="videoca.png" />
+                                        <div class="BannersHomeBlock-img"><img src="{{ banner.image.url }}" alt="videoca.png" />
                                         </div>
                                     </div>
                                 </div>
                                 </a>
-                            {% endif %}
-                        {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -139,20 +135,6 @@
                         </div>
                         {% endfor %}
                         {% endif %}
-                        <div class="Card hide_md hide_1450"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg" /></a>
-                            <div class="Card-content">
-                                <strong class="Card-title"><a href="#">Corsair Carbide Series Arctic White Steel</a>
-                                </strong>
-                                <div class="Card-description">
-                                    <div class="Card-cost"><span class="Card-price">$210.00</span>
-                                    </div>
-                                    <div class="Card-category">Media / xbox
-                                    </div>
-                                    <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg" /></a><a class="Card-btn" href="{% static 'compare.html' %}"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg" /></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

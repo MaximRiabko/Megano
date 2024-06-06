@@ -393,20 +393,22 @@ class CatalogView(ListView):
         descriptionFilter = request.GET.get("descriptionFilter")
 
         if price_from and price_to:
-            products = products.filter(price__gte=price_from, price__lte=price_to)
+            products = products.filter(min_price__gte=price_from, min_price__lte=price_to)
         if name_filter:
             products = products.filter(name__icontains=name_filter)
         if descriptionFilter:
             products = products.filter(description__icontains=descriptionFilter)
 
+
+
         if sort == "price":
-            products = products.order_by("price")
+            products = products.order_by("min_price")
         elif sort == "popularity":
-            products = products.order_by("pop")
+            products = products.order_by("-pop")
         elif sort == "novelty":
-            products = products.order_by("created_at")
+            products = products.order_by("-created_at")
         elif sort == "reviews":
-            products = products.order_by("reviews")
+            products = products.order_by("-reviews")
         else:
             products = products.order_by("id")
 

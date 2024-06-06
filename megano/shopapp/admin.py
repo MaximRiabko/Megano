@@ -56,7 +56,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = "pk", "category"
+    list_display = "pk", "category", "created_at"
 
 
 class CategoryAdmin(admin.ModelAdmin):
