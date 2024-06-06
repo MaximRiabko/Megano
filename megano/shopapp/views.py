@@ -17,6 +17,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
+from django.urls import translate_url
 
 from cart.forms import CartAddProductForm
 from megano import settings
@@ -177,7 +178,6 @@ class MainPageView(TemplateView):
         top_order_products = ProductSeller.objects.annotate(
             cnt=Count("order_items")
         ).order_by("-cnt")[:8]
-
         limited_product, discount = self.get_limited_offer()
         if limited_product:
             product_seller = ProductSeller.objects.filter(
@@ -391,20 +391,22 @@ class CatalogView(ListView):
         descriptionFilter = request.GET.get("descriptionFilter")
 
         if price_from and price_to:
-            products = products.filter(price__gte=price_from, price__lte=price_to)
+            products = products.filter(min_price__gte=price_from, min_price__lte=price_to)
         if name_filter:
             products = products.filter(name__icontains=name_filter)
         if descriptionFilter:
             products = products.filter(description__icontains=descriptionFilter)
 
+
+
         if sort == "price":
-            products = products.order_by("price")
+            products = products.order_by("min_price")
         elif sort == "popularity":
-            products = products.order_by("pop")
+            products = products.order_by("-pop")
         elif sort == "novelty":
-            products = products.order_by("created_at")
+            products = products.order_by("-created_at")
         elif sort == "reviews":
-            products = products.order_by("reviews")
+            products = products.order_by("-reviews")
         else:
             products = products.order_by("id")
 
@@ -436,10 +438,14 @@ class CatalogView(ListView):
 
 @login_required
 def set_language(request):
-    lang = request.GET.get("l")
-    request.session[settings.LANGUAGE_SESSION_KEY] = lang
-    referer = str(request.META.get("HTTP"))
-    request.META["HTTP_ACCEPT_LANGUAGE"] = lang
-    response = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
-    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
+    next_url = request.META.get("HTTP_REFERER")
+    response = HttpResponseRedirect(next_url)
+    lang_code = request.GET.get("l")
+    next_trans = translate_url(next_url, lang_code)
+    if next_trans != next_url:
+        response = HttpResponseRedirect(next_trans)
+        response.set_cookie(
+            settings.LANGUAGE_COOKIE_NAME,
+            lang_code
+        )
     return response

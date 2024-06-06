@@ -13,7 +13,7 @@
                             <form class="form" action="#" method="post">
                                 <div class="form-group">
                                     <div class="range Section-columnRange">
-                                        <input class="range-line" id="price-2" name="price" type="text" data-type="double" data-min="7" data-max="50" data-from="7" data-to="27" />
+                                        <input class="range-line" id="price-2" name="price" type="text" data-type="double" data-min="1" data-max="10000" />
                                         <div class="range-price">Цена:&#32;
                                             <div class="rangePrice">
                                             </div>
@@ -54,9 +54,9 @@
                                 </form>
 
                         </div>
+                     <div class="Cards">
                     {% for contact in page_obj %}
-                    <div class="Cards">
-                        <div class="Card"><a class="Card-picture" href="#"><img src="{{ contact.preview.image.url }}" alt="card.jpg" /></a>
+                        <div class="Card"><a class="Card-picture" href="{% url 'shopapp:product' pk=contact.pk %}"><img src="{{ contact.preview.image.url }}" alt="card.jpg" /></a>
                             <div class="Card-content">
                                 <strong class="Card-title"><a href="product.html">{{ contact.name }}</a>
                                 </strong>
@@ -70,8 +70,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     {% endfor %}
+                    </div>
                     <div class="Pagination">
                             <div class="Pagination-ins">
                                 <a class="Pagination-element Pagination-element_prev" href="#">
@@ -96,9 +96,11 @@
       applyButton.click(function(event) {
         event.preventDefault();
         var url = applyButton.attr('href');
+        var sliderElement = document.querySelector("#price-2");
 
-        var priceFrom = document.querySelector("#price-2").getAttribute("data-from");
-        var priceTo = document.querySelector("#price-2").getAttribute("data-to");
+        var priceFrom = sliderElement.value.split(';')[0];
+        var priceTo = sliderElement.value.split(';')[1];
+
         var title = document.getElementById("title").value;
         var description = document.getElementById("description").value;
 
