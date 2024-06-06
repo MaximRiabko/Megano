@@ -80,6 +80,11 @@ class Comparison(object):
         """
         Перебор элементов в сравнении и получение продуктов из базы данных.
         """
+        product_ids = self.compare.keys()
+        # получение объектов product и добавление их в сравнение
+        products = Product.objects.filter(id__in=product_ids)
+        for product in products:
+            self.compare[str(product.id)]["img"] = product.preview.image.url
         for item in self.compare.values():
             yield item
 
