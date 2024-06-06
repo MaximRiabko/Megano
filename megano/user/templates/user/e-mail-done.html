@@ -19,7 +19,7 @@
             <form method="post">
                 {% csrf_token %}
                 {{ form }}
-                <a class="registr" href="{% url 'auth:register' %}">
+                <a class="registr" href="{% url 'auth:login' %}">
                     {% translate 'Log in' %}
                 </a>
             </form>
